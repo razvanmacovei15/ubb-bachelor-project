@@ -9,5 +9,4 @@ public class FollowTheBeatApplication {
     public static void main(String[] args) {
         SpringApplication.run(FollowTheBeatApplication.class, args);
     }
-
 }
