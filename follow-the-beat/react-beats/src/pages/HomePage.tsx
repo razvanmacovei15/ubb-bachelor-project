@@ -114,3 +114,18 @@ const HomePage: React.FC = () => {
 };
 
 export default HomePage;
+
+
+// cerinte mpp
+// operatii crud si filtrari
+// unit testing pe sort or filter, assert 
+// toate entitatile sa fie salvate in memory
+
+// silver challenge
+// unit testing pentru tot
+// statistica: top middle si bottom 
+
+// gold challenge
+// paginare, cate iteme pe pagina, cate pagini, next prev
+// chart pie 
+// pe un alt thread (faker) sa genereze date care sa schimbe in timp real datele din aplicatie
