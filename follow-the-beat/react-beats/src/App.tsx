@@ -1,22 +1,14 @@
-import { useState } from 'react'
 
 import './App.css'
-
+import TopBar from './components/TopBar'
+import HomePage from './pages/HomePage'
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
-    <>
-      <h1>HELLO WORLD</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          Hello world count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-    </>
+    <div className='w-full h-screen flex flex-col'>
+      <TopBar/>
+      <HomePage/>
+    </div>
   )
 }
 
