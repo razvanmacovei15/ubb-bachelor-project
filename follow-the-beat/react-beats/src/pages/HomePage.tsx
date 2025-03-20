@@ -25,11 +25,13 @@ const mockConcerts: Concert[] = Array.from({ length: 20 }, (_, i) => ({
 }));
 
 const ConcertList: React.FC<ConcertListProps> = ({ addToLineup }) => {
-    const [concerts, setConcerts] = useState<Concert[]>(mockConcerts);
+    const [concerts, setConcerts] = useState<Concert[]>([]);
     const [searchTerm, setSearchTerm] = useState<string>("");
     const [sortBy, setSortBy] = useState<string | null>(null);
     const [itemsPerPage, setItemsPerPage] = useState<number>(5);
     const [currentPage, setCurrentPage] = useState<number>(1);
+
+    const [loading, setLoading] = useState<boolean>(false);
 
     const deleteConcert = (id: number) => {
         setConcerts(concerts.filter(concert => concert.id !== id));
@@ -49,23 +51,34 @@ const ConcertList: React.FC<ConcertListProps> = ({ addToLineup }) => {
     const totalPages = Math.ceil(sortedConcerts.length / itemsPerPage);
     const paginatedConcerts = sortedConcerts.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
+    const onSearch = () => {
+        setLoading(true);
+        //simulate 3 second wait
+        setTimeout(() => {
+            //render the list
+            setConcerts(mockConcerts);
+            console.log("searched");
+            setLoading(false);
+        }, 3000);
+    }
+
     return (
         <div className="p-5">
-            <input
-                type="text"
-                placeholder="Search by artist/location..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="border p-2 rounded-full"
-            />
-            <button onClick={() => setSortBy("time")} className="ml-2 p-2 border rounded">Sort by Time</button>
-            <button onClick={() => setSortBy("alphabet")} className="ml-2 p-2 border rounded">Sort A-Z</button>
-            <select onChange={(e) => setItemsPerPage(Number(e.target.value))} className="ml-2 p-2 border rounded">
-                <option value={5}>5</option>
-                <option value={10}>10</option>
-                <option value={20}>All</option>
-            </select>
-            <ul>
+           
+            <div className="flex flex-row gap-2">
+                <input
+                    type="text"
+                    placeholder="Search by artist/location..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="border p-2 rounded-full w-full"
+                />
+                <button onClick={onSearch}  className="p-2 bg-yellow-300 rounded-2xl">Search</button>
+            </div>
+            {concerts.length === 0 && !loading && <p>No concerts found</p>}
+
+            {loading ? <p>Loading concerts...</p> : (
+                <ul>
                 {paginatedConcerts.map(concert => (
                     <li key={concert.id} className="p-3 border-b">
                         {concert.artist} - {concert.location} - {new Date(concert.startTime).toLocaleString()} 
@@ -74,6 +87,16 @@ const ConcertList: React.FC<ConcertListProps> = ({ addToLineup }) => {
                     </li>
                 ))}
             </ul>
+            )}
+            
+            
+            <button onClick={() => setSortBy("time")} className="ml-2 p-2 border rounded">Sort by Time</button>
+            <button onClick={() => setSortBy("alphabet")} className="ml-2 p-2 border rounded">Sort A-Z</button>
+            <select onChange={(e) => setItemsPerPage(Number(e.target.value))} className="ml-2 p-2 border rounded">
+                <option value={5}>5</option>
+                <option value={10}>10</option>
+                <option value={20}>All</option>
+            </select>
             <div className="flex justify-between mt-3">
                 <button onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} className="p-2 border rounded">Previous</button>
                 <span>Page {currentPage} of {totalPages}</span>
@@ -83,7 +106,7 @@ const ConcertList: React.FC<ConcertListProps> = ({ addToLineup }) => {
     );
 };
 
-const MyLineup: React.FC<MyLineupProps> = ({ lineup }) => (
+const MyLineup =   ({ lineup } : MyLineupProps) => (
     <div className="p-5 border-t">
         <h2>My Lineup</h2>
         <ul>
@@ -94,7 +117,7 @@ const MyLineup: React.FC<MyLineupProps> = ({ lineup }) => (
     </div>
 );
 
-const HomePage: React.FC = () => {
+const HomePage= () => {
     const [lineup, setLineup] = useState<Concert[]>([]);
     
     const addToLineup = (concert: Concert) => {
