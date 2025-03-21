@@ -36,3 +36,5 @@ const ConcertList: React.FC<ConcertListProps> = ({concerts , loading, setConcert
 };
 
 export default ConcertList;
+
+//cum pisici sa nu vada modificarile
