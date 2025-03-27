@@ -4,8 +4,11 @@ import './index.css'
 import {createBrowserRouter, RouterProvider} from "react-router-dom";
 import App from './App.tsx';
 import HomePage from './pages/HomePage.tsx';
-import Profile from './pages/Profile.tsx';
-import Lineup from './pages/Lineup.tsx';
+import Profile from './pages/ProfilePage.tsx';
+import Lineup from './pages/LineupPage.tsx';
+import { ConcertProvider } from './components/contexts/ConcertContext.tsx';
+import { LineupProvider } from './components/contexts/LineupContext.tsx';
+import ConcertsPage from './pages/ConcertsPage.tsx';
 
 
 const router = createBrowserRouter([
@@ -16,6 +19,10 @@ const router = createBrowserRouter([
           {
             index: true, // This makes Dashboard the default when visiting /gymapp
             element: <HomePage />, 
+          },
+          {
+            path: "concerts",
+            element: <ConcertsPage />,
           },
           {
             path: "profile",
@@ -31,6 +38,10 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <ConcertProvider>
+      <LineupProvider>
+        <RouterProvider router={router} />
+      </LineupProvider>
+    </ConcertProvider>
   </StrictMode>
 )

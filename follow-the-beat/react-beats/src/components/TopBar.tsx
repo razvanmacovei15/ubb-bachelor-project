@@ -13,6 +13,9 @@ const TopBar = () => {
                 <TopBarButton title="Home" onClick={() => {
                     navigate("/");
                 }}/>
+                <TopBarButton title="Events" onClick={() => {
+                    navigate("/concerts");
+                }}/>
                 <TopBarButton title="Profile" onClick={() => {
                     navigate("/profile");
                 }}/>

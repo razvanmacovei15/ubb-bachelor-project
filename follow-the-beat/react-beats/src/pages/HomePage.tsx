@@ -1,139 +1,54 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useConcertContext } from "../components/contexts/ConcertContext";
 
-type Concert = {
-    id: number;
-    artist: string;
-    location: string;
-    startTime: string;
-    compatibility: number;
-};
+const HomePage: React.FC = () => {
+  const [isSearching, setIsSearching] = useState(false);
+  const { setConcerts } = useConcertContext();
+  const navigate = useNavigate();
 
-type ConcertListProps = {
-    addToLineup: (concert: Concert) => void;
-};
+  const handleSearch = async () => {
+    setIsSearching(true);
 
-type MyLineupProps = {
-    lineup: Concert[];
-};
+    await new Promise(res => setTimeout(res, 3000));
 
-const mockConcerts: Concert[] = Array.from({ length: 20 }, (_, i) => ({
-    id: i + 1,
-    artist: `Artist ${i + 1}`,
-    location: `City ${i % 5}`,
-    startTime: new Date(Date.now() + i * 3600000).toISOString(), // Future times
-    compatibility: Math.floor(Math.random() * 101) // Random 0-100
-}));
+    const mockConcerts = Array.from({ length: 20 }, (_, i) => ({
+      id: i + 1,
+      artist: `Artist ${i + 1}`,
+      location: `City ${i % 5}`,
+      startTime: new Date(Date.now() + i * 3600000).toISOString(),
+      compatibility: Math.floor(Math.random() * 101),
+    }));
 
-const ConcertList: React.FC<ConcertListProps> = ({ addToLineup }) => {
-    const [concerts, setConcerts] = useState<Concert[]>([]);
-    const [searchTerm, setSearchTerm] = useState<string>("");
-    const [sortBy, setSortBy] = useState<string | null>(null);
-    const [itemsPerPage, setItemsPerPage] = useState<number>(5);
-    const [currentPage, setCurrentPage] = useState<number>(1);
+    setConcerts(mockConcerts);
 
-    const [loading, setLoading] = useState<boolean>(false);
+    navigate("/concerts");
+  };
 
-    const deleteConcert = (id: number) => {
-        setConcerts(concerts.filter(concert => concert.id !== id));
-    };
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-500 text-white">
+      <h1 className="text-5xl text-center p-5">Find events near you</h1>
+      <h2 className="text-xl text-center p-5">Browse more than 10,000 events</h2>
 
-    const filteredConcerts = concerts.filter(concert => 
-        concert.artist.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        concert.location.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+      <input
+        type="text"
+        placeholder="Search..."
+        className="p-3 rounded text-black"
+        disabled={isSearching}
+      />
+      <button
+        onClick={handleSearch}
+        disabled={isSearching}
+        className={`mt-4 p-3 rounded bg-blue-600 hover:bg-blue-700 transition ${
+          isSearching ? "opacity-50 cursor-not-allowed" : ""
+        }`}
+      >
+        {isSearching ? "Searching..." : "Search"}
+      </button>
 
-    const sortedConcerts = [...filteredConcerts].sort((a, b) => {
-        if (sortBy === "time") return new Date(a.startTime).getTime() - new Date(b.startTime).getTime();
-        if (sortBy === "alphabet") return a.artist.localeCompare(b.artist);
-        return 0;
-    });
-
-    const totalPages = Math.ceil(sortedConcerts.length / itemsPerPage);
-    const paginatedConcerts = sortedConcerts.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-
-    const onSearch = () => {
-        setLoading(true);
-        //simulate 3 second wait
-        setTimeout(() => {
-            //render the list
-            setConcerts(mockConcerts);
-            console.log("searched");
-            setLoading(false);
-        }, 3000);
-    }
-
-    return (
-        <div className="p-5">
-           
-            <div className="flex flex-row gap-2">
-                <input
-                    type="text"
-                    placeholder="Search by artist/location..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="border p-2 rounded-full w-full"
-                />
-                <button onClick={onSearch}  className="p-2 bg-yellow-300 rounded-2xl">Search</button>
-            </div>
-            {concerts.length === 0 && !loading && <p>No concerts found</p>}
-
-            {loading ? <p>Loading concerts...</p> : (
-                <ul>
-                {paginatedConcerts.map(concert => (
-                    <li key={concert.id} className="p-3 border-b">
-                        {concert.artist} - {concert.location} - {new Date(concert.startTime).toLocaleString()} 
-                        <button onClick={() => addToLineup(concert)} className="ml-2 p-1 bg-green-500 text-white rounded">Add</button>
-                        <button onClick={() => deleteConcert(concert.id)} className="ml-2 p-1 bg-red-500 text-white rounded">Delete</button>
-                    </li>
-                ))}
-            </ul>
-            )}
-            
-            
-            <button onClick={() => setSortBy("time")} className="ml-2 p-2 border rounded">Sort by Time</button>
-            <button onClick={() => setSortBy("alphabet")} className="ml-2 p-2 border rounded">Sort A-Z</button>
-            <select onChange={(e) => setItemsPerPage(Number(e.target.value))} className="ml-2 p-2 border rounded">
-                <option value={5}>5</option>
-                <option value={10}>10</option>
-                <option value={20}>All</option>
-            </select>
-            <div className="flex justify-between mt-3">
-                <button onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} className="p-2 border rounded">Previous</button>
-                <span>Page {currentPage} of {totalPages}</span>
-                <button onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))} className="p-2 border rounded">Next</button>
-            </div>
-        </div>
-    );
-};
-
-const MyLineup =   ({ lineup } : MyLineupProps) => (
-    <div className="p-5 border-t">
-        <h2>My Lineup</h2>
-        <ul>
-            {lineup.map(concert => (
-                <li key={concert.id}>{concert.artist} - {concert.location} - {new Date(concert.startTime).toLocaleString()}</li>
-            ))}
-        </ul>
+      {isSearching && <p className="mt-4 text-lg">🔍 Searching for concerts...</p>}
     </div>
-);
-
-const HomePage= () => {
-    const [lineup, setLineup] = useState<Concert[]>([]);
-    
-    const addToLineup = (concert: Concert) => {
-        if (!lineup.some(c => c.id === concert.id)) {
-            setLineup([...lineup, concert]);
-        }
-    };
-
-    return (
-        <div className="flex flex-col w-full h-full items-center justify-center bg-gray-500">
-            <h1 className="text-5xl w-full text-center p-5">Find events near you</h1>
-            <h2 className="text-xl text-center p-5">Browse more than 10,000 events</h2>
-            <ConcertList addToLineup={addToLineup} />
-            <MyLineup lineup={lineup} />
-        </div>
-    );
+  );
 };
 
 export default HomePage;
