@@ -9,6 +9,7 @@ import Lineup from './pages/LineupPage.tsx';
 import { ConcertProvider } from './components/contexts/ConcertContext.tsx';
 import { LineupProvider } from './components/contexts/LineupContext.tsx';
 import ConcertsPage from './pages/ConcertsPage.tsx';
+import StatisticsPage from './pages/StatisticsPage.tsx';
 
 
 const router = createBrowserRouter([
@@ -31,7 +32,11 @@ const router = createBrowserRouter([
           {
             path: "lineup",
             element: <Lineup />,
-          }
+          },
+          {
+            path: "statistics",
+            element: <StatisticsPage />,
+          },
         ]
     }
 ])

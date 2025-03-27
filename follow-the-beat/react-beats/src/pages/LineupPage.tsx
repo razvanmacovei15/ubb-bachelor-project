@@ -2,12 +2,17 @@ import React, { useState } from "react";
 import { useLineup } from "../components/contexts/LineupContext";
 
 const LineupPage: React.FC = () => {
+  const getGradientClass = (compatibility: number): string => {
+    if (compatibility <= 33) return "bg-gradient-to-r from-[#cd7f32]/50 to-white";
+    if (compatibility <= 66) return "bg-gradient-to-r from-gray-400/50 to-white";
+    return "bg-gradient-to-r from-yellow-300/50 to-white";
+  };
+  
   const { lineup, getSortedLineup, filterLineup, removeFromLineup, editConcert } = useLineup();
 
   const [sortBy, setSortBy] = useState<"artist" | "time" | "none">("none");
   const [searchTerm, setSearchTerm] = useState<string>("");
 
-  // Store temporary text area input for each concert
   const [detailsDraft, setDetailsDraft] = useState<{ [id: number]: string }>({});
 
   const handleSort = () => {
@@ -54,34 +59,41 @@ const LineupPage: React.FC = () => {
       {displayConcerts.length === 0 ? (
         <p>No concerts found.</p>
       ) : (
-        <ul className="space-y-4">
+        <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {displayConcerts.map((concert) => (
-            <li key={concert.id} className="border p-4 rounded shadow-sm">
-              <div className="flex justify-between items-start gap-4">
-                <div className="flex-1">
-                  <p><strong>{concert.artist}</strong> - {concert.location}</p>
-                  <p className="text-sm text-gray-600">{new Date(concert.startTime).toLocaleString()}</p>
-
-                  <textarea
-                    placeholder="Add details..."
-                    value={detailsDraft[concert.id] ?? concert.details}
-                    onChange={(e) =>
-                      setDetailsDraft({ ...detailsDraft, [concert.id]: e.target.value })
-                    }
-                    className="mt-2 w-full p-2 border rounded"
-                  />
-
-                  <button
-                    onClick={() => handleUpdate(concert.id)}
-                    className="mt-2 p-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-                  >
-                    Update
-                  </button>
+            <li
+              key={concert.id}
+              className="w-full rounded-xl shadow overflow-hidden border h-60 flex"
+            >
+              <div
+                className={`w-4/5 p-4 text-black flex flex-col justify-between ${getGradientClass(concert.compatibility)}`}
+              >
+                <div>
+                  <p className="font-bold">{concert.artist}</p>
+                  <p>{concert.location}</p>
+                  <p className="text-sm text-gray-700">{new Date(concert.startTime).toLocaleString()}</p>
                 </div>
 
+                <textarea
+                  placeholder="Add details..."
+                  value={detailsDraft[concert.id] ?? concert.details}
+                  onChange={(e) =>
+                    setDetailsDraft({ ...detailsDraft, [concert.id]: e.target.value })
+                  }
+                  className="mt-2 w-full p-2 border rounded"
+                />
+              </div>
+
+              <div className="w-1/5 flex flex-col items-center justify-end gap-2 p-2">
+                <button
+                  onClick={() => handleUpdate(concert.id)}
+                  className="w-full p-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                >
+                  Update
+                </button>
                 <button
                   onClick={() => removeFromLineup(concert.id)}
-                  className="p-2 bg-red-600 text-white rounded self-start"
+                  className="w-full p-2 bg-red-600 text-white rounded hover:bg-red-700"
                 >
                   Remove
                 </button>
@@ -89,6 +101,7 @@ const LineupPage: React.FC = () => {
             </li>
           ))}
         </ul>
+
       )}
     </div>
   );

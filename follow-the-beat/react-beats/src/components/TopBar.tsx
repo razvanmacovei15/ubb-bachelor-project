@@ -22,6 +22,9 @@ const TopBar = () => {
                 <TopBarButton title="My Lineup" onClick={() => {
                     navigate("/lineup");
                 }}/>
+                <TopBarButton title="Statistics" onClick={() => {
+                    navigate("/statistics");
+                }}/>
             </div>
         </div>
         

@@ -4,7 +4,7 @@ import { useLineup } from "../components/contexts/LineupContext";
 
 const ConcertsPage: React.FC = () => {
   const { concerts } = useConcertContext();
-  const { addToLineup } = useLineup();
+  const { lineup, addToLineup } = useLineup();
 
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState<"none" | "artist" | "time">("none");
@@ -56,20 +56,29 @@ const ConcertsPage: React.FC = () => {
       </div>
 
       <ul className="space-y-4">
-        {paginatedConcerts.map((concert) => (
-          <li key={concert.id} className="p-4 border rounded flex justify-between items-center shadow">
-            <div>
-              <p><strong>{concert.artist}</strong> - {concert.location}</p>
-              <p className="text-sm text-gray-600">{new Date(concert.startTime).toLocaleString()}</p>
-            </div>
-            <button
-              onClick={() => addToLineup(concert)}
-              className="p-2 px-4 bg-green-600 text-white rounded hover:bg-green-700"
+        {paginatedConcerts.map((concert) => {
+          const isInLineup = lineup.some((item) => item.id === concert.id);
+
+          return (
+            <li
+              key={concert.id}
+              className={`p-4 rounded flex justify-between items-center shadow ${
+                isInLineup ? "border-purple-600 border-2" : "border"
+              }`}
             >
-              Add
-            </button>
-          </li>
-        ))}
+              <div>
+                <p><strong>{concert.artist}</strong> - {concert.location}</p>
+                <p className="text-sm text-gray-600">{new Date(concert.startTime).toLocaleString()}</p>
+              </div>
+              <button
+                onClick={() => addToLineup(concert)}
+                className="p-2 px-4 bg-green-600 text-white rounded hover:bg-green-700"
+              >
+                Add
+              </button>
+            </li>
+          );
+        })}
       </ul>
 
       <div className="flex justify-between items-center mt-6">
