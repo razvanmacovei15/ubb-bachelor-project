@@ -7,6 +7,9 @@ const LineupPage: React.FC = () => {
   const [sortBy, setSortBy] = useState<"artist" | "time" | "none">("none");
   const [searchTerm, setSearchTerm] = useState<string>("");
 
+  // Store temporary text area input for each concert
+  const [detailsDraft, setDetailsDraft] = useState<{ [id: number]: string }>({});
+
   const handleSort = () => {
     if (sortBy === "none") return lineup;
     return getSortedLineup(sortBy);
@@ -18,9 +21,15 @@ const LineupPage: React.FC = () => {
 
   const displayConcerts = handleFilter(handleSort());
 
+  const handleUpdate = (id: number) => {
+    if (detailsDraft[id] !== undefined) {
+      editConcert(id, detailsDraft[id]);
+    }
+  };
+
   return (
     <div className="p-5">
-      <h1 className="text-2xl mb-4">🎵 Your Lineup</h1>
+      <h1 className="text-2xl mb-4">Your Lineup</h1>
 
       <div className="flex gap-4 mb-4 items-center">
         <input
@@ -48,20 +57,31 @@ const LineupPage: React.FC = () => {
         <ul className="space-y-4">
           {displayConcerts.map((concert) => (
             <li key={concert.id} className="border p-4 rounded shadow-sm">
-              <div className="flex justify-between items-center">
-                <div>
+              <div className="flex justify-between items-start gap-4">
+                <div className="flex-1">
                   <p><strong>{concert.artist}</strong> - {concert.location}</p>
-                  <p>{new Date(concert.startTime).toLocaleString()}</p>
+                  <p className="text-sm text-gray-600">{new Date(concert.startTime).toLocaleString()}</p>
+
                   <textarea
                     placeholder="Add details..."
-                    value={concert.details}
-                    onChange={(e) => editConcert(concert.id, e.target.value)}
+                    value={detailsDraft[concert.id] ?? concert.details}
+                    onChange={(e) =>
+                      setDetailsDraft({ ...detailsDraft, [concert.id]: e.target.value })
+                    }
                     className="mt-2 w-full p-2 border rounded"
                   />
+
+                  <button
+                    onClick={() => handleUpdate(concert.id)}
+                    className="mt-2 p-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                  >
+                    Update
+                  </button>
                 </div>
+
                 <button
                   onClick={() => removeFromLineup(concert.id)}
-                  className="ml-4 p-2 bg-red-600 text-white rounded"
+                  className="p-2 bg-red-600 text-white rounded self-start"
                 >
                   Remove
                 </button>

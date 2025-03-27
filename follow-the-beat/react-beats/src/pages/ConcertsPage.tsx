@@ -11,26 +11,23 @@ const ConcertsPage: React.FC = () => {
   const [itemsPerPage, setItemsPerPage] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Search filter
   const filteredConcerts = concerts.filter((concert) =>
     concert.artist.toLowerCase().includes(searchTerm.toLowerCase()) ||
     concert.location.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Sorting
   const sortedConcerts = [...filteredConcerts].sort((a, b) => {
     if (sortBy === "artist") return a.artist.localeCompare(b.artist);
     if (sortBy === "time") return new Date(a.startTime).getTime() - new Date(b.startTime).getTime();
     return 0;
   });
 
-  // Pagination
   const totalPages = Math.ceil(sortedConcerts.length / itemsPerPage);
   const paginatedConcerts = sortedConcerts.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
-      <h1 className="text-3xl font-semibold mb-6 text-center">🎶 Concerts Near You</h1>
+      <h1 className="text-3xl font-semibold mb-6 text-center">Concerts Near You</h1>
 
       <div className="flex flex-wrap items-center gap-4 mb-6">
         <input
@@ -75,7 +72,6 @@ const ConcertsPage: React.FC = () => {
         ))}
       </ul>
 
-      {/* Pagination Controls */}
       <div className="flex justify-between items-center mt-6">
         <button
           onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}

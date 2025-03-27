@@ -46,7 +46,7 @@ const HomePage: React.FC = () => {
         {isSearching ? "Searching..." : "Search"}
       </button>
 
-      {isSearching && <p className="mt-4 text-lg">🔍 Searching for concerts...</p>}
+      {isSearching && <p className="mt-4 text-lg">Searching for concerts...</p>}
     </div>
   );
 };
