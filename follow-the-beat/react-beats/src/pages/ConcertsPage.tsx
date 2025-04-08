@@ -7,7 +7,7 @@ import "./ConcertsPage.css";
 
 const ConcertsPage: React.FC = () => {
   const { concerts } = useConcertContext();
-  const { lineup, addToLineup } = useLineup();
+  const { lineup, addToLineup, removeFromLineup } = useLineup();
 
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState<"none" | "artist" | "time">("none");
@@ -34,12 +34,10 @@ const ConcertsPage: React.FC = () => {
   );
 
   return (
-    <div className="global-gradient">
+    <div className="main-container">
       <TopBar />
-      <div className="p-6 max-w-4xl mx-auto">
-        <h1 className="text-3xl font-semibold mb-6 text-center">
-          Concerts Near You
-        </h1>
+      <div className="concerts-container">
+        <h1>Concerts Near You</h1>
         <div className="flex flex-wrap items-center gap-4 mb-6">
           <input
             type="text"
@@ -76,6 +74,7 @@ const ConcertsPage: React.FC = () => {
                 concert={concert}
                 isInLineup={isInLineup}
                 onAdd={() => addToLineup(concert)}
+                onRemove={() => removeFromLineup(concert.id)}
               />
             );
           })}

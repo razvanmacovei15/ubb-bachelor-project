@@ -11,9 +11,10 @@ interface Props {
   concert: Concert;
   isInLineup: boolean;
   onAdd: (concert: Concert) => void;
+  onRemove: (id: number) => void;
 }
 
-const ConcertCard = ({ concert, isInLineup, onAdd }: Props) => {
+const ConcertCard = ({ concert, isInLineup, onAdd, onRemove }: Props) => {
   return (
     <div className={`concert-card ${isInLineup ? "selected" : ""}`}>
       <div className="concert-info">
@@ -22,9 +23,15 @@ const ConcertCard = ({ concert, isInLineup, onAdd }: Props) => {
         </p>
         <p className="time">{new Date(concert.startTime).toLocaleString()}</p>
       </div>
-      <button className="add-button" onClick={() => onAdd(concert)}>
-        Add
-      </button>
+      {!isInLineup ? (
+        <button className="add-button" onClick={() => onAdd(concert)}>
+          Add to lineup
+        </button>
+      ) : (
+        <button className="remove-button" onClick={() => onRemove(concert.id)}>
+          Remove from lineup
+        </button>
+      )}
     </div>
   );
 };

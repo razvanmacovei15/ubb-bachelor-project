@@ -5,7 +5,7 @@ import "../src/styles/global.css";
 
 function App() {
   return (
-    <div className="w-full h-screen flex flex-col">
+    <div className="w-full h-full flex flex-col">
       <Outlet />
     </div>
   );

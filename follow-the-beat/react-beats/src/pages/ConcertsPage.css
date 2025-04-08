@@ -1,6 +1,29 @@
 .concert-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
+    gap: 25px;
     padding: 20px;
+    width: 100%;
+    margin: auto;
+}
+
+.main-container {
+    width: 100%;
+    min-height: 100vh;
+    background: linear-gradient(to top right, var(--color-secondary), var(--color-primary));
+}
+
+
+.concerts-container {
+    max-width: 1024px;
+    margin: 0 auto;
+    padding: 24px;
+}
+
+.concerts-container h1 {
+    color: white;
+    font-size: 2rem;
+    text-align: center;
+    padding: 10px;
+    font-weight: bold;
 }
