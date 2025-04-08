@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useConcertContext } from "../components/contexts/ConcertContext";
 import "./HomePage.css";
-import TopBar from "../components/TopBar";
+import TopBar from "../components/top-bar/TopBar";
 
 const HomePage: React.FC = () => {
   const [isSearching, setIsSearching] = useState(false);
@@ -18,7 +18,7 @@ const HomePage: React.FC = () => {
     const mockConcerts = Array.from({ length: 20 }, (_, i) => ({
       id: i + 1,
       artist: `Artist ${i + 1}`,
-      location: searchInput || `City ${i % 5}`,
+      location: searchInput || `Cluj-Napoca`,
       startTime: new Date(Date.now() + i * 3600000).toISOString(),
       compatibility: Math.floor(Math.random() * 101),
     }));
@@ -30,7 +30,7 @@ const HomePage: React.FC = () => {
 
   return (
     <>
-      <div className="body">
+      <div className="page-container">
         <TopBar />
         <div className="hero">
           <h1>Find events near you</h1>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="6651a88d-490c-4a92-9b0d-ef8d7cfae258" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../follow-the-beat/react-beats/src/components/ConcertList.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../follow-the-beat/react-beats/src/components/LineupConcertCard.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../follow-the-beat/react-beats/src/components/SearchConcertCard.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../follow-the-beat/react-beats/src/contexts/ConcertsAroundContext.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../follow-the-beat/react-beats/src/data/Concerts.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../follow-the-beat/react-beats/src/types/Concert.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../follow-the-beat/react-beats/src/components/contexts/LineupContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../follow-the-beat/react-beats/src/components/contexts/LineupContext.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../follow-the-beat/react-beats/src/hooks/useSimulateLineupChanges.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../follow-the-beat/react-beats/src/hooks/useSimulateLineupChanges.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../follow-the-beat/react-beats/src/main.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../follow-the-beat/react-beats/src/main.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../follow-the-beat/react-beats/src/pages/HomePage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../follow-the-beat/react-beats/src/pages/HomePage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../follow-the-beat/react-beats/src/pages/Lineup.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../follow-the-beat/react-beats/src/pages/Lineup.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../follow-the-beat/react-beats/src/pages/StatisticsPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../follow-the-beat/react-beats/src/pages/StatisticsPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../follow-the-beat/react-beats/src/utils/lineupUtils.test.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../follow-the-beat/react-beats/src/utils/lineupUtils.test.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../follow-the-beat/react-beats/src/utils/lineupUtils.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../follow-the-beat/react-beats/src/utils/lineupUtils.ts" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "razvanmacovei15"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "git@github.com:razvanmacovei15/ubb-bachelor-project.git",
+    "accountId": "c7970470-82a1-4e84-83c5-b10491be1416"
+  }
+}]]></component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 7
+}]]></component>
+  <component name="ProjectId" id="2vEHIyXYhVc2fCaQ3Whv0TwgBse" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "Rebasing master",
+    "kotlin-language-version-configured": "true",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.keymap",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-a94e463ab2e7-intellij.indexing.shared.core-IU-243.25659.39" />
+        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-IU-243.25659.39" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="6651a88d-490c-4a92-9b0d-ef8d7cfae258" name="Changes" comment="" />
+      <created>1743703237852</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1743703237852</updated>
+      <workItem from="1743703239643" duration="58000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

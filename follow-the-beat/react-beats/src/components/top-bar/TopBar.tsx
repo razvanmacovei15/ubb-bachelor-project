@@ -1,15 +1,16 @@
 import { useNavigate } from "react-router-dom";
-import TopBarButton from "./top-bar/TopBarButton";
+import TopBarButton from "./TopBarButton";
+import "./TopBar.css";
 
 const TopBar = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="flex flex-row w-full gap-2 ">
-      <div className="top-bar w-full h-20 flex items-center justify-start pl-5">
+    <div className="top-bar">
+      <div className="logo-container">
         <h1 className="text-4xl text-white ">Follow your beat</h1>
       </div>
-      <div className="flex flex-row gap-2 items-center justify-end pr-5">
+      <div className="menu-container">
         <TopBarButton
           title="Home"
           onClick={() => {
