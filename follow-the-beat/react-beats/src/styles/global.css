@@ -1,0 +1,30 @@
+/* index.css */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+
+:root {
+  --font-primary: 'Inter', sans-serif;
+  --font-secondary: 'Georgia', serif;
+  --font-accent: 'Courier New', monospace;
+
+  --color-primary: #6d0f7c;
+  --color-secondary: #133d53;
+  --color-accent: #facc15;
+  --color-error: #dc2626;
+  --color-muted: #94a3b8;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-primary);
+  color: var(--color-secondary);
+  background-color: white;
+}
+
+.global-gradient {
+  background: linear-gradient(to top right, var(--color-secondary), var(--color-primary));
+}

@@ -1,0 +1,35 @@
+.button-class {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  height: 40px;
+  border: none;
+  border-radius: 10px;
+  padding: 4px 8px;
+
+  font-family: var(--font-primary);
+  font-size: 1rem;
+  font-weight: regular;
+  color: black;
+  white-space: nowrap;
+
+  cursor: pointer;
+}
+
+.button-class:hover {
+  background-color: var(--color-accent);
+  color: white;
+}
+
+
+.button-class h1 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 1rem;
+  font-weight: bold;
+  color: white;
+  text-align: center;
+}

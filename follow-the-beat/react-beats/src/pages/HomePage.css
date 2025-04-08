@@ -1,0 +1,70 @@
+.body {
+    background: linear-gradient(to top right, var(--color-secondary), var(--color-primary));
+}
+
+.hero {
+    width: auto;
+    align-items: center;
+    height: 1/3vh;
+    display: flex;
+    flex-direction: column;
+    padding: 10%;
+}
+
+.hero h1 {
+    color: white;
+    font-size: 3rem;
+    text-align: center;
+    padding: 10px;
+    font-weight: bold;
+}
+
+.hero h2 {
+    color: white;
+    font-size: 2rem;
+    text-align: center;
+    padding: 0 30px 30px 30px;
+}
+
+.hero span {
+    color: var(--color-accent);
+    font-size: 2rem;
+    text-align: center;
+    text-decoration: underline;
+    font-style: italic;
+}
+
+.search-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    gap: 10px;
+    width: 100%;
+}
+
+.hero input {
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 10px;
+    border: 1px solid var(--color-accent);
+    background-color: transparent;
+    width: 40%;
+    font-size: 1rem;
+    color: white;
+}
+
+.hero input::placeholder {
+    color: white;
+    opacity: 0.7;
+}
+
+.hero button {
+    background-color: var(--color-accent);
+    color: black;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+}
