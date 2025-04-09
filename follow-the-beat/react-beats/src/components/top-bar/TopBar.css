@@ -5,6 +5,7 @@
   height: 80px;
   width: 100%;
   max-width: 1024px;
+  border-bottom: 1px solid var(--color-accent);
 }
 
 .logo-container {
