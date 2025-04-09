@@ -24,12 +24,6 @@ const TopBar = () => {
           }}
         />
         <TopBarButton
-          title="Profile"
-          onClick={() => {
-            navigate("/profile");
-          }}
-        />
-        <TopBarButton
           title="My Lineup"
           onClick={() => {
             navigate("/lineup");
@@ -39,6 +33,12 @@ const TopBar = () => {
           title="Statistics"
           onClick={() => {
             navigate("/statistics");
+          }}
+        />
+        <TopBarButton
+          title="Profile"
+          onClick={() => {
+            navigate("/profile");
           }}
         />
       </div>

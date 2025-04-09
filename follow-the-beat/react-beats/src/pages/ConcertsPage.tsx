@@ -38,7 +38,12 @@ const ConcertsPage: React.FC = () => {
       <div className="main-container">
         <TopBar />
         <div className="concerts-container">
-          <h1>Concerts in {concerts[0].location}</h1>
+          {concerts.length === 0 ? (
+            <h1>No concerts available. Please check back later.</h1>
+          ) : (
+            <h1>Concerts in {concerts[0].location}</h1>
+          )}
+
           <div className="flex flex-wrap items-center gap-4 mb-6">
             <input
               type="text"

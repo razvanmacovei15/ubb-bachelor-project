@@ -35,7 +35,7 @@ const HomePage: React.FC = () => {
         <div className="hero">
           <h1>Find events near you</h1>
           <h2>
-            Browse more than <span>5,000</span> events near you
+            Browse more than <span>5,000 events</span> near you
           </h2>
           <div className="search-container">
             <input
