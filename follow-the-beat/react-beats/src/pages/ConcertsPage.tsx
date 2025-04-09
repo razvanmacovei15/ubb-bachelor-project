@@ -4,6 +4,9 @@ import { useLineup } from "../components/contexts/LineupContext";
 import TopBar from "../components/top-bar/TopBar";
 import ConcertCard from "../components/concertspage/ConcertCard";
 import "./ConcertsPage.css";
+import LeftSidebar from "../components/sidebars/LeftSidebar";
+import RightSidebar from "../components/sidebars/RightSidebar";
+import Pagination from "../components/Pagination";
 
 const ConcertsPage: React.FC = () => {
   const { concerts } = useConcertContext();
@@ -34,9 +37,10 @@ const ConcertsPage: React.FC = () => {
   );
 
   return (
-    <div className="page-container">
+    <div className="concertpage-container">
+      <TopBar />
       <div className="main-container">
-        <TopBar />
+        <LeftSidebar />
         <div className="concerts-container">
           {concerts.length === 0 ? (
             <h1>No concerts available. Please check back later.</h1>
@@ -85,7 +89,6 @@ const ConcertsPage: React.FC = () => {
               );
             })}
           </div>
-
           <div className="flex justify-between items-center mt-6">
             <button
               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
@@ -107,7 +110,9 @@ const ConcertsPage: React.FC = () => {
               Next
             </button>
           </div>
+          <Pagination />
         </div>
+        <RightSidebar />
       </div>
     </div>
   );

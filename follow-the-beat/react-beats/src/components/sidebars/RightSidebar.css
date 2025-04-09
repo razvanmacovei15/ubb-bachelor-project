@@ -1,0 +1,21 @@
+.right-sidebar {
+  display: flex;
+  flex-direction: column;
+  width: 10%;
+  padding: 20px;
+  border-left: 1px solid var(--color-accent);
+}
+
+.rightmenu-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.rightmenu-container h1 {
+  color: black;
+  font-size: 2rem;
+  text-align: center;
+  padding: 10px;
+  font-weight: bold;
+}

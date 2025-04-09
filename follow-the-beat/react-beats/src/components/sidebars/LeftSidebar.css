@@ -1,0 +1,22 @@
+.left-sidebar {
+  display: flex;
+  flex-direction: column;
+  width: 10%;
+  padding: 20px;
+  border-right: 1px solid var(--color-accent);
+}
+
+.leftmenu-container {
+  display: flex;
+
+  flex-direction: column;
+  gap: 20px;
+}
+
+.leftmenu-container h1 {
+  color: black;
+  font-size: 2rem;
+  text-align: center;
+  padding: 10px;
+  font-weight: bold;
+}
