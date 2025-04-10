@@ -30,12 +30,6 @@ const TopBar = () => {
           }}
         />
         <TopBarButton
-          title="Statistics"
-          onClick={() => {
-            navigate("/statistics");
-          }}
-        />
-        <TopBarButton
           title="Profile"
           onClick={() => {
             navigate("/profile");

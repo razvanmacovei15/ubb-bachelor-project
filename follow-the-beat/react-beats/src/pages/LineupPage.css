@@ -4,12 +4,19 @@
     background: linear-gradient(to top right,
             var(--color-secondary),
             var(--color-primary));
-    display: flex;
-    flex: 1;
-    flex-direction: column;
     justify-content: start;
     align-items: start;
     min-height: 100vh;
     overflow-y: auto;
     scrollbar-width: none;
+    padding: 0 24px;
+}
+
+.lineuppage-title {
+    color: white;
+    font-size: 3rem;
+    text-align: center;
+    padding: 50px 10px;
+    font-weight: bold;
+    width: 100%;
 }

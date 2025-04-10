@@ -1,5 +1,5 @@
-import { useState } from "react";
 import LineupConcert from "../types/LineupConcert";
+import "./LineupConcertCard.css";
 
 interface LineupConcertCardProps {
   concert: LineupConcert;
@@ -14,35 +14,33 @@ const LineupConcertCard = ({
   handleUpdate,
   removeFromLineup,
 }: LineupConcertCardProps) => {
-  const [details, setDetails] = useState<string>(concert.details);
-
   return (
-    <>
-      <div
-        className={`w-4/5 p-4 text-black flex flex-col justify-between ${getGradientClass(
-          concert.compatibility
-        )}`}
-      >
-        <div>
-          <p className="font-bold">{concert.artist}</p>
-          <p>{concert.location}</p>
-          <p className="text-sm text-gray-700">
-            {new Date(concert.startTime).toLocaleString()}
-          </p>
-        </div>
-
-        <textarea
-          placeholder="Add details..."
-          value={concert.details}
-          onChange={(e) => {
-            setDetails(e.target.value);
-            concert.details = e.target.value;
-          }}
-          className="mt-2 w-full p-2 border rounded"
-        />
+    <div className="lineupconcertcard-container">
+      <div className="lineupconcertcard-date">
+        <p className="font-bold text-lg text-white overflow-ellipsis flex flex-col">
+          {new Date(concert.startTime).getUTCDate().toLocaleString()}
+          <p>Mar</p>
+        </p>
       </div>
-
-      <div className="w-1/5 flex flex-col items-center justify-end gap-2 p-2">
+      <div className="lineupconcertcard-part-one">
+        <img src="/images/image.jpg" alt={`${concert.artist} concert`} />
+      </div>
+      <div className="lineupcard-part-two">
+        <div
+          className={`w-full h-full p-4 text-white flex flex-col justify-between ${getGradientClass(
+            concert.compatibility
+          )}`}
+        >
+          <div>
+            <p className="font-bold">{concert.artist}</p>
+            <p>{concert.location}</p>
+            <p className="text-sm text-gray-700">
+              {new Date(concert.startTime).toLocaleString()}
+            </p>
+          </div>
+        </div>
+      </div>
+      <div className="lineupcard-part-three">
         <button
           onClick={() => handleUpdate(concert.id)}
           className="w-full p-2 bg-blue-600 text-white rounded hover:bg-blue-700"
@@ -56,7 +54,7 @@ const LineupConcertCard = ({
           Remove
         </button>
       </div>
-    </>
+    </div>
   );
 };
 

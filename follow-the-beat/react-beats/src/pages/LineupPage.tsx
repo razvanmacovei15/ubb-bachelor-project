@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useLineup } from "../components/contexts/LineupContext";
 import TopBar from "../components/top-bar/TopBar";
 import "./LineupPage.css";
+import LineupConcertCard from "../components/concertspage/LineupConcertCard";
 
 const LineupPage: React.FC = () => {
   const getGradientClass = (compatibility: number): string => {
@@ -47,82 +48,26 @@ const LineupPage: React.FC = () => {
   return (
     <div className="lineuppage-container">
       <TopBar />
-      <h1 className="text-2xl mb-4">Your Lineup</h1>
-
-      <div className="flex gap-4 mb-4 items-center">
-        <input
-          type="text"
-          placeholder="Search by artist or location"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="border p-2 rounded w-64"
-        />
-
-        <select
-          value={sortBy}
-          onChange={(e) =>
-            setSortBy(e.target.value as "artist" | "time" | "none")
-          }
-          className="border p-2 rounded"
-        >
-          <option value="none">No Sorting</option>
-          <option value="artist">Sort by Artist</option>
-          <option value="time">Sort by Time</option>
-        </select>
-      </div>
+      <h1 className="lineuppage-title">Your Lineup</h1>
 
       {displayConcerts.length === 0 ? (
         <p>No concerts found.</p>
       ) : (
-        <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="flex flex-col gap-8 w-full">
           {displayConcerts.map((concert) => (
-            <li
+            <LineupConcertCard
               key={concert.id}
-              className="w-full rounded-xl shadow overflow-hidden border h-60 flex"
-            >
-              <div
-                className={`w-4/5 p-4 text-black flex flex-col justify-between ${getGradientClass(
-                  concert.compatibility
-                )}`}
-              >
-                <div>
-                  <p className="font-bold">{concert.artist}</p>
-                  <p>{concert.location}</p>
-                  <p className="text-sm text-gray-700">
-                    {new Date(concert.startTime).toLocaleString()}
-                  </p>
-                </div>
-
-                <textarea
-                  placeholder="Add details..."
-                  value={detailsDraft[concert.id] ?? concert.details}
-                  onChange={(e) =>
-                    setDetailsDraft({
-                      ...detailsDraft,
-                      [concert.id]: e.target.value,
-                    })
-                  }
-                  className="mt-2 w-full p-2 border rounded"
-                />
-              </div>
-
-              <div className="w-1/5 flex flex-col items-center justify-end gap-2 p-2">
-                <button
-                  onClick={() => handleUpdate(concert.id)}
-                  className="w-full p-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-                >
-                  Update
-                </button>
-                <button
-                  onClick={() => removeFromLineup(concert.id)}
-                  className="w-full p-2 bg-red-600 text-white rounded hover:bg-red-700"
-                >
-                  Remove
-                </button>
-              </div>
-            </li>
+              concert={concert}
+              getGradientClass={getGradientClass}
+              handleUpdate={function (id: number): void {
+                throw new Error("Function not implemented.");
+              }}
+              removeFromLineup={function (id: number): void {
+                throw new Error("Function not implemented.");
+              }}
+            />
           ))}
-        </ul>
+        </div>
       )}
     </div>
   );
