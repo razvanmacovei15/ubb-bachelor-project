@@ -1,19 +1,31 @@
 import React, { useState } from "react";
 import { useLineup } from "../components/contexts/LineupContext";
+import TopBar from "../components/top-bar/TopBar";
+import "./LineupPage.css";
 
 const LineupPage: React.FC = () => {
   const getGradientClass = (compatibility: number): string => {
-    if (compatibility <= 33) return "bg-gradient-to-r from-[#cd7f32]/50 to-white";
-    if (compatibility <= 66) return "bg-gradient-to-r from-gray-400/50 to-white";
+    if (compatibility <= 33)
+      return "bg-gradient-to-r from-[#cd7f32]/50 to-white";
+    if (compatibility <= 66)
+      return "bg-gradient-to-r from-gray-400/50 to-white";
     return "bg-gradient-to-r from-yellow-300/50 to-white";
   };
-  
-  const { lineup, getSortedLineup, filterLineup, removeFromLineup, editConcert } = useLineup();
+
+  const {
+    lineup,
+    getSortedLineup,
+    filterLineup,
+    removeFromLineup,
+    editConcert,
+  } = useLineup();
 
   const [sortBy, setSortBy] = useState<"artist" | "time" | "none">("none");
   const [searchTerm, setSearchTerm] = useState<string>("");
 
-  const [detailsDraft, setDetailsDraft] = useState<{ [id: number]: string }>({});
+  const [detailsDraft, setDetailsDraft] = useState<{ [id: number]: string }>(
+    {}
+  );
 
   const handleSort = () => {
     if (sortBy === "none") return lineup;
@@ -33,7 +45,8 @@ const LineupPage: React.FC = () => {
   };
 
   return (
-    <div className="p-5">
+    <div className="lineuppage-container">
+      <TopBar />
       <h1 className="text-2xl mb-4">Your Lineup</h1>
 
       <div className="flex gap-4 mb-4 items-center">
@@ -47,7 +60,9 @@ const LineupPage: React.FC = () => {
 
         <select
           value={sortBy}
-          onChange={(e) => setSortBy(e.target.value as "artist" | "time" | "none")}
+          onChange={(e) =>
+            setSortBy(e.target.value as "artist" | "time" | "none")
+          }
           className="border p-2 rounded"
         >
           <option value="none">No Sorting</option>
@@ -66,19 +81,26 @@ const LineupPage: React.FC = () => {
               className="w-full rounded-xl shadow overflow-hidden border h-60 flex"
             >
               <div
-                className={`w-4/5 p-4 text-black flex flex-col justify-between ${getGradientClass(concert.compatibility)}`}
+                className={`w-4/5 p-4 text-black flex flex-col justify-between ${getGradientClass(
+                  concert.compatibility
+                )}`}
               >
                 <div>
                   <p className="font-bold">{concert.artist}</p>
                   <p>{concert.location}</p>
-                  <p className="text-sm text-gray-700">{new Date(concert.startTime).toLocaleString()}</p>
+                  <p className="text-sm text-gray-700">
+                    {new Date(concert.startTime).toLocaleString()}
+                  </p>
                 </div>
 
                 <textarea
                   placeholder="Add details..."
                   value={detailsDraft[concert.id] ?? concert.details}
                   onChange={(e) =>
-                    setDetailsDraft({ ...detailsDraft, [concert.id]: e.target.value })
+                    setDetailsDraft({
+                      ...detailsDraft,
+                      [concert.id]: e.target.value,
+                    })
                   }
                   className="mt-2 w-full p-2 border rounded"
                 />
@@ -101,7 +123,6 @@ const LineupPage: React.FC = () => {
             </li>
           ))}
         </ul>
-
       )}
     </div>
   );

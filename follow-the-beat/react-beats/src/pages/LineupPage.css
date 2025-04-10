@@ -1,0 +1,15 @@
+.lineuppage-container {
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(to top right,
+            var(--color-secondary),
+            var(--color-primary));
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+    min-height: 100vh;
+    overflow-y: auto;
+    scrollbar-width: none;
+}

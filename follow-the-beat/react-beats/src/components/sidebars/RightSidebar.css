@@ -1,8 +1,12 @@
 .right-sidebar {
   display: flex;
   flex-direction: column;
-  width: 10%;
-  padding: 20px;
+  align-items: center;
+  justify-content: start;
+  width: 25vw;
+  max-width: 300px;
+  margin-top: 25vh;
+  padding: 15px;
   border-left: 1px solid var(--color-accent);
 }
 

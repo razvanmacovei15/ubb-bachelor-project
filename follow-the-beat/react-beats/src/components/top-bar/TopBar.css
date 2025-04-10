@@ -1,10 +1,11 @@
 .top-bar {
+
   display: flex;
   flex-direction: row;
-  height: 10vh;
+  height: 5vh;
   width: 100%;
   border-bottom: 1px solid var(--color-accent);
-  padding: 0 10%;
+  padding: 0 5%;
 }
 
 .logo-container {
