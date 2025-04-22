@@ -53,7 +53,7 @@ const LineupPage: React.FC = () => {
       {displayConcerts.length === 0 ? (
         <p>No concerts found.</p>
       ) : (
-        <div className="flex flex-col gap-8 w-full">
+        <div className="lineuppage-list ">
           {displayConcerts.map((concert) => (
             <LineupConcertCard
               key={concert.id}

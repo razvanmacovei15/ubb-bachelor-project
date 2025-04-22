@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  postgres-dev:
+    image: postgres:17
+    container_name: postgres-dev
+    environment:
+      POSTGRES_USER: dev_user
+      POSTGRES_PASSWORD: dev_pass
+      POSTGRES_DB: dev_db
+    ports:
+      - "55432:5432"
+    volumes:
+      - ~/Desktop/maco-codes/bachelor-project/project/ubb-bachelor-project/postgres/data/dev:/var/lib/postgresql/data
+
+  postgres-test:
+    image: postgres:17
+    container_name: postgres-test
+    environment:
+      POSTGRES_USER: test_user
+      POSTGRES_PASSWORD: test_pass
+      POSTGRES_DB: test_db
+    ports:
+      - "55433:5432"
+    volumes:
+      - ~/Desktop/maco-codes/bachelor-project/project/ubb-bachelor-project/postgres/data/test:/var/lib/postgresql/data
+
+  postgres-prod:
+    image: postgres:17
+    container_name: postgres-prod
+    environment:
+      POSTGRES_USER: prod_user
+      POSTGRES_PASSWORD: prod_pass
+      POSTGRES_DB: prod_db
+    ports:
+      - "55434:5432"
+    volumes:
+      - ~/Desktop/maco-codes/bachelor-project/project/ubb-bachelor-project/postgres/data/prod:/var/lib/postgresql/data
