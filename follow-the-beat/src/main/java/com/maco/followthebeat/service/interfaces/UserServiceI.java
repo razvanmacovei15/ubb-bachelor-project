@@ -1,11 +1,13 @@
 package com.maco.followthebeat.service.interfaces;
 
+import com.maco.followthebeat.entity.User;
+
 import java.util.UUID;
 
 public interface UserServiceI {
-    UUID createUser();
+    UUID createUser(User user);
     UUID createAnonymousUser();
     void deleteUser(UUID userId);
     void updateUser(UUID userId);
-    String getUser(UUID userId);
+    User getUser(UUID userId);
 }

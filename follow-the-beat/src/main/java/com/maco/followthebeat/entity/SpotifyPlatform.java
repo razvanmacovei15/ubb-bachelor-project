@@ -1,13 +1,17 @@
 package com.maco.followthebeat.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 import java.util.UUID;
 
 @Entity
 @Table(name = "spotify_clients")
-@Data
+@Getter
+@Setter
+@Builder
+@RequiredArgsConstructor
+@AllArgsConstructor
 public class SpotifyPlatform {
     @Id
     @GeneratedValue

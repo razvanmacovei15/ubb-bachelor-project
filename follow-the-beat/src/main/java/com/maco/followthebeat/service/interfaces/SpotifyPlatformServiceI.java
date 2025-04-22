@@ -1,10 +1,12 @@
 package com.maco.followthebeat.service.interfaces;
 
+import com.maco.followthebeat.entity.SpotifyPlatform;
+
 import java.util.UUID;
 
 public interface SpotifyPlatformServiceI {
-    void createSpotifyPlatform(UUID userId, String accessToken, String refreshToken, String tokenType, String scope, long expiresIn);
+    void createSpotifyPlatform(SpotifyPlatform spotifyPlatform);
     void deleteSpotifyPlatform(UUID userId);
-    void updateSpotifyPlatform(UUID userId, String accessToken, String refreshToken, String tokenType, String scope, long expiresIn);
+    void updateSpotifyPlatform(SpotifyPlatform spotifyPlatform);
     String getSpotifyPlatform(UUID userId);
 }

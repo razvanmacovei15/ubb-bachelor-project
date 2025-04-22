@@ -1,6 +1,8 @@
 import  { useState, useEffect } from 'react';
 import axios from 'axios';
 import './ProfilePage.css';
+import { v4 as uuidv4 } from 'uuid';
+
 
 const ProfilePage = () => {
     const [userData, setUserData] = useState<{ isSpotifyConnected: boolean } | null>(null);
@@ -9,7 +11,7 @@ const ProfilePage = () => {
 
     const checkSpotifyAuth = async () => {
         try {
-            const response = await axios.get('http://localhost:8080/api/spotify-test/top-tracks?limit=10');
+            const response = await axios.get('http://localhost:8080/spotify/top-tracks?limit=10');
             if (response.status === 200) {
                 setUserData({ isSpotifyConnected: true });
                 console.log(response.data)
@@ -29,9 +31,15 @@ const ProfilePage = () => {
         try {
             setLoading(true);
             setError(null);
+
+            const state = uuidv4();
             
             // Get the Spotify authorization URL from our backend
-            const response = await axios.get('http://localhost:8080/api/spotify-test/login-url');
+            const response = await axios.get('http://localhost:8080/spotify/auth-url', {
+                params: {
+                    state,
+                }
+            });
             const authUrl = response.data as string;
             
             // Open Spotify login in a popup window
@@ -64,6 +72,7 @@ const ProfilePage = () => {
         } catch (err) {
             setError('Failed to initiate Spotify login');
             setLoading(false);
+
         }
     };
 
