@@ -47,17 +47,16 @@ public class SpotifyController {
                 log.info("the user id is: {}", userId);
                 log.info("the state is: {}", state);
                 userId = userService.createAnonymousUser();
-//                stateCacheService.store(state, userId);
                 log.info("Created new anonymous user: {}", userId);
             } else {
                 log.info("Using existing user ID: {}", userId);
                 User user = userService.getUser(userId);
-                //load spotify related login credentials from DB
+                //todo load spotify related login credentials from DB
             }
 
             stateCacheService.store(state, userId);
 
-            String loginUrl = spotifyClient.getAuthUrlWithState(state);
+            String loginUrl = spotifyClient.getAuthUrlWithState(state) + "&userId=" + userId.toString();
             log.info("url: {}", loginUrl);
             return ResponseEntity.ok(loginUrl);
         } catch (Exception e) {
@@ -86,6 +85,8 @@ public class SpotifyController {
         }
 
         try {
+
+            //todo gotta make this work only on fresh spotify account/doesn't work on existing ones
             User user = userService.getUser(userId);
 
             spotifyClient.authenticateWithCode(code);
@@ -103,6 +104,7 @@ public class SpotifyController {
             return ResponseEntity.badRequest().body("Authentication failed: " + e.getMessage());
         }
     }
+
 
     @GetMapping("/top-tracks")
     public ResponseEntity<List<SpotifyTrack>> getTopTracks(

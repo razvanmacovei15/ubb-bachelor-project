@@ -33,21 +33,47 @@ const ProfilePage = () => {
             setError(null);
 
             const state = uuidv4();
-            
+            //todo if the user exists the state will be the user id so that we can find in the DB
+            // if the user does not exist in the localstorage -> new workflow
+            // Retrieve userId from local storage if it exists
+            let userId = localStorage.getItem('userId');
+
+            // Define the type for params
+            type ParamsType = {
+                state: string;
+                userId?: string; // userId is optional
+            };
+
+            // Prepare the request parameters
+            const params: ParamsType = {
+                state,
+            };
+
+            // Add userId to the params if it exists
+            if (userId) {
+                params.userId = userId;
+                params.state = userId;
+            }
+
             // Get the Spotify authorization URL from our backend
-            const response = await axios.get('http://localhost:8080/spotify/auth-url', {
-                params: {
-                    state,
-                }
-            });
+            const response = await axios.get('http://localhost:8080/spotify/auth-url', { params });
             const authUrl = response.data as string;
-            
+
+            // Extract userId from the URL if not already in local storage
+            if (!userId) {
+                const urlParams = new URLSearchParams(new URL(authUrl).search);
+                userId = urlParams.get('userId');
+                if (userId) {
+                    localStorage.setItem('userId', userId);
+                }
+            }
+
             // Open Spotify login in a popup window
             const width = 600;
             const height = 600;
             const left = window.screen.width / 2 - width / 2;
             const top = window.screen.height / 2 - height / 2;
-            
+
             const popup = window.open(
                 authUrl,
                 'Spotify Login',
@@ -58,12 +84,10 @@ const ProfilePage = () => {
             const checkPopupClosed = setInterval(() => {
                 if (popup?.closed) {
                     clearInterval(checkPopupClosed);
-                    // Check if authentication was successful
                     checkSpotifyAuth();
                 }
             }, 1000);
 
-            // Stop checking after 5 minutes
             setTimeout(() => {
                 clearInterval(checkPopupClosed);
                 setLoading(false);
@@ -72,7 +96,6 @@ const ProfilePage = () => {
         } catch (err) {
             setError('Failed to initiate Spotify login');
             setLoading(false);
-
         }
     };
 
