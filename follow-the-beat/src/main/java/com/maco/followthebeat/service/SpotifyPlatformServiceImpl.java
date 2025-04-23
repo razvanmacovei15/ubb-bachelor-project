@@ -4,15 +4,15 @@ import com.maco.followthebeat.entity.SpotifyPlatform;
 import com.maco.followthebeat.entity.User;
 import com.maco.followthebeat.mapper.TokenMapper;
 import com.maco.followthebeat.repo.SpotifyPlatformRepo;
-import com.maco.followthebeat.service.interfaces.SpotifyPlatformServiceI;
 import com.maco.spotify.api.client.SpotifyClient;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.UUID;
 @Service
 @AllArgsConstructor
-public class SpotifyPlatformService implements SpotifyPlatformServiceI {
+public class SpotifyPlatformServiceImpl implements com.maco.followthebeat.service.interfaces.SpotifyPlatformService {
     private final SpotifyPlatformRepo spotifyPlatformRepo;
     private final TokenMapper tokenMapper;
 
@@ -21,8 +21,10 @@ public class SpotifyPlatformService implements SpotifyPlatformServiceI {
         spotifyPlatformRepo.save(spotifyPlatform);
     }
 
-    public SpotifyPlatform createSpotifyPlatform(SpotifyClient spotifyClient, User user){
+    @Override
+    public SpotifyPlatform createSpotifyPlatform(SpotifyClient spotifyClient, User user) {
         return tokenMapper.toEntity(spotifyClient, user);
+
     }
 
     @Override
@@ -36,12 +38,12 @@ public class SpotifyPlatformService implements SpotifyPlatformServiceI {
     }
 
     @Override
-    public String getSpotifyPlatform(UUID userId) {
-        return "";
+    public Optional<SpotifyPlatform> getSpotifyPlatform(UUID userId) {
+        return null;
     }
 
     @Override
-    public SpotifyPlatform getSpotifyPlatformByUser(User user) {
+    public Optional<SpotifyPlatform> getSpotifyPlatformByUser(User user) {
         return spotifyPlatformRepo.getSpotifyPlatformByUser(user);
     }
 

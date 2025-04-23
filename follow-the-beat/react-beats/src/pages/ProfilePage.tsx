@@ -3,6 +3,12 @@ import axios from "axios";
 import "./ProfilePage.css";
 import { v4 as uuidv4 } from "uuid";
 
+
+type ParamsType = {
+  state: string;
+  userId?: string;
+};
+
 const ProfilePage = () => {
   const [userData, setUserData] = useState<{
     isSpotifyConnected: boolean;
@@ -13,7 +19,7 @@ const ProfilePage = () => {
   const checkSpotifyAuth = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:8080/spotify/top-tracks?limit=10"
+        "http://localhost:8080/spotify-artists/top-artists?limit=30&range=LAST_6_MONTHS"
       );
       if (response.status === 200) {
         setUserData({ isSpotifyConnected: true });
@@ -35,17 +41,8 @@ const ProfilePage = () => {
       setLoading(true);
       setError(null);
 
-      //todo if the user exists the state will be the user id so that we can find in the DB
-      // if the user does not exist in the localstorage -> new workflow
-      // Retrieve userId from local storage if it exists
       let userId: string | null = localStorage.getItem("userId");
       const state = userId || uuidv4();
-
-      // Define the type for params
-      type ParamsType = {
-        state: string;
-        userId?: string; // userId is optional
-      };
 
       // Prepare the request parameters
       const params: ParamsType = {
@@ -55,7 +52,7 @@ const ProfilePage = () => {
 
       // Get the Spotify authorization URL from our backend
       const response = await axios.get(
-        "http://localhost:8080/spotify/auth-url",
+        "http://localhost:8080/spotify-auth/auth-url",
         { params }
       );
       const authUrl = response.data as string;
@@ -81,16 +78,27 @@ const ProfilePage = () => {
         `width=${width},height=${height},left=${left},top=${top}`
       );
 
-      // Listen for the popup window to close
-      const checkPopupClosed = setInterval(() => {
-        if (popup?.closed) {
-          clearInterval(checkPopupClosed);
-          checkSpotifyAuth();
+      window.addEventListener("message", (event) => {
+        if (event.data?.userId) {
+          const newUserId = event.data.userId;
+          console.log("Final user ID:", newUserId);
+          localStorage.setItem("userId", newUserId);
         }
-      }, 1000);
+      });
 
+      setTimeout(()=> {
+        // Listen for the popup window to close
+        const checkPopupClosed = setInterval(() => {
+          if (popup?.closed) {
+            clearInterval(checkPopupClosed);
+            checkSpotifyAuth();
+          }
+        }, 1000);
+      }, 1000)
+
+      // Cleanup in case nothing happens for 5 minutes
       setTimeout(() => {
-        clearInterval(checkPopupClosed);
+        if (!popup?.closed) popup?.close();
         setLoading(false);
       }, 300000);
     } catch (err) {

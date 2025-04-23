@@ -5,8 +5,9 @@ import com.maco.followthebeat.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
 import java.util.UUID;
 @Repository
 public interface SpotifyPlatformRepo extends JpaRepository<SpotifyPlatform, UUID> {
-    SpotifyPlatform getSpotifyPlatformByUser(User user);
+    Optional<SpotifyPlatform> getSpotifyPlatformByUser(User user);
 }
