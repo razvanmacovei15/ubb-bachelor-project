@@ -181,15 +181,22 @@ const SpotifyProfile: React.FC = () => {
                 {currentView === "artists" && (
                   <div className="stats-section full-width">
                     <div className="artists-grid">
-                      {topArtists.map((artist, index) => (
-                        <div key={artist.id} className="artist-card">
-                          <img src={artist.images[0]?.url} alt={artist.name} />
-                          <div className="artist-info">
-                            <span className="rank">#{index + 1}</span>
-                            <h4>{artist.name}</h4>
+                      {topArtists.length === 0 ? (
+                          <div className="notfound">
+                            <p>Not enough listening data!</p>
                           </div>
-                        </div>
-                      ))}
+                      ) : (
+                          <>
+                            {topArtists.map((artist, index) => (
+                              <div key={artist.id} className="artist-card">
+                                <img src={artist.images[0]?.url} alt={artist.name} />
+                                <div className="artist-info">
+                                  <span className="rank">#{index + 1}</span>
+                                  <h4>{artist.name}</h4>
+                                </div>
+                              </div>
+                            ))}
+                          </>)}
                     </div>
                   </div>
                 )}
