@@ -25,6 +25,7 @@ public class SpotifyTrackController {
     @Autowired
     public SpotifyTrackController(SpotifyClient spotifyClient) {
         this.spotifyClient = spotifyClient;
+
     }
 
     @GetMapping("/top-tracks")
