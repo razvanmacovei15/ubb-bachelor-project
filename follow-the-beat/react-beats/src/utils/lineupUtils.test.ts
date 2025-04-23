@@ -1,5 +1,5 @@
 import { addToLineup, removeFromLineup, editConcert, sortLineup, filterLineup } from "./LineupUtils";
-import Concert from "../components/types/Concert";
+import Concert from "../types/Concert";
 
 const baseConcert: Concert = {
     id: 1,

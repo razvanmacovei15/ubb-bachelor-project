@@ -1,5 +1,5 @@
 import React from "react";
-import { useLineup } from "../components/contexts/LineupContext";
+import { useLineup } from "../contexts/LineupContext";
 import {
   PieChart,
   Pie,

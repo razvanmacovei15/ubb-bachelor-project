@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useConcertSortingFilteringContext } from "../contexts/ConcertSortingFiltering";
+import { useConcertSortingFilteringContext } from "../../contexts/ConcertSortingFiltering";
 import "./RightSidebar.css";
 
 const RightSidebar = () => {

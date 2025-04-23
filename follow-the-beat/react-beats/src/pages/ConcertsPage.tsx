@@ -1,11 +1,11 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useConcertContext } from "../components/contexts/ConcertContext";
-import { useLineup } from "../components/contexts/LineupContext";
+import { useConcertContext } from "../contexts/ConcertContext";
+import { useLineup } from "../contexts/LineupContext";
 import TopBar from "../components/top-bar/TopBar";
 import ConcertCard from "../components/concertspage/ConcertCard";
 import "./ConcertsPage.css";
 import Pagination from "../components/Pagination";
-import { useConcertSortingFilteringContext } from "../components/contexts/ConcertSortingFiltering";
+import { useConcertSortingFilteringContext } from "../contexts/ConcertSortingFiltering";
 import RightSidebar from "../components/sidebars/RightSidebar";
 
 const ConcertsPage: React.FC = () => {

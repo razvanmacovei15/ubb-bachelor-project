@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useConcertContext } from "../components/contexts/ConcertContext";
+import { useConcertContext } from "../contexts/ConcertContext";
 import "./HomePage.css";
 import TopBar from "../components/top-bar/TopBar";
 

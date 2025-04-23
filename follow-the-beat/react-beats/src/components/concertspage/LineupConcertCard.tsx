@@ -1,4 +1,4 @@
-import LineupConcert from "../types/LineupConcert";
+import LineupConcert from "../../types/LineupConcert";
 import "./LineupConcertCard.css";
 
 interface LineupConcertCardProps {

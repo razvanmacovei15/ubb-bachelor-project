@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useLineup } from "../components/contexts/LineupContext";
+import { useLineup } from "../contexts/LineupContext";
 
 let nextId = 1000;
 

@@ -7,7 +7,7 @@ import {
   editConcert as editFn,
   sortLineup,
   filterLineup,
-} from "../../utils/lineupUtils";
+} from "../utils/lineupUtils";
 
 interface LineupContextType {
   lineup: LineupConcert[];

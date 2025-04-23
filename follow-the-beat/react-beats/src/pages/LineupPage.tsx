@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useLineup } from "../components/contexts/LineupContext";
+import { useLineup } from "../contexts/LineupContext";
 import TopBar from "../components/top-bar/TopBar";
 import "./LineupPage.css";
 import LineupConcertCard from "../components/concertspage/LineupConcertCard";

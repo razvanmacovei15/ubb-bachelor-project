@@ -7,11 +7,11 @@ import App from "./App.tsx";
 import HomePage from "./pages/HomePage.tsx";
 import Profile from "./pages/ProfilePage.tsx";
 import Lineup from "./pages/LineupPage.tsx";
-import { ConcertProvider } from "./components/contexts/ConcertContext.tsx";
-import { LineupProvider } from "./components/contexts/LineupContext.tsx";
+import { ConcertProvider } from "./contexts/ConcertContext.tsx";
+import { LineupProvider } from "./contexts/LineupContext.tsx";
 import ConcertsPage from "./pages/ConcertsPage.tsx";
 import StatisticsPage from "./pages/StatisticsPage.tsx";
-import { ConcertSortingFilteringProvider } from "./components/contexts/ConcertSortingFiltering.tsx";
+import { ConcertSortingFilteringProvider } from "./contexts/ConcertSortingFiltering.tsx";
 
 const router = createBrowserRouter([
   {

@@ -1,5 +1,5 @@
-import Concert from "../components/types/Concert";
-import LineupConcert from "../components/types/LineupConcert";
+import Concert from "../types/Concert";
+import LineupConcert from "../types/LineupConcert";
 
 export const addToLineup = (lineup: LineupConcert[], concert: Concert): LineupConcert[] => {
     if (lineup.some(c => c.id === concert.id)) return lineup;
