@@ -29,29 +29,26 @@ const HomePage: React.FC = () => {
   };
 
   return (
-    <>
-      <div className="page-container">
-        <TopBar />
-        <div className="hero">
-          <h1>Find events near you</h1>
-          <h2>
-            Browse more than <span>5,000 events</span> near you
-          </h2>
-          <div className="search-container">
-            <input
-              type="text"
-              placeholder="Search..."
-              value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
-              disabled={isSearching}
-            />
-            <button onClick={handleSearch} disabled={isSearching}>
-              {isSearching ? "Searching..." : "Search"}
-            </button>
-          </div>
+    <div className="page-background">
+      <div className="hero content-container">
+        <h1>Find events near you</h1>
+        <h2>
+          Browse more than <span>5,000 events</span> near you
+        </h2>
+        <div className="search-container">
+          <input
+            type="text"
+            placeholder="Search..."
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            disabled={isSearching}
+          />
+          <button onClick={handleSearch} disabled={isSearching}>
+            {isSearching ? "Searching..." : "Search"}
+          </button>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

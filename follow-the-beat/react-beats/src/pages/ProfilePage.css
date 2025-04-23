@@ -1,7 +1,304 @@
+/* Animated Background */
+@keyframes gradientAnimation {
+    0% {
+        background-position: 0% 0%;
+    }
+    100% {
+        background-position: 100% 0%;
+    }
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: linear-gradient(
+        90deg,
+        #121212,
+        #1a1a1a,
+        #121212
+    );
+    background-size: 200% 100%;
+    animation: gradientAnimation 20s linear infinite;
+}
+
 .profile {
-    max-width: 800px;
+    padding: 20px;
+    width: 100%;
+    max-width: 1400px;
     margin: 0 auto;
-    padding: 2rem;
+    min-height: 100vh;
+    background: rgba(18, 18, 18, 0.7);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+.profile h1 {
+    color: #ffffff;
+    margin-bottom: 20px;
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.profile-content {
+    display: flex;
+    align-items: start;
+    justify-content: start;
+    gap: 20px;
+}
+
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.view-toggle {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.view-toggle button {
+    background-color: rgba(40, 40, 40, 0.8);
+    color: #ffffff;
+    border: none;
+    border-radius: 500px;
+    padding: 12px 24px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex: 1;
+    max-width: 200px;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+.view-toggle button:hover {
+    background-color: rgba(64, 64, 64, 0.8);
+    transform: scale(1.02);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.view-toggle button.active {
+    background-color: #1db954;
+    box-shadow: 0 4px 12px rgba(29, 185, 84, 0.3);
+}
+
+.view-toggle button.active:hover {
+    background-color: #1ed760;
+}
+
+.stats-container {
+    flex: 1;
+    min-height: 0;
+}
+
+.stats-section.full-width {
+    width: 100%;
+    height: 100%;
+}
+
+.artists-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    background: rgba(26, 26, 26, 0.9);
+    border-radius: 8px;
+    height: 100%;
+    overflow-y: auto;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.tracks-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 20px;
+    background: rgba(26, 26, 26, 0.9);
+    border-radius: 8px;
+    height: 100%;
+    overflow-y: auto;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.track-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(40, 40, 40, 0.8);
+    border-radius: 4px;
+    padding: 8px;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    width: 100%;
+}
+
+.track-item:hover {
+    background: rgba(64, 64, 64, 0.8);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.track-item .rank {
+    color: #b3b3b3;
+    font-size: 0.9rem;
+    min-width: 25px;
+    text-align: center;
+}
+
+.track-item img {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.track-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.track-info h4 {
+    color: #ffffff;
+    margin: 0;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.track-info p {
+    color: #b3b3b3;
+    margin: 4px 0 0;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.artist-card {
+    background: rgba(40, 40, 40, 0.8);
+    border-radius: 8px;
+    padding: 12px;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 300px;
+    position: relative;
+}
+
+.artist-card:hover {
+    background: rgba(64, 64, 64, 0.8);
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.artist-card img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-bottom: 8px;
+}
+
+.artist-info {
+    color: #ffffff;
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    right: 12px;
+}
+
+.artist-info .rank {
+    color: #b3b3b3;
+    font-size: 0.9rem;
+    margin-bottom: 4px;
+    display: block;
+}
+
+.artist-info h4 {
+    color: #ffffff;
+    margin: 0;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Custom Scrollbar */
+.artists-grid::-webkit-scrollbar,
+.tracks-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.artists-grid::-webkit-scrollbar-track,
+.tracks-list::-webkit-scrollbar-track {
+    background: rgba(40, 40, 40, 0.5);
+    border-radius: 3px;
+}
+
+.artists-grid::-webkit-scrollbar-thumb,
+.tracks-list::-webkit-scrollbar-thumb {
+    background: rgba(83, 83, 83, 0.8);
+    border-radius: 3px;
+}
+
+.artists-grid::-webkit-scrollbar-thumb:hover,
+.tracks-list::-webkit-scrollbar-thumb:hover {
+    background: rgba(102, 102, 102, 0.8);
+}
+
+.loading-spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    color: #ffffff;
+}
+
+.error-message {
+    color: #ff4d4d;
+    margin-top: 1rem;
+}
+
+@media (max-width: 1200px) {
+    .stats-container {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 768px) {
+    .profile {
+        padding: 15px;
+    }
+
+    .profile-content {
+        flex-direction: column;
+    }
+
+    .view-toggle {
+        flex-direction: row;
+    }
+
+    .view-toggle button {
+        max-width: none;
+    }
+
+    .artists-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
 }
 
 .spotify-section {
@@ -36,14 +333,105 @@
     cursor: not-allowed;
 }
 
-.loading-spinner {
+.profile-tabs {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 200px;
+    gap: 10px;
+    margin-bottom: 20px;
 }
 
-.error-message {
-    color: red;
-    margin-top: 1rem;
+.tab-button {
+    background-color: rgba(40, 40, 40, 0.8);
+    color: #ffffff;
+    border: none;
+    border-radius: 500px;
+    padding: 12px 24px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+.tab-button:hover {
+    background-color: rgba(64, 64, 64, 0.8);
+    transform: scale(1.02);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.tab-button.active {
+    background-color: #1db954;
+    box-shadow: 0 4px 12px rgba(29, 185, 84, 0.3);
+}
+
+.account-settings {
+    width: 100%;
+    padding: 0 30%;
+    background: rgba(26, 26, 26, 0.9);
+    border-radius: 8px;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.account-settings h2 {
+    color: #ffffff;
+    margin-bottom: 15px;
+    font-size: 2rem;
+}
+
+.settings-section {
+    margin-bottom: 30px;
+}
+
+.settings-section h3 {
+    color: #ffffff;
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    color: #b3b3b3;
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    background: rgba(40, 40, 40, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    color: #ffffff;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #1db954;
+    box-shadow: 0 0 0 2px rgba(29, 185, 84, 0.2);
+}
+
+.save-button {
+    background-color: #1db954;
+    color: white;
+    border: none;
+    border-radius: 500px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.save-button:hover {
+    background-color: #1ed760;
+    transform: scale(1.02);
+    box-shadow: 0 4px 12px rgba(29, 185, 84, 0.3);
 } 

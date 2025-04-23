@@ -40,36 +40,37 @@ const ConcertsPage: React.FC = () => {
   }, [itemsPerPage]);
 
   return (
-    <div className="concertpage-container">
-      <TopBar />
-      <div className="main-container">
+    <div className="page-background">
+      <h1>Upcoming Concerts in {concerts[0].location}</h1>
+      <div className="content-container">
         <div className="concerts-container">
           {concerts.length === 0 ? (
-            <h1>No concerts available. Please check back later.</h1>
+            <h2>No concerts available. Please check back later.</h2>
           ) : (
-            <h1>Concerts in {concerts[0].location}</h1>
+            <>
+              <div className="concert-grid">
+                {currentTableData.map((concert) => {
+                  const isInLineup = lineup.some((item) => item.id === concert.id);
+                  return (
+                    <ConcertCard
+                      key={concert.id}
+                      concert={concert}
+                      isInLineup={isInLineup}
+                      onAdd={() => addToLineup(concert)}
+                      onRemove={() => removeFromLineup(concert.id)}
+                    />
+                  );
+                })}
+              </div>
+              <Pagination
+                className="pagination-bar"
+                currentPage={currentPage}
+                totalCount={sortedConcerts.length}
+                pageSize={itemsPerPage}
+                onPageChange={(page) => setCurrentPage(page)}
+              />
+            </>
           )}
-          <div className="concert-grid">
-            {currentTableData.map((concert) => {
-              const isInLineup = lineup.some((item) => item.id === concert.id);
-              return (
-                <ConcertCard
-                  key={concert.id}
-                  concert={concert}
-                  isInLineup={isInLineup}
-                  onAdd={() => addToLineup(concert)}
-                  onRemove={() => removeFromLineup(concert.id)}
-                />
-              );
-            })}
-          </div>
-          <Pagination
-            className="pagination-bar"
-            currentPage={currentPage}
-            totalCount={sortedConcerts.length}
-            pageSize={itemsPerPage}
-            onPageChange={(page) => setCurrentPage(page)}
-          />
         </div>
         <RightSidebar />
       </div>

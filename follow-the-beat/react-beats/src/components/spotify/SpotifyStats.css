@@ -1,0 +1,181 @@
+.spotify-stats {
+    background-color: #1a1a1a;
+    border-radius: 8px;
+    padding: 20px;
+    height: 100%;
+}
+
+.spotify-stats h2 {
+    color: #ffffff;
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+}
+
+.stats-section {
+    height: calc(100% - 60px);
+    display: flex;
+    flex-direction: column;
+}
+
+.stats-section h3 {
+    color: #ffffff;
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+}
+
+.artists-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
+    overflow-y: auto;
+    flex: 1;
+    padding-right: 10px;
+}
+
+.artists-grid::-webkit-scrollbar {
+    width: 6px;
+}
+
+.artists-grid::-webkit-scrollbar-track {
+    background: #282828;
+    border-radius: 3px;
+}
+
+.artists-grid::-webkit-scrollbar-thumb {
+    background: #535353;
+    border-radius: 3px;
+}
+
+.artists-grid::-webkit-scrollbar-thumb:hover {
+    background: #666666;
+}
+
+.artist-card {
+    background-color: #282828;
+    border-radius: 8px;
+    padding: 12px;
+    transition: background-color 0.2s ease;
+}
+
+.artist-card:hover {
+    background-color: #404040;
+}
+
+.artist-card img {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-bottom: 8px;
+}
+
+.artist-info {
+    color: #ffffff;
+}
+
+.artist-info .rank {
+    color: #b3b3b3;
+    font-size: 0.9rem;
+    margin-bottom: 4px;
+    display: block;
+}
+
+.artist-info h4 {
+    margin: 0;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tracks-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow-y: auto;
+    flex: 1;
+    padding-right: 10px;
+}
+
+.tracks-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.tracks-list::-webkit-scrollbar-track {
+    background: #282828;
+    border-radius: 3px;
+}
+
+.tracks-list::-webkit-scrollbar-thumb {
+    background: #535353;
+    border-radius: 3px;
+}
+
+.tracks-list::-webkit-scrollbar-thumb:hover {
+    background: #666666;
+}
+
+.track-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background-color: #282828;
+    border-radius: 4px;
+    padding: 8px;
+    transition: background-color 0.2s ease;
+}
+
+.track-item:hover {
+    background-color: #404040;
+}
+
+.track-item .rank {
+    color: #b3b3b3;
+    font-size: 0.9rem;
+    min-width: 25px;
+}
+
+.track-item img {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.track-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.track-info h4 {
+    color: #ffffff;
+    margin: 0;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.track-info p {
+    color: #b3b3b3;
+    margin: 4px 0 0;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+@media (max-width: 768px) {
+    .artists-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    }
+
+    .track-item {
+        padding: 6px;
+    }
+
+    .track-item img {
+        width: 35px;
+        height: 35px;
+    }
+} 

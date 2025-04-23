@@ -46,29 +46,25 @@ const LineupPage: React.FC = () => {
   };
 
   return (
-    <div className="lineuppage-container">
-      <TopBar />
-      <h1 className="lineuppage-title">Your Lineup</h1>
-
-      {displayConcerts.length === 0 ? (
-        <p>No concerts found.</p>
-      ) : (
-        <div className="lineuppage-list ">
-          {displayConcerts.map((concert) => (
-            <LineupConcertCard
-              key={concert.id}
-              concert={concert}
-              getGradientClass={getGradientClass}
-              handleUpdate={function (id: number): void {
-                throw new Error("Function not implemented.");
-              }}
-              removeFromLineup={function (id: number): void {
-                throw new Error("Function not implemented.");
-              }}
-            />
-          ))}
-        </div>
-      )}
+    <div className="page-background">
+      <h1>Your Lineup</h1>
+      <div className="content-container">
+        {displayConcerts.length === 0 ? (
+          <p>No concerts found.</p>
+        ) : (
+          <div className="lineuppage-list">
+            {displayConcerts.map((concert) => (
+              <LineupConcertCard
+                key={concert.id}
+                concert={concert}
+                getGradientClass={getGradientClass}
+                handleUpdate={handleUpdate}
+                removeFromLineup={removeFromLineup}
+              />
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

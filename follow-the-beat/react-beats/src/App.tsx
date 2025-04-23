@@ -1,12 +1,14 @@
 import { Outlet } from "react-router-dom";
-import "./App.css";
-import "./index.css";
-import "../src/styles/global.css";
+import TopBar from "./components/top-bar/TopBar";
+import "./styles/global.css";
 
 function App() {
   return (
-    <div className="App">
-      <Outlet />
+    <div className="app">
+      <TopBar />
+      <main className="app-main-content">
+        <Outlet />
+      </main>
     </div>
   );
 }
