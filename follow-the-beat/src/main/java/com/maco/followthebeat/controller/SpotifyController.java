@@ -8,6 +8,7 @@ import com.maco.followthebeat.service.StateCacheService;
 import com.maco.followthebeat.service.UserService;
 import com.maco.spotify.api.client.SpotifyClient;
 import com.maco.spotify.api.model.SpotifyTrack;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -39,19 +40,28 @@ public class SpotifyController {
     }
 
     @GetMapping("/auth-url")
-    public ResponseEntity<String> getLoginUrl(@RequestParam String state, @RequestParam(required = false) UUID userId) {
+    public ResponseEntity<String> getLoginUrl(@RequestParam String state) {
         log.info("Generating Spotify login URL");
         try {
-            // Generate a unique state parameter for this user
-            if (userId == null) {
-                log.info("the user id is: {}", userId);
-                log.info("the state is: {}", state);
+            // Try to parse the state as UUID to check if it's an existing user ID
+            UUID userId = null;
+            try {
+                userId = UUID.fromString(state);
+                // If we got here, it's a valid UUID - check if user exists
+                try {
+                    User user = userService.getUser(userId);
+                    // Check if user already has Spotify connected
+                    SpotifyPlatform sp = spotifyPlatformService.getSpotifyPlatformByUser(user);
+                    if (sp != null) {
+                        return ResponseEntity.badRequest().body("User already has Spotify connected");
+                    }
+                } catch (EntityNotFoundException e) {
+                    // If user doesn't exist, create new anonymous user
+                    userId = userService.createAnonymousUser();
+                }
+            } catch (IllegalArgumentException e) {
+                // If state is not a valid UUID, treat as new user
                 userId = userService.createAnonymousUser();
-                log.info("Created new anonymous user: {}", userId);
-            } else {
-                log.info("Using existing user ID: {}", userId);
-                User user = userService.getUser(userId);
-                //todo load spotify related login credentials from DB
             }
 
             stateCacheService.store(state, userId);
@@ -70,37 +80,41 @@ public class SpotifyController {
             @RequestParam String code,
             @RequestParam String state,
             @RequestParam(required = false) String error) {
-        
-        log.info("Received Spotify callback with code: {}, state: {}, error: {}", code, state, error);
-
-        if (error != null) {
-            log.error("Spotify authorization error: {}", error);
-            return ResponseEntity.badRequest().body("Authorization failed: " + error);
-        }
-
-        UUID userId = stateCacheService.retrieve(state);
-
-        if(userId == null){
-            return ResponseEntity.badRequest().body("Invalid or expired state");
-        }
 
         try {
+            // Get the userId from state cache
+            UUID userId = stateCacheService.retrieve(state);
+            if (userId == null) {
+                return ResponseEntity.badRequest().body("Invalid or expired state");
+            }
 
-            //todo gotta make this work only on fresh spotify account/doesn't work on existing ones
-            User user = userService.getUser(userId);
-
+            // Authenticate with Spotify
             spotifyClient.authenticateWithCode(code);
 
-            SpotifyPlatform spotifyPlatform = tokenMapper.toEntity(this.spotifyClient, user);
+            // Get Spotify user ID
+            String spotifyUserId = spotifyClient.getUserDetails().getId();
 
-            spotifyPlatformService.createSpotifyPlatform(spotifyPlatform);
+            // Check if this Spotify account is already connected to another user
+            User existingUser = userService.getUserBySpotifyId(spotifyUserId);
+
+            if (existingUser != null) {
+                // If we have an anonymous user, merge it with the existing user
+                User currentUser = userService.getUser(userId);
+                if (currentUser.isAnonymous()) {
+                    userService.mergeAnonymousUser(currentUser, existingUser);
+                }
+                userId = existingUser.getId();
+            } else {
+                // Update the user with Spotify info
+                User user = userService.getUser(userId);
+                SpotifyPlatform newUserSpotifyPlatform = spotifyPlatformService.createSpotifyPlatform(this.spotifyClient, user);
+                user.setSpotifyPlatform(newUserSpotifyPlatform);
+                userService.updateUser(user.getId());
+            }
 
             stateCacheService.invalidate(state);
-
-            log.info("Successfully authenticated with Spotify");
             return ResponseEntity.ok("<script>window.close();</script>");
         } catch (Exception e) {
-            log.error("Authentication failed: {}", e.getMessage(), e);
             return ResponseEntity.badRequest().body("Authentication failed: " + e.getMessage());
         }
     }

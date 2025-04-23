@@ -43,4 +43,16 @@ public class UserService implements UserServiceI {
                 .orElseThrow(() -> new EntityNotFoundException("User not found: " + userId));
         return user;
     }
+
+    @Override
+    public User getUserBySpotifyId(String spotifyId) {
+        return userRepo.findBySpotifyUserId(spotifyId);
+    }
+
+    @Override
+    public User mergeAnonymousUser(User currentUser, User existingUser) {
+        return null;
+    }
+
+
 }

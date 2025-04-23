@@ -16,8 +16,8 @@ public class SpotifyPlatform {
     @Id
     @GeneratedValue
     private UUID id;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "id")
     private User user;
     @Column(name = "spotify_user_id", unique = true, nullable = false)
     private String spotifyUserId;

@@ -1,5 +1,6 @@
 package com.maco.followthebeat.entity;
 
+import com.maco.followthebeat.repo.SpotifyPlatformRepo;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -28,4 +29,6 @@ public class User {
     @Column(name = "updated_at")
     @UpdateTimestamp
     private Date updatedAt;
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private SpotifyPlatform spotifyPlatform;
 }
