@@ -15,7 +15,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SpotifyPlatform {
+public class SpotifyData {
     @Id
     @GeneratedValue
     private UUID id;

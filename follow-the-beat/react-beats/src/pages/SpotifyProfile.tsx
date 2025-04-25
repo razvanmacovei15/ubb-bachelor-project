@@ -5,10 +5,15 @@ import SpotifyConnection from '../components/spotify/SpotifyConnection';
 import FilterSidebar from '../components/spotify/FilterSidebar';
 import './ProfilePage.css';
 
-type ParamsType = {
+type AuthParamsType = {
   state: string;
-  userId?: string;
 };
+
+type FetchParamsType = {
+    userId: string;
+    limit: number;
+    range: string;
+}
 
 interface SpotifyArtist {
   id: string;
@@ -32,7 +37,8 @@ type ViewType = "artists" | "tracks";
 const SpotifyProfile: React.FC = () => {
   const [userData, setUserData] = useState<{
     isSpotifyConnected: boolean;
-  } | null>(null);
+    userId?: string;
+  }>({ isSpotifyConnected: false });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [timeRange, setTimeRange] = useState("LAST_6_MONTHS");
@@ -40,28 +46,59 @@ const SpotifyProfile: React.FC = () => {
   const [topTracks, setTopTracks] = useState<SpotifyTrack[]>([]);
   const [currentView, setCurrentView] = useState<ViewType>("artists");
 
-  const fetchSpotifyData = async () => {
+  const fetchSpotifyData = async (params: FetchParamsType) => {
+    if (!params.userId) {
+      setUserData({ ...userData, isSpotifyConnected: false });
+      setLoading(false);
+      return;
+    }
+
     try {
       const [artistsResponse, tracksResponse] = await Promise.all([
-        axios.get<SpotifyArtist[]>(`http://localhost:8080/spotify-artists/top-artists?limit=30&range=${timeRange}`),
-        axios.get<SpotifyTrack[]>(`http://localhost:8080/spotify-tracks/top-tracks?limit=50&range=${timeRange}`)
+        axios.get<SpotifyArtist[]>(`http://localhost:8080/spotify-artists/top-artists`, {
+          params: { userId: params.userId, limit: params.limit, range: params.range },
+        }),
+        axios.get<SpotifyTrack[]>(`http://localhost:8080/spotify-tracks/top-tracks`, {
+          params: { userId: params.userId, limit: params.limit, range: params.range },
+        }),
       ]);
 
       if (artistsResponse.status === 200 && tracksResponse.status === 200) {
         setTopArtists(artistsResponse.data);
         setTopTracks(tracksResponse.data);
-        setUserData({ isSpotifyConnected: true });
+        setUserData({ ...userData, isSpotifyConnected: true });
       }
     } catch (err) {
-      setUserData({ isSpotifyConnected: false });
+      setUserData({ ...userData, isSpotifyConnected: false });
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchSpotifyData();
-  }, [timeRange]);
+    const userId = localStorage.getItem("userId");
+    if (userId) {
+      setUserData({ isSpotifyConnected: true, userId });
+      fetchSpotifyData({
+        userId,
+        limit: 50,
+        range: timeRange
+      });
+    } else {
+      setUserData({ isSpotifyConnected: false });
+    }
+    setLoading(false);
+  }, []);
+
+  useEffect(() => {
+    if (userData?.userId) {
+      fetchSpotifyData({
+        userId: userData.userId,
+        limit: 50,
+        range: timeRange
+      });
+    }
+  }, [timeRange, userData?.userId]);
 
   const handleSpotifyLogin = async () => {
     try {
@@ -69,11 +106,13 @@ const SpotifyProfile: React.FC = () => {
       setError(null);
 
       let userId: string | null = localStorage.getItem("userId");
+      console.log("User ID from local storage:", userId);
       const state = userId || uuidv4();
 
-      const params: ParamsType = {
+      console.log("State:", state);
+
+      const params: AuthParamsType = {
         state,
-        ...(userId && { userId }),
       };
 
       const response = await axios.get(
@@ -85,6 +124,7 @@ const SpotifyProfile: React.FC = () => {
       if (!userId) {
         const urlParams = new URLSearchParams(new URL(authUrl).search);
         userId = urlParams.get("userId");
+        console.log("User ID from URL params:", userId);
         if (userId) {
           localStorage.setItem("userId", userId);
         }
@@ -112,7 +152,13 @@ const SpotifyProfile: React.FC = () => {
         const checkPopupClosed = setInterval(() => {
           if (popup?.closed) {
             clearInterval(checkPopupClosed);
-            fetchSpotifyData();
+            if (userData?.userId) {
+              fetchSpotifyData({
+                userId: userData.userId,
+                limit: 50,
+                range: timeRange
+              });
+            }
           }
         }, 1000);
       }, 1000);
@@ -163,20 +209,20 @@ const SpotifyProfile: React.FC = () => {
           {userData?.isSpotifyConnected && (
             <>
               <div className="view-toggle">
-                <button 
+                <button
                   className={currentView === "artists" ? "active" : ""}
                   onClick={() => handleViewChange("artists")}
                 >
                   Top Artists
                 </button>
-                <button 
+                <button
                   className={currentView === "tracks" ? "active" : ""}
                   onClick={() => handleViewChange("tracks")}
                 >
                   Top Tracks
                 </button>
               </div>
-              
+
               <div className="stats-container">
                 {currentView === "artists" && (
                   <div className="stats-section full-width">
