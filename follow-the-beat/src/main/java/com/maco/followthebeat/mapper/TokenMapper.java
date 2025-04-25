@@ -1,6 +1,6 @@
 package com.maco.followthebeat.mapper;
 
-import com.maco.followthebeat.entity.SpotifyPlatform;
+import com.maco.followthebeat.entity.SpotifyUserData;
 import com.maco.followthebeat.entity.User;
 import com.maco.spotify.api.client.SpotifyClient;
 import com.maco.spotify.api.model.SpotifyUser;
@@ -8,11 +8,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class TokenMapper {
-    public SpotifyPlatform toEntity(SpotifyClient client, User user){
+    public SpotifyUserData toEntity(SpotifyClient client, User user){
 
         SpotifyUser userDetails = client.getUserDetails();
 
-        return SpotifyPlatform.builder()
+        return SpotifyUserData.builder()
                 .user(user)
                 .spotifyUserId(userDetails.getId())
                 .accessToken(client.getTokenManager().getCurrentToken().getAccessToken())

@@ -35,7 +35,7 @@ public class S3Service {
                 .method(Method.GET)
                 .bucket(minioProperties.getBucketName())
                 .object(objectKey)
-                .expiry(minioProperties.getPresignedUrlExpiration(), TimeUnit.MINUTES)
+                .expiry(minioProperties.getPreSignedUrlExpiration(), TimeUnit.MINUTES)
                 .build()
         );
     }

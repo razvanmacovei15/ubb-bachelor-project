@@ -1,4 +1,4 @@
-package com.maco.followthebeat.service;
+package com.maco.followthebeat.service.cache;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import org.springframework.beans.factory.annotation.Autowired;

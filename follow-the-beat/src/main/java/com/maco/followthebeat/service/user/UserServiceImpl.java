@@ -1,4 +1,4 @@
-package com.maco.followthebeat.service;
+package com.maco.followthebeat.service.user;
 
 import com.maco.followthebeat.dto.CreateUserRequest;
 import com.maco.followthebeat.entity.User;
@@ -6,12 +6,13 @@ import com.maco.followthebeat.repo.UserRepo;
 import com.maco.followthebeat.service.interfaces.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 import java.util.UUID;
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -71,6 +72,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void mergeAnonymousUser(User currentUser, User existingUser) {
+        log.info("Merging anonymous user {} with existing user {}", currentUser.getId(), existingUser.getId());
+        if(currentUser == existingUser){
+            log.warn("Cannot merge user with itself");
+            return;
+        }
+        log.debug("Deleting anonymous user {}", currentUser.getId());
         userRepo.delete(currentUser);
     }
 

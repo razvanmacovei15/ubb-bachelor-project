@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @Repository
 public interface UserRepo extends JpaRepository<User, UUID> {
-    @Query("SELECT u FROM User u JOIN u.spotifyPlatform sp WHERE sp.spotifyUserId = :spotifyUserId")
+    @Query("SELECT u FROM User u JOIN u.spotifyUserData sp WHERE sp.spotifyUserId = :spotifyUserId")
     Optional<User> findBySpotifyUserId(@Param("spotifyUserId") String spotifyUserId);
     boolean existsById(UUID id);
     boolean existsByEmail(String email);

@@ -1,5 +1,6 @@
 package com.maco.followthebeat.config;
 
+import com.maco.followthebeat.spotify.client.SpotifyClientFactory;
 import com.maco.spotify.api.client.SpotifyClient;
 import com.maco.spotify.api.config.SpotifyConfig;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,14 +23,7 @@ public class SpotifyClientConfig {
     private String scopes;
 
     @Bean
-    public SpotifyClient spotifyClient() {
-        SpotifyConfig config = new SpotifyConfig.Builder()
-                .withClientId(clientId)
-                .withClientSecret(clientSecret)
-                .withRedirectUri(redirectUri)
-                .withScopes(scopes.split(","))
-                .build();
-        
-        return new SpotifyClient(config);
+    public SpotifyClientFactory spotifyClientFactory() {
+        return new SpotifyClientFactory(clientId, clientSecret, redirectUri, scopes);
     }
 } 

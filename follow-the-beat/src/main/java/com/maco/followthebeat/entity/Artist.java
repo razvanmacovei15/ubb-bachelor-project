@@ -20,7 +20,7 @@ public class Artist {
     private String name;
 
     @Column
-    private String imageKey;  // S3 object key instead of URL
+    private String imageKey;
 
     @ElementCollection
     @CollectionTable(name = "artist_genres", joinColumns = @JoinColumn(name = "artist_id"))

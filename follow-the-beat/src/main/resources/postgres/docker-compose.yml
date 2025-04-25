@@ -11,7 +11,7 @@ services:
     ports:
       - "55432:5432"
     volumes:
-      - ~/Desktop/maco-codes/bachelor-project/project/ubb-bachelor-project/postgres/data/dev:/var/lib/postgresql/data
+      - ~/Desktop/maco-codes/bachelor-project/ubb-bachelor-project/postgres/data/dev:/var/lib/postgresql/data
 
   postgres-test:
     image: postgres:17
@@ -23,7 +23,7 @@ services:
     ports:
       - "55433:5432"
     volumes:
-      - ~/Desktop/maco-codes/bachelor-project/project/ubb-bachelor-project/postgres/data/test:/var/lib/postgresql/data
+      - ~/Desktop/maco-codes/bachelor-project/ubb-bachelor-project/postgres/data/test:/var/lib/postgresql/data
 
   postgres-prod:
     image: postgres:17
@@ -35,4 +35,4 @@ services:
     ports:
       - "55434:5432"
     volumes:
-      - ~/Desktop/maco-codes/bachelor-project/project/ubb-bachelor-project/postgres/data/prod:/var/lib/postgresql/data
+      - ~/Desktop/maco-codes/bachelor-project/ubb-bachelor-project/postgres/data/prod:/var/lib/postgresql/data

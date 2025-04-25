@@ -9,13 +9,13 @@ import java.time.Instant;
 import java.util.UUID;
 
 @Entity
-@Table(name = "spotify_clients")
+@Table(name = "spotify_user_data")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SpotifyData {
+public class SpotifyUserData {
     @Id
     @GeneratedValue
     private UUID id;
