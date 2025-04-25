@@ -14,4 +14,7 @@ public class CreateUserRequest {
 
     @NotBlank(message = "Password is required")
     private String password;
+
+    @NotBlank(message = "Password confirmation is required")
+    private String passwordConfirmation;
 }
