@@ -92,7 +92,4 @@ public class SpotifyAuthController {
             return ResponseEntity.badRequest().body("Authentication failed: " + e.getMessage());
         }
     }
-
-
-
 } 
