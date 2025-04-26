@@ -1,15 +1,15 @@
 package com.maco.followthebeat.spotify.service;
 
+import com.maco.client.v2.SpotifyClientI;
 import com.maco.followthebeat.entity.SpotifyUserData;
 import com.maco.followthebeat.entity.User;
-import com.maco.spotify.api.client.SpotifyClient;
 
 import java.util.Optional;
 import java.util.UUID;
 
-public interface SpotifyDataService {
+public interface SpotifyUserDataService {
     void createSpotifyData(SpotifyUserData spotifyUserData);
-    SpotifyUserData createSpotifyData(SpotifyClient spotifyClient, User user);
+    SpotifyUserData createSpotifyData(SpotifyClientI spotifyClient, User user);
     void deleteSpotifyData(UUID userId);
     void updateSpotifyData(SpotifyUserData spotifyUserData);
     Optional<SpotifyUserData> getSpotifyData(UUID userId);

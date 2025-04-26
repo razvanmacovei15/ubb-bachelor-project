@@ -1,11 +1,11 @@
 package com.maco.followthebeat.spotify.service;
 
+import com.maco.client.v2.SpotifyClientI;
 import com.maco.followthebeat.entity.SpotifyUserData;
 import com.maco.followthebeat.entity.User;
 import com.maco.followthebeat.mapper.TokenMapper;
 import com.maco.followthebeat.spotify.client.SpotifyClientFactory;
 import com.maco.followthebeat.spotify.repository.SpotifyDataRepo;
-import com.maco.spotify.api.client.SpotifyClient;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +13,7 @@ import java.util.Optional;
 import java.util.UUID;
 @Service
 @AllArgsConstructor
-public class SpotifyDataServiceImpl implements SpotifyDataService {
+public class SpotifyUserDataServiceImpl implements SpotifyUserDataService {
     private final SpotifyDataRepo spotifyDataRepo;
     private final TokenMapper tokenMapper;
     private final SpotifyClientFactory spotifyClientFactory;
@@ -24,9 +24,8 @@ public class SpotifyDataServiceImpl implements SpotifyDataService {
     }
 
     @Override
-    public SpotifyUserData createSpotifyData(SpotifyClient spotifyClient, User user) {
+    public SpotifyUserData createSpotifyData(SpotifyClientI spotifyClient, User user) {
         return tokenMapper.toEntity(spotifyClient, user);
-
     }
 
     @Override

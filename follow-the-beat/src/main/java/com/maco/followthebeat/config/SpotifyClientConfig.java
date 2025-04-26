@@ -1,8 +1,6 @@
 package com.maco.followthebeat.config;
 
 import com.maco.followthebeat.spotify.client.SpotifyClientFactory;
-import com.maco.spotify.api.client.SpotifyClient;
-import com.maco.spotify.api.config.SpotifyConfig;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

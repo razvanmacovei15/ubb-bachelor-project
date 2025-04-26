@@ -1,9 +1,9 @@
 package com.maco.followthebeat.spotify.client;
 
-import com.maco.spotify.api.client.SpotifyClient;
-import com.maco.spotify.api.config.SpotifyConfig;
+import com.maco.client.v2.SpotifyClientI;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -26,17 +26,8 @@ public class SpotifyClientFactory {
         this.scopes = scopes.split(",");
     }
     @Bean
-    public SpotifyClient createSpotifyClient() {
-        log.info("Creating Spotify client with clientId: {}", clientId);
-        SpotifyConfig config = new SpotifyConfig.Builder()
-                .withClientId(clientId)
-                .withClientSecret(clientSecret)
-                .withRedirectUri(redirectUri)
-                .withScopes(scopes)
-                .build();
-
-        return new SpotifyClient(config);
+    @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+    public SpotifyClientI createSpotifyClient() {
+        return new SpotifyClientI(clientId, clientSecret, redirectUri, scopes);
     }
-
-
 }

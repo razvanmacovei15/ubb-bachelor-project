@@ -1,25 +1,25 @@
 package com.maco.followthebeat.mapper;
 
+import com.maco.client.v2.SpotifyClientI;
+import com.maco.client.v2.model.SpotifyUser;
 import com.maco.followthebeat.entity.SpotifyUserData;
 import com.maco.followthebeat.entity.User;
-import com.maco.spotify.api.client.SpotifyClient;
-import com.maco.spotify.api.model.SpotifyUser;
 import org.springframework.stereotype.Component;
 
 @Component
 public class TokenMapper {
-    public SpotifyUserData toEntity(SpotifyClient client, User user){
+    public SpotifyUserData toEntity(SpotifyClientI client, User user){
 
-        SpotifyUser userDetails = client.getUserDetails();
+        SpotifyUser userDetails = client.getCurrentUserDetails();
 
         return SpotifyUserData.builder()
                 .user(user)
                 .spotifyUserId(userDetails.getId())
-                .accessToken(client.getTokenManager().getCurrentToken().getAccessToken())
-                .expiresIn(client.getTokenManager().getCurrentToken().getExpiresIn())
-                .refreshToken(client.getTokenManager().getCurrentToken().getRefreshToken())
-                .tokenType(client.getTokenManager().getCurrentToken().getTokenType())
-                .scope(client.getTokenManager().getCurrentToken().getScope())
+                .accessToken(client.getAccessToken().getAccessToken())
+                .expiresIn(client.getAccessToken().getExpiresIn())
+                .refreshToken(client.getAccessToken().getRefreshToken())
+                .tokenType(client.getAccessToken().getTokenType())
+                .scope(client.getAccessToken().getScope())
                 .build();
     }
 }

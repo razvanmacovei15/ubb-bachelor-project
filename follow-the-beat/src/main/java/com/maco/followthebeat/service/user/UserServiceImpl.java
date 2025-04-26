@@ -1,9 +1,11 @@
 package com.maco.followthebeat.service.user;
 
+import com.maco.client.v2.SpotifyClientI;
 import com.maco.followthebeat.dto.CreateUserRequest;
 import com.maco.followthebeat.entity.User;
 import com.maco.followthebeat.repo.UserRepo;
 import com.maco.followthebeat.service.interfaces.UserService;
+import com.maco.followthebeat.spotify.client.SpotifyClientManager;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -72,17 +74,27 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void mergeAnonymousUser(User currentUser, User existingUser) {
-        log.info("Merging anonymous user {} with existing user {}", currentUser.getId(), existingUser.getId());
         if(currentUser == existingUser){
-            log.warn("Cannot merge user with itself");
             return;
         }
-        log.debug("Deleting anonymous user {}", currentUser.getId());
         userRepo.delete(currentUser);
     }
 
     @Override
-    public boolean existsById(UUID userId) {
-        return userRepo.existsById(userId);
+    public boolean hasConnectedSpotifyAccount(UUID userId) {
+        return userRepo.hasSpotifyConnected(userId);
+    }
+
+    @Override
+    public boolean validateUserAndSpotifyAuth(UUID userId, SpotifyClientManager clientManager) {
+        // Check if user exists
+        Optional<User> userOptional = findUserById(userId);
+        if (userOptional.isEmpty()) {
+            return false;
+        }
+
+        // Check Spotify authentication
+        SpotifyClientI client = clientManager.getOrCreateSpotifyClient(userId);
+        return client.isAuthenticated();
     }
 }

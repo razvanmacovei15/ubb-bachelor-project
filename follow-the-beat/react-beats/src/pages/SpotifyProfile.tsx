@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
-import SpotifyConnection from '../components/spotify/SpotifyConnection';
-import FilterSidebar from '../components/spotify/FilterSidebar';
-import './ProfilePage.css';
+import SpotifyConnection from "../components/spotify/SpotifyConnection";
+import FilterSidebar from "../components/spotify/FilterSidebar";
+import "./ProfilePage.css";
 
 type AuthParamsType = {
   state: string;
 };
 
 type FetchParamsType = {
-    userId: string;
-    limit: number;
-    range: string;
-}
+  userId: string;
+  limit: number;
+  range: string;
+};
 
 interface SpotifyArtist {
   id: string;
@@ -41,7 +41,7 @@ const SpotifyProfile: React.FC = () => {
   }>({ isSpotifyConnected: false });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [timeRange, setTimeRange] = useState("LAST_6_MONTHS");
+  const [timeRange, setTimeRange] = useState("medium_term");
   const [topArtists, setTopArtists] = useState<SpotifyArtist[]>([]);
   const [topTracks, setTopTracks] = useState<SpotifyTrack[]>([]);
   const [currentView, setCurrentView] = useState<ViewType>("artists");
@@ -52,15 +52,30 @@ const SpotifyProfile: React.FC = () => {
       setLoading(false);
       return;
     }
+    setLoading(true);
 
     try {
       const [artistsResponse, tracksResponse] = await Promise.all([
-        axios.get<SpotifyArtist[]>(`http://localhost:8080/spotify-artists/top-artists`, {
-          params: { userId: params.userId, limit: params.limit, range: params.range },
-        }),
-        axios.get<SpotifyTrack[]>(`http://localhost:8080/spotify-tracks/top-tracks`, {
-          params: { userId: params.userId, limit: params.limit, range: params.range },
-        }),
+        axios.get<SpotifyArtist[]>(
+          `http://localhost:8080/spotify-artists/top-artists`,
+          {
+            params: {
+              userId: params.userId,
+              limit: params.limit,
+              range: params.range,
+            },
+          }
+        ),
+        axios.get<SpotifyTrack[]>(
+          `http://localhost:8080/spotify-tracks/top-tracks`,
+          {
+            params: {
+              userId: params.userId,
+              limit: params.limit,
+              range: params.range,
+            },
+          }
+        ),
       ]);
 
       if (artistsResponse.status === 200 && tracksResponse.status === 200) {
@@ -82,23 +97,13 @@ const SpotifyProfile: React.FC = () => {
       fetchSpotifyData({
         userId,
         limit: 50,
-        range: timeRange
+        range: timeRange,
       });
     } else {
       setUserData({ isSpotifyConnected: false });
+      setLoading(false);
     }
-    setLoading(false);
-  }, []);
-
-  useEffect(() => {
-    if (userData?.userId) {
-      fetchSpotifyData({
-        userId: userData.userId,
-        limit: 50,
-        range: timeRange
-      });
-    }
-  }, [timeRange, userData?.userId]);
+  }, [timeRange]);
 
   const handleSpotifyLogin = async () => {
     try {
@@ -156,7 +161,7 @@ const SpotifyProfile: React.FC = () => {
               fetchSpotifyData({
                 userId: userData.userId,
                 limit: 50,
-                range: timeRange
+                range: timeRange,
               });
             }
           }
@@ -223,61 +228,89 @@ const SpotifyProfile: React.FC = () => {
                 </button>
               </div>
 
-              <div className="stats-container">
-                {currentView === "artists" && (
-                  <div className="stats-section full-width">
-                    <div className="artists-grid">
-                      {topArtists.length === 0 ? (
-                          <div className="notfound">
-                            <p>Not enough listening data!</p>
-                          </div>
-                      ) : (
-                          <>
-                            {topArtists.map((artist, index) => (
-                              <div key={artist.id} className="artist-card">
-                                <img src={artist.images[0]?.url} alt={artist.name} />
-                                <div className="artist-info">
-                                  <span className="rank">#{index + 1}</span>
-                                  <h4>{artist.name}</h4>
-                                </div>
-                              </div>
-                            ))}
-                          </>)}
+              <div className="content-wrapper">
+                <div className="stats-container">
+                  {loading ? (
+                    <div className="loading-indicator">
+                      <div className="spinner"></div>
+                      <p>Loading your Spotify stats...</p>
                     </div>
-                  </div>
-                )}
-
-                {currentView === "tracks" && (
-                  <div className="stats-section full-width">
-                    <div className="tracks-list">
-                      {topTracks.map((track, index) => (
-                        <div key={track.id} className="track-item">
-                          <span className="rank">#{index + 1}</span>
-                          <img src={track.album.images[0]?.url} alt={track.name} />
-                          <div className="track-info">
-                            <h4>{track.name}</h4>
-                            <p>{track.artists.map(a => a.name).join(', ')}</p>
+                  ) : (
+                    <>
+                      {currentView === "artists" && (
+                        <div className="stats-section full-width">
+                          <div className="artists-grid">
+                            {topArtists.length === 0 ? (
+                              <div className="notfound">
+                                <p>Not enough listening data!</p>
+                              </div>
+                            ) : (
+                              <>
+                                {topArtists.map((artist, index) => (
+                                  <div key={artist.id} className="artist-card">
+                                    <img
+                                      src={artist.images[0]?.url}
+                                      alt={artist.name}
+                                    />
+                                    <div className="artist-info">
+                                      <span className="rank">#{index + 1}</span>
+                                      <h4>{artist.name}</h4>
+                                    </div>
+                                  </div>
+                                ))}
+                              </>
+                            )}
                           </div>
                         </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
+                      )}
+
+                      {currentView === "tracks" && (
+                        <div className="stats-section full-width">
+                          <div className="tracks-list">
+                            {topTracks.length === 0 ? (
+                              <div className="notfound">
+                                <p>Not enough listening data!</p>
+                              </div>
+                            ) : (
+                              <>
+                                {topTracks.map((track, index) => (
+                                  <div key={track.id} className="track-item">
+                                    <span className="rank">#{index + 1}</span>
+                                    <img
+                                      src={track.album.images[0]?.url}
+                                      alt={track.name}
+                                    />
+                                    <div className="track-info">
+                                      <h4>{track.name}</h4>
+                                      <p>
+                                        {track.artists
+                                          .map((a) => a.name)
+                                          .join(", ")}
+                                      </p>
+                                    </div>
+                                  </div>
+                                ))}
+                              </>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </>
+                  )}
+                </div>
+
+                <FilterSidebar
+                  timeRange={timeRange}
+                  onTimeRangeChange={handleTimeRangeChange}
+                  onSortChange={handleSortChange}
+                />
               </div>
             </>
           )}
         </div>
-
-        {userData?.isSpotifyConnected && (
-          <FilterSidebar
-            timeRange={timeRange}
-            onTimeRangeChange={handleTimeRangeChange}
-            onSortChange={handleSortChange}
-          />
-        )}
       </div>
     </div>
   );
 };
 
-export default SpotifyProfile; 
+export default SpotifyProfile;

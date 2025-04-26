@@ -89,12 +89,8 @@
             <version>8.5.12</version>
         </dependency>
     </dependencies>
-    <repositories>
-        <repository>
-            <id>github</id>
-            <url>https://maven.pkg.github.com/razvanmacovei15/maco-spotify-api</url>
-        </repository>
-    </repositories>
+
+
 
     <build>
         <plugins>

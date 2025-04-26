@@ -30,7 +30,4 @@ public class Artist {
     @OneToOne(mappedBy = "artist", cascade = CascadeType.ALL, orphanRemoval = true)
     private SpotifyArtistData spotifyData;
 
-    // Future platform data can be added here
-    // @OneToOne(mappedBy = "artist", cascade = CascadeType.ALL, orphanRemoval = true)
-    // private YouTubeArtistData youtubeData;
 } 

@@ -13,7 +13,13 @@ import java.util.UUID;
 public interface UserRepo extends JpaRepository<User, UUID> {
     @Query("SELECT u FROM User u JOIN u.spotifyUserData sp WHERE sp.spotifyUserId = :spotifyUserId")
     Optional<User> findBySpotifyUserId(@Param("spotifyUserId") String spotifyUserId);
-    boolean existsById(UUID id);
+    @Query("""
+    SELECT CASE WHEN u.spotifyUserData IS NOT NULL THEN true ELSE false END
+    FROM User u
+    WHERE u.id = :userId
+""")
+    boolean hasSpotifyConnected(UUID userId);
+    boolean existsById(UUID userId);
     boolean existsByEmail(String email);
     boolean existsByUsername(String username);
 }

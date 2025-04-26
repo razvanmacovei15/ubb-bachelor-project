@@ -9,7 +9,7 @@ import java.util.UUID;
 public class ArtistDto {
     private UUID id;
     private String name;
-    private String imageKey;  // S3 object key
-    private String imageUrl;  // Presigned URL (generated at runtime)
+    private String imageKey;
+    private String imageUrl;
     private List<String> genres;
 } 

@@ -26,7 +26,6 @@
 }
 
 .connected-status p::before {
-    content: "✓";
     color: #1db954;
     font-weight: bold;
 }

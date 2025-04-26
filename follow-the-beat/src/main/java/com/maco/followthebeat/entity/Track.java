@@ -40,9 +40,4 @@ public class Track {
     @OneToOne(mappedBy = "track", cascade = CascadeType.ALL, orphanRemoval = true)
     private SpotifyTrackData spotifyData;
 
-    // Future platform data can be added here
-    // @OneToOne(mappedBy = "track", cascade = CascadeType.ALL, orphanRemoval = true)
-    // private YouTubeTrackData youtubeData;
-    // @OneToOne(mappedBy = "track", cascade = CascadeType.ALL, orphanRemoval = true)
-    // private AppleMusicTrackData appleMusicData;
 }
