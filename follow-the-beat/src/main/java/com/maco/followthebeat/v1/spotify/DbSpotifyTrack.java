@@ -1,32 +1,35 @@
-package com.maco.followthebeat.entity.spotify.interfaces;
+package com.maco.followthebeat.v1.spotify;
 
-import com.maco.followthebeat.v2.user.entity.User;
-import com.maco.followthebeat.entity.spotify.DbSpotifyTrack;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
-@MappedSuperclass
+@Entity
+@Table(name = "spotify_track")
 @Data
-public abstract class BaseUserTopTrack {
+public class DbSpotifyTrack {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
-    @ManyToOne
-    @JoinColumn(name = "track_id", nullable = false)
-    private DbSpotifyTrack track;
+    @Column(name = "spotify_id", unique = true, nullable = false)
+    private String spotifyId;
 
     @Column(nullable = false)
-    private Integer rank;
+    private String name;
+
+    @Column(name = "duration_ms")
+    private Integer durationMs;
+
+    private Integer popularity;
+
+    @Column(name = "preview_url")
+    private String previewUrl;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -35,4 +38,7 @@ public abstract class BaseUserTopTrack {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private Instant updatedAt;
+
+    @OneToMany(mappedBy = "track")
+    private List<TrackArtist> artists;
 }

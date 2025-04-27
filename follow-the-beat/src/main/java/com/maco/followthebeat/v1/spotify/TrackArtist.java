@@ -1,4 +1,4 @@
-package com.maco.followthebeat.entity.spotify;
+package com.maco.followthebeat.v1.spotify;
 
 import com.maco.followthebeat.v2.spotify.artists.entity.DbSpotifyArtist;
 import jakarta.persistence.*;

@@ -1,8 +1,6 @@
-package com.maco.followthebeat.service.spotify;
+package com.maco.followthebeat.v1.spotify;
 
-import com.maco.followthebeat.entity.spotify.DbSpotifyTrack;
-import com.maco.followthebeat.repo.spotify.DbSpotifyTrackRepository;
-import com.maco.followthebeat.service.spotify.interfaces.SpotifyTrackService;
+import com.maco.followthebeat.v1.spotify.interfaces.SpotifyTrackService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

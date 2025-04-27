@@ -1,6 +1,7 @@
-package com.maco.followthebeat.service.spotify.interfaces;
+package com.maco.followthebeat.v1.spotify.interfaces;
 
-import com.maco.followthebeat.entity.spotify.DbSpotifyTrack;
+import com.maco.followthebeat.v1.spotify.DbSpotifyTrack;
+
 import java.util.List;
 import java.util.Optional;
 

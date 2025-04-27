@@ -1,8 +1,8 @@
-package com.maco.followthebeat.controller;
+package com.maco.followthebeat.v1.controller;
 
 import com.maco.followthebeat.v2.user.entity.User;
 import com.maco.followthebeat.v2.user.service.interfaces.UserService;
-import com.maco.followthebeat.service.spotify.interfaces.SpotifyTrackStatsService;
+import com.maco.followthebeat.v1.spotify.interfaces.SpotifyTrackStatsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

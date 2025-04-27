@@ -1,7 +1,7 @@
-package com.maco.followthebeat.controller;
+package com.maco.followthebeat.v1.controller;
 
 import com.maco.followthebeat.v2.common.enums.SpotifyTimeRange;
-import com.maco.followthebeat.spotify.api.service.tracks.SpotifyTracksService;
+import com.maco.followthebeat.v1.tracks.SpotifyTracksService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

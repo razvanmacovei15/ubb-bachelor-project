@@ -71,6 +71,7 @@ public class SpotifyArtistStatsServiceImpl implements SpotifyArtistStatsService 
     @Override
     @Transactional
     public List<SpotifyArtistDto> fetchAndSaveInitialStats(User user, SpotifyTimeRange timeRange) {
+        //todo can be done better by first fetching the api returning it to the frontend and then saving it to the db
         List<SpotifyArtistDto> shortTermArtists = spotifyApiArtistsService.fetchTopArtists(
                 user.getId(), SpotifyTimeRange.SHORT_TERM, 50, 0
         );

@@ -56,7 +56,9 @@ public abstract class AbstractArtistSaveStrategy<T extends BaseUserTopArtist> im
                     0
             );
         }
-        saveArtists(user, artists);
+        if (artists != null) {
+            saveArtists(user, artists);
+        }
     }
 
     private void saveArtists(User user, List<SpotifyArtistDto> artists) {

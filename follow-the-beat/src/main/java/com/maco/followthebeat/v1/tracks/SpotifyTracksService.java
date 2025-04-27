@@ -1,4 +1,4 @@
-package com.maco.followthebeat.spotify.api.service.tracks;
+package com.maco.followthebeat.v1.tracks;
 
 import com.maco.client.v2.SpotifyClientI;
 import com.maco.client.v2.model.SpotifyTrack;
