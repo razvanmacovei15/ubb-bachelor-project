@@ -5,14 +5,12 @@ import com.maco.followthebeat.entity.User;
 import com.maco.followthebeat.service.interfaces.AuthService;
 import com.maco.followthebeat.service.interfaces.StateCacheService;
 import com.maco.followthebeat.service.interfaces.UserService;
-import com.maco.followthebeat.spotify.client.SpotifyClientFactory;
-import com.maco.followthebeat.spotify.client.SpotifyClientManager;
+import com.maco.followthebeat.spotify.api.client.SpotifyClientManager;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @Slf4j

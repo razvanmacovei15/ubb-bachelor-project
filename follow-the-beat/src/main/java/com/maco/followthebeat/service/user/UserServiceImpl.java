@@ -5,7 +5,7 @@ import com.maco.followthebeat.dto.CreateUserRequest;
 import com.maco.followthebeat.entity.User;
 import com.maco.followthebeat.repo.UserRepo;
 import com.maco.followthebeat.service.interfaces.UserService;
-import com.maco.followthebeat.spotify.client.SpotifyClientManager;
+import com.maco.followthebeat.spotify.api.client.SpotifyClientManager;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

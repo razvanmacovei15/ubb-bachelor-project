@@ -1,10 +1,8 @@
 package com.maco.followthebeat.service.interfaces;
 
-import com.maco.client.v2.SpotifyClientI;
 import com.maco.followthebeat.dto.CreateUserRequest;
 import com.maco.followthebeat.entity.User;
-import com.maco.followthebeat.spotify.client.SpotifyClientManager;
-import org.springframework.http.ResponseEntity;
+import com.maco.followthebeat.spotify.api.client.SpotifyClientManager;
 
 import java.util.Optional;
 import java.util.UUID;

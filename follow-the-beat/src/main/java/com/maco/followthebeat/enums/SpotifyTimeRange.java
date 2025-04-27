@@ -2,6 +2,8 @@ package com.maco.followthebeat.enums;
 
 import lombok.Getter;
 
+import java.util.Arrays;
+
 @Getter
 public enum SpotifyTimeRange {
     SHORT_TERM("short_term"),
@@ -11,4 +13,12 @@ public enum SpotifyTimeRange {
 
     SpotifyTimeRange(String value) {
         this.value = value;
-    }}
+    }
+
+    public static SpotifyTimeRange fromString(String value) {
+        return Arrays.stream(SpotifyTimeRange.values())
+                .filter(range -> range.name().equalsIgnoreCase(value.replace("-", "_")))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Invalid SpotifyTimeRange: " + value));
+    }
+}

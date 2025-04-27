@@ -8,7 +8,11 @@ export type ViewType = "artists" | "tracks";
 export interface SpotifyArtist {
     id: string;
     name: string;
-    images: { url: string }[];
+    imageUrl: string;
+    genres: string[];
+    popularity: number;
+    rank: number;
+    playCount: number;
 }
 
 export interface SpotifyTrack {
@@ -35,29 +39,29 @@ const useSpotifyProfile = () => {
     const [topTracks, setTopTracks] = useState<SpotifyTrack[]>([]);
     const [currentView, setCurrentView] = useState<ViewType>("artists");
 
-    const fetchTopArtists = async (userId: string) => {
-        const response = await axios.get<SpotifyArtist[]>(`http://localhost:8080/spotify-artists/top-artists`, {
-            params: { userId, limit: 50, range: timeRange },
+    const fetchTopArtists = async (userId: string, range: string) => {
+        const response = await axios.get<SpotifyArtist[]>(`http://localhost:8080/api/spotify-artists/top-artists`, {
+            params: { userId, limit: 50, range },
         });
         setTopArtists(response.data);
     };
 
-    const fetchTopTracks = async (userId: string) => {
+    const fetchTopTracks = async (userId: string, range: string) => {
         const response = await axios.get<SpotifyTrack[]>(`http://localhost:8080/spotify-tracks/top-tracks`, {
-            params: { userId, limit: 50, range: timeRange },
+            params: { userId, limit: 50, range },
         });
         setTopTracks(response.data);
     };
 
-    const fetchSpotifyData = async (userId: string) => {
-        await Promise.all([fetchTopArtists(userId), fetchTopTracks(userId)]);
+    const fetchSpotifyData = async (userId: string, range : string) => {
+        await Promise.all([fetchTopArtists(userId, range), fetchTopTracks(userId, range)]);
         setUserData({ isConnectedToSpotify: true, userId });
     };
 
     const fetchInitialSpotifyData = async (userId: string) => {
         setContentLoading(true);
         try {
-            await fetchSpotifyData(userId);
+            await fetchSpotifyData(userId, timeRange);
         } catch (err) {
             console.error(err);
             setError("Failed to fetch Spotify data");
@@ -67,10 +71,10 @@ const useSpotifyProfile = () => {
         }
     };
 
-    const fetchStatsSpotifyData = async (userId: string) => {
+    const fetchStatsSpotifyData = async (userId: string, range: string) => {
         setStatsLoading(true);
         try {
-            await fetchSpotifyData(userId);
+            await fetchSpotifyData(userId, range);
         } catch (err) {
             console.error(err);
             setError("Failed to fetch Spotify data");
@@ -100,11 +104,11 @@ const useSpotifyProfile = () => {
         }
     };
 
-    const handleTimeRangeChange = (range: string) => {
-        setTimeRange(range);
+    const handleTimeRangeChange = (newRange: string) => {
+        setTimeRange(newRange);
         const storedUserId = localStorage.getItem("userId");
         if (storedUserId) {
-            fetchStatsSpotifyData(storedUserId);
+            fetchStatsSpotifyData(storedUserId, newRange);
         }
     };
 

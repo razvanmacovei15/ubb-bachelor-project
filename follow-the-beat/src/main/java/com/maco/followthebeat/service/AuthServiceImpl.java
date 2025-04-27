@@ -4,7 +4,7 @@ import com.maco.client.v2.SpotifyClientI;
 import com.maco.followthebeat.entity.SpotifyUserData;
 import com.maco.followthebeat.entity.User;
 import com.maco.followthebeat.service.interfaces.AuthService;
-import com.maco.followthebeat.spotify.service.SpotifyUserDataService;
+import com.maco.followthebeat.spotify.api.service.SpotifyUserDataService;
 import com.maco.followthebeat.service.interfaces.UserService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
