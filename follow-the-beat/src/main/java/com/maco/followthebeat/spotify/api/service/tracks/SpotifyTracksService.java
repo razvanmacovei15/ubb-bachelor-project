@@ -2,9 +2,9 @@ package com.maco.followthebeat.spotify.api.service.tracks;
 
 import com.maco.client.v2.SpotifyClientI;
 import com.maco.client.v2.model.SpotifyTrack;
-import com.maco.followthebeat.enums.SpotifyTimeRange;
-import com.maco.followthebeat.service.interfaces.UserService;
-import com.maco.followthebeat.spotify.api.client.SpotifyClientManager;
+import com.maco.followthebeat.v2.common.enums.SpotifyTimeRange;
+import com.maco.followthebeat.v2.user.service.interfaces.UserService;
+import com.maco.followthebeat.v2.spotify.auth.client.SpotifyClientManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

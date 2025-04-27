@@ -1,6 +1,6 @@
 package com.maco.followthebeat.repo.spotify;
 
-import com.maco.followthebeat.entity.User;
+import com.maco.followthebeat.v2.user.entity.User;
 import com.maco.followthebeat.entity.spotify.ShortTermTrack;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

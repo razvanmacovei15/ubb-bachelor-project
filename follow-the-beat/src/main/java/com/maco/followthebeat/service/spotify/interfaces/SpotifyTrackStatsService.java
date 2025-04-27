@@ -1,6 +1,6 @@
 package com.maco.followthebeat.service.spotify.interfaces;
 
-import com.maco.followthebeat.entity.User;
+import com.maco.followthebeat.v2.user.entity.User;
 import com.maco.followthebeat.entity.spotify.ShortTermTrack;
 import com.maco.followthebeat.entity.spotify.MediumTermTrack;
 import com.maco.followthebeat.entity.spotify.LongTermTrack;

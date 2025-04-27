@@ -47,13 +47,11 @@ public class SpotifyTrackServiceImpl implements SpotifyTrackService {
 
     @Override
     public void syncTrackData(String spotifyId) {
-        // TODO: Implement Spotify API call to fetch track data
         throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public void syncMultipleTracks(List<String> spotifyIds) {
-        // TODO: Implement batch Spotify API call to fetch multiple tracks
         throw new UnsupportedOperationException("Not implemented yet");
     }
 } 

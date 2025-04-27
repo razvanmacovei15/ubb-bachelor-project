@@ -1,5 +1,6 @@
 package com.maco.followthebeat.entity.spotify;
 
+import com.maco.followthebeat.v2.spotify.artists.entity.DbSpotifyArtist;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.util.UUID;

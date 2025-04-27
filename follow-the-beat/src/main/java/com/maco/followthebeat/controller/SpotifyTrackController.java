@@ -1,6 +1,6 @@
 package com.maco.followthebeat.controller;
 
-import com.maco.followthebeat.enums.SpotifyTimeRange;
+import com.maco.followthebeat.v2.common.enums.SpotifyTimeRange;
 import com.maco.followthebeat.spotify.api.service.tracks.SpotifyTracksService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
