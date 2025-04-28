@@ -31,3 +31,11 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Project Data ###
+../minio-data
+../postgres
+../Archive.zip
+../Framework Comparison.docx
+../EY-tech-interview
+../.idea
