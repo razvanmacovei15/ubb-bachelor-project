@@ -18,4 +18,5 @@ public interface UserService {
     boolean hasConnectedSpotifyAccount(UUID userId);
     boolean validateUserAndSpotifyAuth(UUID userId, SpotifyClientManager clientManager);
     void setIsActive(boolean bool, User user);
+    void validateUserExistenceAndAuthentication(UUID userId, SpotifyClientManager clientManager);
 }

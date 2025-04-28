@@ -34,9 +34,6 @@ import java.util.stream.IntStream;
 public class SpotifyArtistStatsServiceImpl implements SpotifyArtistStatsService{
 
     private final SpotifyApiArtistsService spotifyApiArtistsService;
-    private final ShortTermArtistRepository shortTermArtistRepository;
-    private final MediumTermArtistRepository mediumTermArtistRepository;
-    private final LongTermArtistRepository longTermArtistRepository;
     private final SpotifyArtistService spotifyArtistService;
     private final SpotifyArtistMapper spotifyArtistMapper;
     private final UserService userService;
@@ -68,9 +65,10 @@ public class SpotifyArtistStatsServiceImpl implements SpotifyArtistStatsService{
 
     @Override
     public void deleteAllStats(User user) {
-        shortTermArtistRepository.deleteByUser(user);
-        mediumTermArtistRepository.deleteByUser(user);
-        longTermArtistRepository.deleteByUser(user);
+        for (SpotifyTimeRange timeRange : SpotifyTimeRange.values()) {
+            ArtistSaveStrategy artistSaveStrategy = artistSaveStrategyFactory.getStrategy(timeRange);
+            artistSaveStrategy.deleteByUser(user);
+        }
     }
 
     @Override

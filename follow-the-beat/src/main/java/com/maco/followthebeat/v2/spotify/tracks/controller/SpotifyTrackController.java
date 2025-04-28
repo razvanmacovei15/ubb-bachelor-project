@@ -1,14 +1,19 @@
 package com.maco.followthebeat.v2.spotify.tracks.controller;
 
 import com.maco.followthebeat.v2.common.enums.SpotifyTimeRange;
-import com.maco.followthebeat.v1.tracks.SpotifyTracksService;
+import com.maco.followthebeat.v2.common.exceptions.UserNotFoundException;
+import com.maco.followthebeat.v2.spotify.tracks.dto.SpotifyTrackDto;
+import com.maco.followthebeat.v2.spotify.tracks.service.interfaces.SpotifyTrackStatsService;
+import com.maco.followthebeat.v2.user.entity.User;
+import com.maco.followthebeat.v2.user.service.interfaces.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -16,39 +21,45 @@ import java.util.UUID;
 @RequestMapping("/spotify-tracks")
 @RequiredArgsConstructor
 public class SpotifyTrackController {
-    private final SpotifyTracksService spotifyTracksService;
+    private final SpotifyTrackStatsService spotifyTrackStatsService;
+    private final UserService userService;
 
     @GetMapping("/top-tracks")
     public ResponseEntity<?> getTopTracks(
-            @RequestParam(required = false) String userId,
+            @RequestParam(required = false) UUID userId,
             @RequestParam(defaultValue = "10") int limit,
             @RequestParam(defaultValue = "0", required = false) int offset,
+            @RequestParam(defaultValue = "medium_term") SpotifyTimeRange range) {
+
+        Optional<User> userOptional = userService.findUserById(userId);
+        if (userOptional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(List.of());
+        }
+        User user = userOptional.get();
+        if(!user.isActive()){
+            log.info("User is not active, fetching initial stats from SpotifyAPI");
+            List<SpotifyTrackDto> artists = spotifyTrackStatsService.fetchAndSaveInitialStats(user, range);
+            return ResponseEntity.ok(artists);
+        }
+        log.info("User is active, fetching stats from DB");
+        List<SpotifyTrackDto> tracks = spotifyTrackStatsService.getTopTracksByTimeRange(user, range);
+        return ResponseEntity.ok(tracks);
+    }
+
+    @PostMapping(value = "/refresh", produces = "application/json")
+    public ResponseEntity<Void> refreshStats(
+            @RequestParam UUID userId,
             @RequestParam(defaultValue = "medium_term") String range) {
 
-        if (userId == null || userId.isEmpty()) {
-            return ResponseEntity.badRequest().body("User ID is required");
-        }
+//        UUID userUuid = UUID.fromString(userId);
+        User user = userService.findUserById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId));
 
-        try {
-            UUID userUuid = UUID.fromString(userId);
-            SpotifyTimeRange timeRange = Arrays.stream(SpotifyTimeRange.values())
-                    .filter(r -> r.getValue().equals(range))
-                    .findFirst()
-                    .orElseThrow(() -> new IllegalArgumentException("Invalid time range: " + range));
-            
-            return spotifyTracksService.fetchTopTracks(userUuid, timeRange, limit, offset);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
+        SpotifyTimeRange timeRange = SpotifyTimeRange.valueOf(range);
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
-    }
+        spotifyTrackStatsService.updateStatsByTimeRange(user, timeRange);
 
-    @ExceptionHandler(IllegalStateException.class)
-    public ResponseEntity<String> handleIllegalStateException(IllegalStateException e) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        return ResponseEntity.ok().build();
     }
 }

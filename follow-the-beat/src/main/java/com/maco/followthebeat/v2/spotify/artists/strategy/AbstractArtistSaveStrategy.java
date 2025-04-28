@@ -1,6 +1,5 @@
 package com.maco.followthebeat.v2.spotify.artists.strategy;
 
-import com.maco.client.v2.model.SpotifyArtist;
 import com.maco.followthebeat.v2.spotify.artists.dto.SpotifyArtistDto;
 import com.maco.followthebeat.v2.user.entity.User;
 import com.maco.followthebeat.v2.spotify.artists.entity.DbSpotifyArtist;
@@ -25,7 +24,6 @@ public abstract class AbstractArtistSaveStrategy<T extends BaseUserTopArtist> im
     protected final SpotifyArtistService spotifyArtistService;
 
     protected abstract JpaRepository<T, UUID> getRepository();
-    protected abstract SpotifyTimeRange getTimeRange();
     protected abstract T createEntity(User user, DbSpotifyArtist artist, int rank);
     protected abstract List<T> findAllByUserOrdered(User user);
 

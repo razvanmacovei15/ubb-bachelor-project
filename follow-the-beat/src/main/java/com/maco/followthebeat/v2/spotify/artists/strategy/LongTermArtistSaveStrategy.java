@@ -35,7 +35,7 @@ public class LongTermArtistSaveStrategy extends AbstractArtistSaveStrategy<LongT
     }
 
     @Override
-    protected SpotifyTimeRange getTimeRange() {
+    public SpotifyTimeRange getTimeRange() {
         return SpotifyTimeRange.LONG_TERM;
     }
 

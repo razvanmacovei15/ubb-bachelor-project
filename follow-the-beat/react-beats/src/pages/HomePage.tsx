@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useConcertContext } from "../contexts/ConcertContext";
 import "./HomePage.css";
-import TopBar from "../components/top-bar/TopBar";
 
 const HomePage: React.FC = () => {
   const [isSearching, setIsSearching] = useState(false);

@@ -28,6 +28,9 @@ public class DbSpotifyTrack {
 
     private Integer popularity;
 
+    @Column(nullable = false, name = "album_img_url")
+    private String albumImgUrl;
+
     @Column(name = "preview_url")
     private String previewUrl;
 

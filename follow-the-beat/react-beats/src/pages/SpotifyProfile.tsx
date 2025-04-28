@@ -69,15 +69,15 @@ const SpotifyProfile: React.FC = () => {
                               <p>Not enough listening data!</p>
                             </div>
                           ) : (
-                            topArtists.map((artist, index) => (
-                              <div key={artist.id} className="artist-card">
-                                <img src={artist.imageUrl} alt={artist.name} />
-                                <div className="artist-info">
-                                  <span className="rank">#{index + 1}</span>
-                                  <h4>{artist.name}</h4>
-                                </div>
-                              </div>
-                            ))
+                              topArtists.map((artist, index) => (
+                                  <div key={artist.id} className="artist-card">
+                                    <img src={artist.imageUrl} alt={artist.name} />
+                                    <div className="artist-info">
+                                      <span className="rank">#{index + 1}</span>
+                                      <h4>{artist.name}</h4>
+                                    </div>
+                                  </div>
+                              ))
                           )}
                         </div>
                       ) : (
@@ -91,7 +91,7 @@ const SpotifyProfile: React.FC = () => {
                               <div key={track.id} className="track-item">
                                 <span className="rank">#{index + 1}</span>
                                 <img
-                                  src={track.album.images[0]?.url}
+                                  src={track.albumImgUrl}
                                   alt={track.name}
                                 />
                                 <div className="track-info">

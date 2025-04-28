@@ -1,8 +1,9 @@
 package com.maco.followthebeat.v2.spotify.tracks.controller;
 
+import com.maco.followthebeat.v2.common.enums.SpotifyTimeRange;
+import com.maco.followthebeat.v2.spotify.tracks.service.interfaces.SpotifyTrackStatsService;
 import com.maco.followthebeat.v2.user.entity.User;
 import com.maco.followthebeat.v2.user.service.interfaces.UserService;
-import com.maco.followthebeat.v1.spotify.interfaces.SpotifyTrackStatsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,7 @@ public class SpotifyTrackStatsController {
         try {
             User user = userService.findUserById(userId).orElseThrow(
                     () -> new IllegalArgumentException("User not found"));
-            return ResponseEntity.ok(spotifyTrackStatsService.getShortTermTracks(user));
+            return ResponseEntity.ok(spotifyTrackStatsService.getTrackStatsByTimeRange(user, SpotifyTimeRange.SHORT_TERM));
         } catch (Exception e) {
             log.error("Error fetching short-term tracks", e);
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -35,7 +36,7 @@ public class SpotifyTrackStatsController {
         try {
             User user = userService.findUserById(userId).orElseThrow(
                     () -> new IllegalArgumentException("User not found"));
-            return ResponseEntity.ok(spotifyTrackStatsService.getMediumTermTracks(user));
+            return ResponseEntity.ok(spotifyTrackStatsService.getTopTracksByTimeRange(user, SpotifyTimeRange.MEDIUM_TERM));
         } catch (Exception e) {
             log.error("Error fetching medium-term tracks", e);
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -47,7 +48,7 @@ public class SpotifyTrackStatsController {
         try {
             User user = userService.findUserById(userId).orElseThrow(
                     () -> new IllegalArgumentException("User not found"));
-            return ResponseEntity.ok(spotifyTrackStatsService.getLongTermTracks(user));
+            return ResponseEntity.ok(spotifyTrackStatsService.getTrackStatsByTimeRange(user, SpotifyTimeRange.LONG_TERM));
         } catch (Exception e) {
             log.error("Error fetching long-term tracks", e);
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -59,7 +60,7 @@ public class SpotifyTrackStatsController {
         try {
             User user = userService.findUserById(userId).orElseThrow(
                     () -> new IllegalArgumentException("User not found"));
-            spotifyTrackStatsService.updateShortTermStats(user);
+            spotifyTrackStatsService.updateStatsByTimeRange(user, SpotifyTimeRange.SHORT_TERM);
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             log.error("Error refreshing short-term stats", e);
@@ -72,7 +73,7 @@ public class SpotifyTrackStatsController {
         try {
             User user = userService.findUserById(userId).orElseThrow(
                     () -> new IllegalArgumentException("User not found"));
-            spotifyTrackStatsService.updateMediumTermStats(user);
+            spotifyTrackStatsService.updateStatsByTimeRange(user, SpotifyTimeRange.MEDIUM_TERM);
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             log.error("Error refreshing medium-term stats", e);
@@ -85,7 +86,7 @@ public class SpotifyTrackStatsController {
         try {
             User user = userService.findUserById(userId).orElseThrow(
                     () -> new IllegalArgumentException("User not found"));
-            spotifyTrackStatsService.updateLongTermStats(user);
+            spotifyTrackStatsService.updateStatsByTimeRange(user, SpotifyTimeRange.LONG_TERM);
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             log.error("Error refreshing long-term stats", e);

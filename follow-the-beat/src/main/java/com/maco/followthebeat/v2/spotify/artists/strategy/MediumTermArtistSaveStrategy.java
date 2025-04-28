@@ -35,7 +35,7 @@ public class MediumTermArtistSaveStrategy extends AbstractArtistSaveStrategy<Med
     }
 
     @Override
-    protected SpotifyTimeRange getTimeRange() {
+    public SpotifyTimeRange getTimeRange() {
         return SpotifyTimeRange.MEDIUM_TERM;
     }
 

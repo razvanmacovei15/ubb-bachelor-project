@@ -27,7 +27,6 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/spotify-artists")
 @RequiredArgsConstructor
 public class SpotifyArtistsController {
-    private final SpotifyApiArtistsService spotifyApiArtistsService;
     private final SpotifyArtistStatsService spotifyArtistStatsService;
     private final UserService userService;
 
@@ -37,6 +36,7 @@ public class SpotifyArtistsController {
             @RequestParam(defaultValue = "medium_term") SpotifyTimeRange range,
             @RequestParam(defaultValue = "10") int limit,
             @RequestParam(defaultValue = "0", required = false) int offset) {
+
         Optional<User> userOptional = userService.findUserById(userId);
         if (userOptional.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -44,29 +44,21 @@ public class SpotifyArtistsController {
         }
         User user = userOptional.get();
 
-
-
         if(!user.isActive()){
             List<SpotifyArtistDto> artists = spotifyArtistStatsService.fetchAndSaveInitialStats(user, range);
-            log.info("Fetched and saved initial stats for user: {}, range: {}", user.getId(), range);
             return ResponseEntity.ok(artists);
         }
         List<SpotifyArtistDto> artists = spotifyArtistStatsService.getTopArtistsByTimeRange(user, range);
-        log.info("Fetched top artists for user: {}, range: {} from db.", user.getId(), range);
         return ResponseEntity.ok(artists);
     }
 
-
-
     @PostMapping(value = "/refresh", produces = "application/json")
     public ResponseEntity<Void> refreshStats(
-            @RequestParam String userId,
+            @RequestParam UUID userId,
             @RequestParam(defaultValue = "medium_term") String range) {
 
-        log.info("Received refresh request for userId: {}, range: {}", userId, range);
-
-        UUID userUuid = UUID.fromString(userId);
-        User user = userService.findUserById(userUuid)
+//        UUID userUuid = UUID.fromString(userId);
+        User user = userService.findUserById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId));
 
         SpotifyTimeRange timeRange = SpotifyTimeRange.valueOf(range);

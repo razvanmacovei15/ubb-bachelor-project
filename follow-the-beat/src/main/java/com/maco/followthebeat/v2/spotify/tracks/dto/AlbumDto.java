@@ -7,5 +7,5 @@ import lombok.Getter;
 @Builder
 public class AlbumDto {
     private String name;
-    private String imageUrl;
+    private ImageDto[] images;
 }

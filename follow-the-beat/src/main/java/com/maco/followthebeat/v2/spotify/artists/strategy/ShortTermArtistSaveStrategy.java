@@ -35,7 +35,7 @@ public class ShortTermArtistSaveStrategy extends AbstractArtistSaveStrategy<Shor
     }
 
     @Override
-    protected SpotifyTimeRange getTimeRange() {
+    public SpotifyTimeRange getTimeRange() {
         return SpotifyTimeRange.SHORT_TERM;
     }
 

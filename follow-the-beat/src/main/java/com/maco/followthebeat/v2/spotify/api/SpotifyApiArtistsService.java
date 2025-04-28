@@ -21,17 +21,22 @@ import java.util.UUID;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class SpotifyApiArtistsService extends SpotifyApiService<SpotifyArtistDto> {
-    private final SpotifyClientManager clientManager;
     private final SpotifyArtistMapper spotifyArtistMapper;
+
+    public SpotifyApiArtistsService(SpotifyClientManager clientManager, UserService userService, SpotifyArtistMapper spotifyArtistMapper) {
+        super(clientManager, userService);
+        this.spotifyArtistMapper = spotifyArtistMapper;
+    }
 
     public List<SpotifyArtistDto> fetchTopItems(UUID userId, SpotifyTimeRange range, int limit, int offset) {
         validateUserAndAuthentication(userId);
 
         SpotifyClientI client = clientManager.getOrCreateSpotifyClient(userId);
-        List<SpotifyArtist> artists = getTopItemsByRange(client, range, limit, offset);
-        return artists.stream()
+        List<SpotifyArtist> tracks = getTopItemsByRange(client, range, limit, offset);
+        log.info("Fetched {} tracks from Spotify for user {} and range {}", tracks.size(), userId, range);
+
+        return tracks.stream()
                 .map(spotifyArtistMapper::clientToDto)
                 .toList();
     }

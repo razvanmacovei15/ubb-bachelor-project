@@ -1,6 +1,8 @@
 package com.maco.followthebeat.v2.user.service.impl;
 
 import com.maco.client.v2.SpotifyClientI;
+import com.maco.followthebeat.v2.common.exceptions.SpotifyAuthenticationException;
+import com.maco.followthebeat.v2.common.exceptions.UserNotFoundException;
 import com.maco.followthebeat.v2.user.dto.CreateUserRequest;
 import com.maco.followthebeat.v2.user.entity.User;
 import com.maco.followthebeat.v2.user.repo.UserRepo;
@@ -102,5 +104,21 @@ public class UserServiceImpl implements UserService {
         user.setActive(bool);
         userRepo.save(user);
     }
+
+    @Override
+    public void validateUserExistenceAndAuthentication(UUID userId, SpotifyClientManager clientManager) {
+        Optional<User> userOptional = findUserById(userId);
+
+        if (userOptional.isEmpty()) {
+            throw new UserNotFoundException("User with id " + userId + " does not exist.");
+        }
+
+        SpotifyClientI client = clientManager.getOrCreateSpotifyClient(userId);
+
+        if (client == null || !client.isAuthenticated()) {
+            throw new SpotifyAuthenticationException("User is not authenticated with Spotify.");
+        }
+    }
+
 
 }
