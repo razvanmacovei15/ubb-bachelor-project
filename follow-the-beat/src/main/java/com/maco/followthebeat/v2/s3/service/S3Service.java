@@ -29,7 +29,7 @@ public class S3Service {
         return objectKey;
     }
 
-    public String generatePresignedUrl(String objectKey) throws Exception {
+    public String generatePreSignedUrl(String objectKey) throws Exception {
         return minioClient.getPresignedObjectUrl(
             GetPresignedObjectUrlArgs.builder()
                 .method(Method.GET)

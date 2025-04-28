@@ -9,9 +9,6 @@ public class SpotifyTimeRangeConverter implements Converter<String, SpotifyTimeR
 
     @Override
     public SpotifyTimeRange convert(String source) {
-        if (source == null) {
-            return null;
-        }
         return switch (source.toLowerCase()) {
             case "short_term" -> SpotifyTimeRange.SHORT_TERM;
             case "medium_term" -> SpotifyTimeRange.MEDIUM_TERM;
