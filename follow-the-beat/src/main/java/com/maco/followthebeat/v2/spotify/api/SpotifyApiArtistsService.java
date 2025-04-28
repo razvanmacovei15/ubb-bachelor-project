@@ -34,7 +34,6 @@ public class SpotifyApiArtistsService extends SpotifyApiService<SpotifyArtistDto
 
         SpotifyClientI client = clientManager.getOrCreateSpotifyClient(userId);
         List<SpotifyArtist> tracks = getTopItemsByRange(client, range, limit, offset);
-        log.info("Fetched {} tracks from Spotify for user {} and range {}", tracks.size(), userId, range);
 
         return tracks.stream()
                 .map(spotifyArtistMapper::clientToDto)

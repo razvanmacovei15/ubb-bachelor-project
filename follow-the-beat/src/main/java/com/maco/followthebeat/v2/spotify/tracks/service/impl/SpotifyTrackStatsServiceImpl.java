@@ -97,7 +97,6 @@ public class SpotifyTrackStatsServiceImpl implements SpotifyTrackStatsService {
             DbSpotifyTrack managedTrack = spotifyTrackService.saveOrGetExistingTrack(dbSpotifyTrack);
 
             tracksSaveStrategy.saveTrack(user, managedTrack, i + 1);
-            log.info("Saved track {} for user {} at rank {}", managedTrack.getName(), user.getId(), i + 1);
 
         }
     }
@@ -117,7 +116,6 @@ public class SpotifyTrackStatsServiceImpl implements SpotifyTrackStatsService {
     @Override
     public List<SpotifyTrackDto> getTopTracksByTimeRange(User user, SpotifyTimeRange timeRange) {
         List<? extends BaseUserTopTrack> tracks = getTrackStatsByTimeRange(user, timeRange);
-        log.info("Fetched {} tracks from database for user {} and timeRange {}", tracks.size(), user.getId(), timeRange);
 
         return tracks.stream()
                 .map(spotifyTrackMapper::fromDbSpotifyTrack)
