@@ -70,9 +70,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.maco</groupId>
-            <artifactId>maco-spotify-api</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <groupId>com.macocoding</groupId>
+            <artifactId>spotify-api</artifactId>
+            <version>3.0.0</version>
         </dependency>
         <dependency>
             <groupId>com.github.ben-manes.caffeine</groupId>
@@ -124,5 +124,19 @@
             </plugin>
         </plugins>
     </build>
+    <repositories>
+        <repository>
+            <id>github</id>
+            <name>GitHub Maco Packages</name>
+            <url>https://maven.pkg.github.com/razvanmacovei15/maco-spotify-api</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
 
 </project>
