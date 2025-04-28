@@ -1,8 +1,8 @@
 package com.maco.followthebeat.v2.spotify.artists.service.impl;
 
-import com.maco.client.v2.model.SpotifyArtist;
 import com.maco.followthebeat.v2.spotify.api.SpotifyApiArtistsService;
 import com.maco.followthebeat.v2.spotify.artists.dto.SpotifyArtistDto;
+import com.maco.followthebeat.v2.spotify.service.SpotifyStatsService;
 import com.maco.followthebeat.v2.user.entity.User;
 import com.maco.followthebeat.v2.spotify.artists.entity.DbSpotifyArtist;
 import com.maco.followthebeat.v2.spotify.artists.entity.BaseUserTopArtist;
@@ -22,13 +22,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.IntStream;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class SpotifyArtistStatsServiceImpl implements SpotifyArtistStatsService {
+public class SpotifyArtistStatsServiceImpl implements SpotifyArtistStatsService{
 
     private final SpotifyApiArtistsService spotifyApiArtistsService;
     private final ShortTermArtistRepository shortTermArtistRepository;
@@ -38,6 +41,8 @@ public class SpotifyArtistStatsServiceImpl implements SpotifyArtistStatsService 
     private final SpotifyArtistMapper spotifyArtistMapper;
     private final UserService userService;
     private final ArtistSaveStrategyFactory artistSaveStrategyFactory;
+
+    private final ExecutorService executor = Executors.newFixedThreadPool(2); // 2 async threads for background saves
 
     private void saveArtistAndStats(User user, List<SpotifyArtistDto> artists, SpotifyTimeRange timeRange) {
         ArtistSaveStrategy artistSaveStrategy = artistSaveStrategyFactory.getStrategy(timeRange);
@@ -70,24 +75,38 @@ public class SpotifyArtistStatsServiceImpl implements SpotifyArtistStatsService 
 
     @Override
     @Transactional
-    public List<SpotifyArtistDto> fetchAndSaveInitialStats(User user, SpotifyTimeRange timeRange) {
-        //todo can be done better by first fetching the api returning it to the frontend and then saving it to the db
-        List<SpotifyArtistDto> shortTermArtists = spotifyApiArtistsService.fetchTopArtists(
-                user.getId(), SpotifyTimeRange.SHORT_TERM, 50, 0
+    public List<SpotifyArtistDto> fetchAndSaveInitialStats(User user, SpotifyTimeRange requestedTimeRange) {
+        // Step 1: Fetch only the requested time range
+        List<SpotifyArtistDto> requestedArtists = spotifyApiArtistsService.fetchTopItems(
+                user.getId(), requestedTimeRange, 50, 0
         );
-        saveArtistAndStats(user, shortTermArtists, SpotifyTimeRange.SHORT_TERM);
 
-        List<SpotifyArtistDto> mediumTermArtists = spotifyApiArtistsService.fetchTopArtists(
-                user.getId(), SpotifyTimeRange.MEDIUM_TERM, 50, 0
-        );
-        saveArtistAndStats(user, mediumTermArtists, SpotifyTimeRange.MEDIUM_TERM);
+        // Step 2: Save the requested time range immediately (synchronous save)
+        saveArtistAndStats(user, requestedArtists, requestedTimeRange);
 
-        List<SpotifyArtistDto> longTermArtists = spotifyApiArtistsService.fetchTopArtists(
-                user.getId(), SpotifyTimeRange.LONG_TERM, 50, 0
-        );
-        saveArtistAndStats(user, longTermArtists, SpotifyTimeRange.LONG_TERM);
+        // Step 3: Async fetch and save the other two time ranges
+        CompletableFuture.runAsync(() -> fetchAndSaveOtherTimeRanges(user, requestedTimeRange), executor);
+
+        // Step 4: Mark user active (after initial save)
         userService.setIsActive(true, user);
-        return getTopArtistsByTimeRange(user, timeRange);
+
+        // Step 5: Return the initial requested artists immediately
+        return requestedArtists;
+    }
+
+    private void fetchAndSaveOtherTimeRanges(User user, SpotifyTimeRange alreadyFetched) {
+        for (SpotifyTimeRange timeRange : SpotifyTimeRange.values()) {
+            if (!timeRange.equals(alreadyFetched)) {
+                try {
+                    List<SpotifyArtistDto> artists = spotifyApiArtistsService.fetchTopItems(
+                            user.getId(), timeRange, 50, 0
+                    );
+                    saveArtistAndStats(user, artists, timeRange);
+                } catch (Exception e) {
+                    log.error("Failed to fetch/save artists for time range: " + timeRange, e);
+                }
+            }
+        }
     }
 
     @Override

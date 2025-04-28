@@ -1,6 +1,6 @@
-package com.maco.followthebeat.v1.spotify.interfaces;
+package com.maco.followthebeat.v2.spotify.tracks.entity;
 
-import com.maco.followthebeat.v1.spotify.DbSpotifyTrack;
+import com.maco.followthebeat.v2.spotify.tracks.entity.DbSpotifyTrack;
 import com.maco.followthebeat.v2.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Data;

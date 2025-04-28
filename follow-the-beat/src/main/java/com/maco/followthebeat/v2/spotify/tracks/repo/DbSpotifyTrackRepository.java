@@ -1,5 +1,6 @@
-package com.maco.followthebeat.v1.spotify;
+package com.maco.followthebeat.v2.spotify.tracks.repo;
 
+import com.maco.followthebeat.v2.spotify.tracks.entity.DbSpotifyTrack;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

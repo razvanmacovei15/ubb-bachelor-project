@@ -1,4 +1,4 @@
-package com.maco.followthebeat.v1.controller;
+package com.maco.followthebeat.v2.spotify.tracks.controller;
 
 import com.maco.followthebeat.v2.user.entity.User;
 import com.maco.followthebeat.v2.user.service.interfaces.UserService;

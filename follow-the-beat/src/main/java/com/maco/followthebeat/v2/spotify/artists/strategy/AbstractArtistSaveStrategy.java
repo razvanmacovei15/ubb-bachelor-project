@@ -49,7 +49,7 @@ public abstract class AbstractArtistSaveStrategy<T extends BaseUserTopArtist> im
     public void updateStats(User user) {
         List<SpotifyArtistDto> artists = null;
         if (spotifyApiArtistsService != null) {
-            artists = spotifyApiArtistsService.fetchTopArtists(
+            artists = spotifyApiArtistsService.fetchTopItems(
                     user.getId(),
                     getTimeRange(),
                     50,

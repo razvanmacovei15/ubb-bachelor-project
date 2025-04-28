@@ -1,5 +1,12 @@
 package com.maco.followthebeat.v1.spotify;
 
+import com.maco.followthebeat.v2.spotify.tracks.entity.DbSpotifyTrack;
+import com.maco.followthebeat.v2.spotify.tracks.entity.LongTermTrack;
+import com.maco.followthebeat.v2.spotify.tracks.entity.MediumTermTrack;
+import com.maco.followthebeat.v2.spotify.tracks.entity.ShortTermTrack;
+import com.maco.followthebeat.v2.spotify.tracks.repo.LongTermTrackRepository;
+import com.maco.followthebeat.v2.spotify.tracks.repo.MediumTermTrackRepository;
+import com.maco.followthebeat.v2.spotify.tracks.repo.ShortTermTrackRepository;
 import com.maco.followthebeat.v2.user.entity.User;
 import com.maco.followthebeat.v2.common.enums.SpotifyTimeRange;
 import com.maco.followthebeat.v1.spotify.interfaces.SpotifyTrackService;

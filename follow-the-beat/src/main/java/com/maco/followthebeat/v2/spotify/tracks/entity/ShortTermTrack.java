@@ -1,6 +1,5 @@
-package com.maco.followthebeat.v1.spotify;
+package com.maco.followthebeat.v2.spotify.tracks.entity;
 
-import com.maco.followthebeat.v1.spotify.interfaces.BaseUserTopTrack;
 import jakarta.persistence.*;
 
 @Entity

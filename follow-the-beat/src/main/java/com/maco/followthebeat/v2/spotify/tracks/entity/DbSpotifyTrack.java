@@ -1,4 +1,4 @@
-package com.maco.followthebeat.v1.spotify;
+package com.maco.followthebeat.v2.spotify.tracks.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -24,7 +24,7 @@ public class DbSpotifyTrack {
     private String name;
 
     @Column(name = "duration_ms")
-    private Integer durationMs;
+    private Long durationMs;
 
     private Integer popularity;
 

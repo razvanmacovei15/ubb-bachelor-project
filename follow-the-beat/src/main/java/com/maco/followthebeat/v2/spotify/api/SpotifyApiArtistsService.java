@@ -22,33 +22,21 @@ import java.util.UUID;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class SpotifyApiArtistsService {
+public class SpotifyApiArtistsService extends SpotifyApiService<SpotifyArtistDto> {
     private final SpotifyClientManager clientManager;
-    private final UserService userService;
     private final SpotifyArtistMapper spotifyArtistMapper;
 
-    public List<SpotifyArtistDto> fetchTopArtists(UUID userId, SpotifyTimeRange range, int limit, int offset) {
+    public List<SpotifyArtistDto> fetchTopItems(UUID userId, SpotifyTimeRange range, int limit, int offset) {
         validateUserAndAuthentication(userId);
 
         SpotifyClientI client = clientManager.getOrCreateSpotifyClient(userId);
-        List<SpotifyArtist> artists = getTopArtistsByRange(client, range, limit, offset);
+        List<SpotifyArtist> artists = getTopItemsByRange(client, range, limit, offset);
         return artists.stream()
                 .map(spotifyArtistMapper::clientToDto)
                 .toList();
     }
 
-    private void validateUserAndAuthentication(UUID userId) {
-        boolean valid = userService.validateUserAndSpotifyAuth(userId, clientManager);
-        if (!valid) {
-            SpotifyClientI client = clientManager.getOrCreateSpotifyClient(userId);
-            if (!client.isAuthenticated()) {
-                throw new SpotifyAuthenticationException("User is not authenticated with Spotify.");
-            }
-            throw new UserNotFoundException("User not found with id: " + userId);
-        }
-    }
-
-    private List<SpotifyArtist> getTopArtistsByRange(SpotifyClientI client, SpotifyTimeRange range, int limit, int offset) {
+    protected List<SpotifyArtist> getTopItemsByRange(SpotifyClientI client, SpotifyTimeRange range, int limit, int offset) {
         return switch (range) {
             case SHORT_TERM -> client.getTopArtistsLast4Weeks(limit, offset);
             case MEDIUM_TERM -> client.getTopArtistsLast6Months(limit, offset);

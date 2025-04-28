@@ -1,8 +1,8 @@
-package com.maco.followthebeat.v1.spotify;
+package com.maco.followthebeat.v2.spotify.tracks.service.impl;
 
-import com.maco.followthebeat.v1.spotify.interfaces.SpotifyTrackService;
 import com.maco.followthebeat.v2.spotify.tracks.entity.DbSpotifyTrack;
 import com.maco.followthebeat.v2.spotify.tracks.repo.DbSpotifyTrackRepository;
+import com.maco.followthebeat.v2.spotify.tracks.service.interfaces.SpotifyTrackService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +24,12 @@ public class SpotifyTrackServiceImpl implements SpotifyTrackService {
     @Override
     public DbSpotifyTrack saveTrack(DbSpotifyTrack track) {
         return dbSpotifyTrackRepository.save(track);
+    }
+
+    @Override
+    public DbSpotifyTrack saveOrGetExistingTrack(DbSpotifyTrack track) {
+        return dbSpotifyTrackRepository.findBySpotifyId(track.getSpotifyId())
+                .orElseGet(() -> dbSpotifyTrackRepository.save(track));
     }
 
     @Override
@@ -54,4 +60,4 @@ public class SpotifyTrackServiceImpl implements SpotifyTrackService {
     public void syncMultipleTracks(List<String> spotifyIds) {
         throw new UnsupportedOperationException("Not implemented yet");
     }
-} 
+}

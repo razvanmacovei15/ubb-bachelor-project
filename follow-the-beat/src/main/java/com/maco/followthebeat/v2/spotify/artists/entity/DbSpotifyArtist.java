@@ -1,6 +1,6 @@
 package com.maco.followthebeat.v2.spotify.artists.entity;
 
-import com.maco.followthebeat.v1.spotify.TrackArtist;
+import com.maco.followthebeat.v2.spotify.tracks.entity.TrackArtist;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
