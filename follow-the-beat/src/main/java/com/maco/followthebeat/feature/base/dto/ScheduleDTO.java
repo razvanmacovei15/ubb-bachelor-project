@@ -1,15 +1,14 @@
 package com.maco.followthebeat.feature.base.dto;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.UUID;
 @Data
 @Builder
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 public class ScheduleDTO {
     private UUID id;
     private LocalDate date;

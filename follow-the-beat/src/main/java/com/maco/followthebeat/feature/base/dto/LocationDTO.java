@@ -1,13 +1,11 @@
 package com.maco.followthebeat.feature.base.dto;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import java.util.UUID;
 @Data
-@Builder
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 public abstract class LocationDTO {
     private UUID id;
     private String name;

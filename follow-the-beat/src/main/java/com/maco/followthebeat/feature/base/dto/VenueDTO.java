@@ -1,15 +1,13 @@
 package com.maco.followthebeat.feature.base.dto;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Builder
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 public class VenueDTO extends LocationDTO {
     private String address;
     private String city;
