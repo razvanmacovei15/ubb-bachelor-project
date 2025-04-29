@@ -25,7 +25,7 @@ public class Artist {
 
     @ElementCollection
     @CollectionTable(name = "artist_genres", joinColumns = @JoinColumn(name = "artist_id"))
-    @Column(name = "genres")
+    @Column(name = "genre")
     private List<String> genres;
 
     @CreationTimestamp

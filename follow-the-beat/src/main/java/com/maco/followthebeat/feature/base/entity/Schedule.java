@@ -19,18 +19,7 @@ public class Schedule {
     private LocalTime startTime;
     private LocalTime endTime;
 
-    @Column(name = "time_zone")
-    private String timeZone;
-
     @OneToOne
-    @JoinColumn(name = "event_id", nullable = false)
-    private Event event;
-
-    @ManyToMany
-    @JoinTable(
-            name = "schedule_artists",
-            joinColumns = @JoinColumn(name = "schedule_id"),
-            inverseJoinColumns = @JoinColumn(name = "artist_id")
-    )
-    private List<Artist> artists;
+    @JoinColumn(name = "concert_id")
+    private Concert concert;
 }

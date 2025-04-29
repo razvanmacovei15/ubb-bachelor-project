@@ -1,6 +1,5 @@
 package com.maco.followthebeat.feature.base.entity;
 
-import com.maco.followthebeat.feature.base.enums.EventType;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -11,11 +10,23 @@ import java.util.List;
 import java.util.UUID;
 @Entity
 @Data
-@Table(name = "events")
-public class Event {
+@Table(name = "concerts")
+public class Concert {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+
+    @ManyToOne
+    @JoinColumn(name = "location_id")
+    private Location location;
+
+    @ManyToMany
+    @JoinTable(
+            name = "concert_artists",
+            joinColumns = @JoinColumn(name = "concert_id"),
+            inverseJoinColumns = @JoinColumn(name = "artist_id")
+    )
+    private List<Artist> artists;
 
     @Column(nullable = false)
     private String name;
@@ -24,18 +35,6 @@ public class Event {
     private Schedule schedule;
 
     private String description;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private EventType eventType;
-
-    @ManyToOne
-    @JoinColumn(name = "stage_id")
-    private Stage stage;
-
-    @ManyToOne
-    @JoinColumn(name = "venue_id")
-    private Venue venue;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
