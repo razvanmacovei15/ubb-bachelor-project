@@ -1,7 +1,7 @@
 package com.maco.followthebeat.v2.spotify.artists.controller;
 
 import com.maco.followthebeat.v2.user.entity.User;
-import com.maco.followthebeat.v2.common.enums.SpotifyTimeRange;
+import com.maco.followthebeat.v2.spotify.enums.SpotifyTimeRange;
 import com.maco.followthebeat.v2.user.service.interfaces.UserService;
 import com.maco.followthebeat.v2.spotify.artists.service.interfaces.SpotifyArtistStatsService;
 import lombok.RequiredArgsConstructor;

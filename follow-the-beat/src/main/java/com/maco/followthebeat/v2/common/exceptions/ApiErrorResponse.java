@@ -16,14 +16,12 @@ import java.util.Map;
 public class ApiErrorResponse {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime timestamp;
-
     private int status;
     private String error;
     private String message;
     private String path;
-    private Map<String, String> errors; // for field validation errors
+    private Map<String, String> errors;
 
-    // Constructors without validation errors
     public ApiErrorResponse(int status, String error, String message, String path) {
         this.timestamp = LocalDateTime.now();
         this.status = status;

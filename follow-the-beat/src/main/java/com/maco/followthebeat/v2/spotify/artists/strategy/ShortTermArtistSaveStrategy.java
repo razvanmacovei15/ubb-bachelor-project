@@ -6,7 +6,7 @@ import com.maco.followthebeat.v2.spotify.api.SpotifyApiArtistsService;
 import com.maco.followthebeat.v2.spotify.artists.mapper.SpotifyArtistMapper;
 import com.maco.followthebeat.v2.spotify.artists.service.interfaces.SpotifyArtistService;
 import com.maco.followthebeat.v2.user.entity.User;
-import com.maco.followthebeat.v2.common.enums.SpotifyTimeRange;
+import com.maco.followthebeat.v2.spotify.enums.SpotifyTimeRange;
 import com.maco.followthebeat.v2.spotify.artists.entity.DbSpotifyArtist;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;

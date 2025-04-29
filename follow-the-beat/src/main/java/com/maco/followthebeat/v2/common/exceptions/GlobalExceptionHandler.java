@@ -1,5 +1,6 @@
 package com.maco.followthebeat.v2.common.exceptions;
 
+import com.maco.followthebeat.v2.spotify.exceptions.SpotifyAuthenticationException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ValidationException;
 import lombok.extern.slf4j.Slf4j;

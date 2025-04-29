@@ -1,12 +1,11 @@
 package com.maco.followthebeat.v2.spotify.tracks.mapper;
 
 import com.maco.client.v2.model.SpotifyTrack;
-import com.maco.client.v2.model.extra.Image;
 import com.maco.followthebeat.v2.spotify.tracks.dto.SpotifyTrackDto;
 import com.maco.followthebeat.v2.spotify.tracks.dto.TrackArtistDto;
 import com.maco.followthebeat.v2.spotify.tracks.entity.BaseUserTopTrack;
 import com.maco.followthebeat.v2.spotify.tracks.entity.DbSpotifyTrack;
-import com.maco.followthebeat.v2.spotify.tracks.entity.TrackArtist;
+import com.maco.followthebeat.v2.spotify.tracks.entity.SpotifyTrackArtist;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -55,10 +54,10 @@ public class SpotifyTrackMapper {
     }
 
 
-    private TrackArtistDto fromTrackArtist(TrackArtist trackArtist) {
+    private TrackArtistDto fromTrackArtist(SpotifyTrackArtist SpotifyTrackArtist) {
         return TrackArtistDto.builder()
-                .spotifyArtistId(trackArtist.getArtist().getSpotifyId())
-                .name(trackArtist.getArtist().getName())
+                .spotifyArtistId(SpotifyTrackArtist.getArtist().getSpotifyId())
+                .name(SpotifyTrackArtist.getArtist().getName())
                 .build();
     }
 

@@ -1,6 +1,6 @@
 package com.maco.followthebeat.v2.spotify.tracks.strategy;
 
-import com.maco.followthebeat.v2.common.enums.SpotifyTimeRange;
+import com.maco.followthebeat.v2.spotify.enums.SpotifyTimeRange;
 import com.maco.followthebeat.v2.spotify.tracks.service.interfaces.SpotifyTrackService;
 import com.maco.followthebeat.v2.spotify.api.SpotifyApiTracksService;
 import com.maco.followthebeat.v2.spotify.tracks.entity.DbSpotifyTrack;

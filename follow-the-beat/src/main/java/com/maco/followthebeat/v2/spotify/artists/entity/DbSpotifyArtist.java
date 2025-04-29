@@ -1,6 +1,6 @@
 package com.maco.followthebeat.v2.spotify.artists.entity;
 
-import com.maco.followthebeat.v2.spotify.tracks.entity.TrackArtist;
+import com.maco.followthebeat.v2.spotify.tracks.entity.SpotifyTrackArtist;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -43,6 +43,6 @@ public class DbSpotifyArtist {
     private Instant updatedAt;
 
     @OneToMany(mappedBy = "artist")
-    private List<TrackArtist> tracks;
+    private List<SpotifyTrackArtist> tracks;
 
 } 

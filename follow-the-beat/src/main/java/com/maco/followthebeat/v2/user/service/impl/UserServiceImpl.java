@@ -1,7 +1,7 @@
 package com.maco.followthebeat.v2.user.service.impl;
 
 import com.maco.client.v2.SpotifyClientI;
-import com.maco.followthebeat.v2.common.exceptions.SpotifyAuthenticationException;
+import com.maco.followthebeat.v2.spotify.exceptions.SpotifyAuthenticationException;
 import com.maco.followthebeat.v2.common.exceptions.UserNotFoundException;
 import com.maco.followthebeat.v2.user.dto.CreateUserRequest;
 import com.maco.followthebeat.v2.user.entity.User;

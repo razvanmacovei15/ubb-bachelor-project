@@ -1,7 +1,6 @@
 package com.maco.followthebeat.v2.spotify.artists.strategy;
 
-import com.maco.followthebeat.v2.common.enums.SpotifyTimeRange;
-import com.maco.followthebeat.v2.spotify.artists.strategy.ArtistSaveStrategy;
+import com.maco.followthebeat.v2.spotify.enums.SpotifyTimeRange;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

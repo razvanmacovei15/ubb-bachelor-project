@@ -7,7 +7,6 @@ import com.maco.followthebeat.v2.spotify.artists.entity.BaseUserTopArtist;
 import com.maco.followthebeat.v2.spotify.api.SpotifyApiArtistsService;
 import com.maco.followthebeat.v2.spotify.artists.mapper.SpotifyArtistMapper;
 import com.maco.followthebeat.v2.spotify.artists.service.interfaces.SpotifyArtistService;
-import com.maco.followthebeat.v2.common.enums.SpotifyTimeRange;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,6 +1,6 @@
 package com.maco.followthebeat.v2.spotify.tracks.controller;
 
-import com.maco.followthebeat.v2.common.enums.SpotifyTimeRange;
+import com.maco.followthebeat.v2.spotify.enums.SpotifyTimeRange;
 import com.maco.followthebeat.v2.spotify.tracks.service.interfaces.SpotifyTrackStatsService;
 import com.maco.followthebeat.v2.user.entity.User;
 import com.maco.followthebeat.v2.user.service.interfaces.UserService;

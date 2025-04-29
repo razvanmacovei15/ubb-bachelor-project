@@ -1,16 +1,11 @@
 package com.maco.followthebeat.v2.spotify.artists.controller;
 
-import com.maco.client.v2.model.SpotifyArtist;
-import com.maco.followthebeat.v2.common.exceptions.SpotifyAuthenticationException;
 import com.maco.followthebeat.v2.common.exceptions.UserNotFoundException;
 import com.maco.followthebeat.v2.spotify.artists.dto.SpotifyArtistDto;
 import com.maco.followthebeat.v2.user.entity.User;
-import com.maco.followthebeat.v2.spotify.artists.entity.BaseUserTopArtist;
-import com.maco.followthebeat.v2.common.enums.SpotifyTimeRange;
-import com.maco.followthebeat.v2.spotify.artists.mapper.SpotifyArtistMapper;
+import com.maco.followthebeat.v2.spotify.enums.SpotifyTimeRange;
 import com.maco.followthebeat.v2.user.service.interfaces.UserService;
 import com.maco.followthebeat.v2.spotify.artists.service.interfaces.SpotifyArtistStatsService;
-import com.maco.followthebeat.v2.spotify.api.SpotifyApiArtistsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -20,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RestController

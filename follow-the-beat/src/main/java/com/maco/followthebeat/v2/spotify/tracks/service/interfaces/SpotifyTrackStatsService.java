@@ -1,8 +1,6 @@
 package com.maco.followthebeat.v2.spotify.tracks.service.interfaces;
 
-import com.maco.followthebeat.v2.common.enums.SpotifyTimeRange;
-import com.maco.followthebeat.v2.spotify.artists.dto.SpotifyArtistDto;
-import com.maco.followthebeat.v2.spotify.artists.entity.BaseUserTopArtist;
+import com.maco.followthebeat.v2.spotify.enums.SpotifyTimeRange;
 import com.maco.followthebeat.v2.spotify.tracks.dto.SpotifyTrackDto;
 import com.maco.followthebeat.v2.spotify.tracks.entity.BaseUserTopTrack;
 import com.maco.followthebeat.v2.user.entity.User;

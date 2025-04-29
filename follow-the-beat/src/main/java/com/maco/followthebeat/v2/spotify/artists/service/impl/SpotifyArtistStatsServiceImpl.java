@@ -2,15 +2,11 @@ package com.maco.followthebeat.v2.spotify.artists.service.impl;
 
 import com.maco.followthebeat.v2.spotify.api.SpotifyApiArtistsService;
 import com.maco.followthebeat.v2.spotify.artists.dto.SpotifyArtistDto;
-import com.maco.followthebeat.v2.spotify.service.SpotifyStatsService;
 import com.maco.followthebeat.v2.user.entity.User;
 import com.maco.followthebeat.v2.spotify.artists.entity.DbSpotifyArtist;
 import com.maco.followthebeat.v2.spotify.artists.entity.BaseUserTopArtist;
-import com.maco.followthebeat.v2.common.enums.SpotifyTimeRange;
+import com.maco.followthebeat.v2.spotify.enums.SpotifyTimeRange;
 import com.maco.followthebeat.v2.spotify.artists.mapper.SpotifyArtistMapper;
-import com.maco.followthebeat.v2.spotify.artists.repo.LongTermArtistRepository;
-import com.maco.followthebeat.v2.spotify.artists.repo.MediumTermArtistRepository;
-import com.maco.followthebeat.v2.spotify.artists.repo.ShortTermArtistRepository;
 import com.maco.followthebeat.v2.spotify.artists.strategy.ArtistSaveStrategy;
 import com.maco.followthebeat.v2.spotify.artists.strategy.ArtistSaveStrategyFactory;
 import com.maco.followthebeat.v2.spotify.artists.service.interfaces.SpotifyArtistService;

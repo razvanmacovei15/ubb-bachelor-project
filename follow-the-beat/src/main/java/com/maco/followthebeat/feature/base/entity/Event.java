@@ -1,5 +1,6 @@
-package com.maco.followthebeat.v2.spotify.tracks.entity;
+package com.maco.followthebeat.feature.base.entity;
 
+import com.maco.followthebeat.feature.base.enums.EventType;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -8,40 +9,38 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
-
 @Entity
-@Table(name = "spotify_track")
 @Data
-public class DbSpotifyTrack {
+@Table(name = "events")
+public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "spotify_id", unique = true, nullable = false)
-    private String spotifyId;
-
     @Column(nullable = false)
     private String name;
 
-    @Column(name = "duration_ms")
-    private Long durationMs;
+    @OneToOne(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Schedule schedule;
 
-    private Integer popularity;
+    private String description;
 
-    @Column(nullable = false, name = "album_img_url")
-    private String albumImgUrl;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private EventType eventType;
 
-    @Column(name = "preview_url")
-    private String previewUrl;
+    @ManyToOne
+    @JoinColumn(name = "stage_id")
+    private Stage stage;
+
+    @ManyToOne
+    @JoinColumn(name = "venue_id")
+    private Venue venue;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
-
     @UpdateTimestamp
     @Column(name = "updated_at")
     private Instant updatedAt;
-
-    @OneToMany(mappedBy = "track")
-    private List<SpotifyTrackArtist> artists;
 }

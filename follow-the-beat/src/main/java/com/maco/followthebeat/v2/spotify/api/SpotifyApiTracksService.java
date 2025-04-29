@@ -3,12 +3,11 @@ package com.maco.followthebeat.v2.spotify.api;
 
 import com.maco.client.v2.SpotifyClientI;
 import com.maco.client.v2.model.SpotifyTrack;
-import com.maco.followthebeat.v2.common.enums.SpotifyTimeRange;
+import com.maco.followthebeat.v2.spotify.enums.SpotifyTimeRange;
 import com.maco.followthebeat.v2.spotify.auth.client.SpotifyClientManager;
 import com.maco.followthebeat.v2.spotify.tracks.dto.SpotifyTrackDto;
 import com.maco.followthebeat.v2.spotify.tracks.mapper.SpotifyTrackMapper;
 import com.maco.followthebeat.v2.user.service.interfaces.UserService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
