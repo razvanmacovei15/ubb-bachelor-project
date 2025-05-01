@@ -39,7 +39,7 @@ public class UntoldAdapter extends SuperService {
             Stage stage = existingStageOpt.orElseGet(() -> {
                 Stage newStage = stageMapper.toEntity(stageDTO);
                 newStage.setFestival(festival);
-                return stageService.save(newStage);git
+                return stageService.save(newStage);
             });
 
             ArtistDTO artistDTO = untoldMapper.mapArtistDTO(untoldArtist);
