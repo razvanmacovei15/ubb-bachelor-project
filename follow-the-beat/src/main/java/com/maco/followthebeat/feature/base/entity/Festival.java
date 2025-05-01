@@ -1,14 +1,19 @@
 package com.maco.followthebeat.feature.base.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 @Entity
 @Data
 @Table(name = "festivals")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Festival {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -32,5 +37,5 @@ public class Festival {
     private List<Artist> artists;
 
     @OneToMany(mappedBy = "festival", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Stage> stages;
+    private Set<Stage> stages = new HashSet<>();
 }

@@ -4,8 +4,9 @@ import com.maco.followthebeat.feature.base.entity.Artist;
 import com.maco.followthebeat.feature.base.generics.BaseCrudService;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface ArtistService extends BaseCrudService<Artist> {
-
+    Optional<Artist> findByName(String name);
 }

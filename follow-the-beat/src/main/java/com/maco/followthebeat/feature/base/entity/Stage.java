@@ -1,8 +1,7 @@
 package com.maco.followthebeat.feature.base.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -10,10 +9,13 @@ import java.util.UUID;
 @Entity
 @Data
 @Table(name = "stages")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @PrimaryKeyJoinColumn(name = "id")
 public class Stage  extends Location {
 
-    private String description;
+    private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "festival_id")

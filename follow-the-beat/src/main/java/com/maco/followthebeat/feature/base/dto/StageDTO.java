@@ -10,7 +10,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StageDTO extends LocationDTO {
-    private String description;
+    private String name;
     private FestivalDTO festivalDTO;
     private List<ConcertDTO> dtoConcerts;
 }

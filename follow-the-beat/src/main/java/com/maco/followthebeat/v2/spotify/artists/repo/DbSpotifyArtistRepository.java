@@ -10,4 +10,5 @@ import java.util.UUID;
 @Repository
 public interface DbSpotifyArtistRepository extends JpaRepository<DbSpotifyArtist, UUID> {
     Optional<DbSpotifyArtist> findBySpotifyId(String spotifyId);
+    Optional<DbSpotifyArtist> findByName(String name);
 } 

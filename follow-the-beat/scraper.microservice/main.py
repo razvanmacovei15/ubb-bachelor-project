@@ -31,14 +31,14 @@ def scrape_untold():
     logger.info("Received request: /untold")
     data = scrape_untold_artists()
     logger.info("Finished /untold request")
-    return {"artists": data}
+    return {"untold": data}
 
 @app.get("/electric")
 def scrape_ec():
     logger.info("Received request: /electric")
     data = scrape_electric_castle()
     logger.info("Finished /electric request")
-    return {"artists": data}
+    return {"untold": data}
 
 @app.get("/progress/untold")
 def get_untold_progress():

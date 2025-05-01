@@ -3,6 +3,7 @@ import SpotifyConnection from "../components/spotify/SpotifyConnection";
 import FilterSidebar from "../components/spotify/FilterSidebar";
 import useSpotifyProfile from "../hooks/useSpotifyProfile";
 import "./ProfilePage.css";
+import axios from "axios";
 
 const SpotifyProfile: React.FC = () => {
   const {
@@ -19,6 +20,21 @@ const SpotifyProfile: React.FC = () => {
     handleSpotifyLogin,
   } = useSpotifyProfile();
 
+  const fetchUntoldFestival = async () => {
+    try {
+      const response = await axios.get('http://localhost:8080/api/v1/untold/festival');
+      console.log('✅ Success:', response.data);
+    } catch (error) {
+      if (error.response) {
+        console.error('❌ Server responded with error:', error.response.status, error.response.data);
+      } else if (error.request) {
+        console.error('❌ No response received:', error.request);
+      } else {
+        console.error('❌ Error setting up request:', error.message);
+      }
+    }
+  };
+
   return (
     <div className="spotify-settings">
       <div className="profile-content">
@@ -30,6 +46,10 @@ const SpotifyProfile: React.FC = () => {
             onLogin={handleSpotifyLogin}
             onRefresh={() => window.location.reload()}
           />
+
+          <button onClick={fetchUntoldFestival}>
+            TEST
+          </button>
 
           {userData.isConnectedToSpotify && (
             <>

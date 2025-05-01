@@ -9,11 +9,9 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-class ArtistDTO {
+public class ArtistDTO {
     private UUID id;
     private String name;
     private String imgUrl;
     private List<String> genres;
-    private Instant createdAt;
-    private Instant updatedAt;
 }

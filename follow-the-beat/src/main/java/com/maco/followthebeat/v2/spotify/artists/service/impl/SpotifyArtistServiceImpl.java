@@ -22,6 +22,11 @@ public class SpotifyArtistServiceImpl implements SpotifyArtistService {
     }
 
     @Override
+    public Optional<DbSpotifyArtist> getArtistByName(String name) {
+        return dbSpotifyArtistRepository.findByName(name);
+    }
+
+    @Override
     public DbSpotifyArtist saveArtist(DbSpotifyArtist artist) {
         return dbSpotifyArtistRepository.save(artist);
     }

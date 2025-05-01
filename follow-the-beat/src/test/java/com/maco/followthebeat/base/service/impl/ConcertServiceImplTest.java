@@ -1,6 +1,8 @@
 package com.maco.followthebeat.base.service.impl;
 
+import com.maco.followthebeat.feature.base.entity.Artist;
 import com.maco.followthebeat.feature.base.entity.Concert;
+import com.maco.followthebeat.feature.base.entity.Location;
 import com.maco.followthebeat.feature.base.repo.ConcertRepo;
 import com.maco.followthebeat.feature.base.service.impl.ConcertServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,46 +17,65 @@ class ConcertServiceImplTest {
 
     private ConcertRepo concertRepo;
     private ConcertServiceImpl concertService;
+    private Artist testArtist;
+    private Location testLocation;
 
     @BeforeEach
     void setUp() {
         concertRepo = mock(ConcertRepo.class);
         concertService = new ConcertServiceImpl(concertRepo);
+
+        // Set up a test Artist and Location since they're required in Concert
+        testArtist = Artist.builder()
+                .id(UUID.randomUUID())
+                .name("Test Artist")
+                .imgUrl("http://test.com/artist.jpg")
+                .genres(List.of("Pop"))
+                .build();
+
+        testLocation = mock(Location.class); // Can be mocked or built if needed
+    }
+
+    private Concert createTestConcert() {
+        return Concert.builder()
+                .id(UUID.randomUUID())
+                .artist(testArtist)
+                .location(testLocation)
+                .build();
     }
 
     @Test
     void testCreateConcert() {
-        Concert concert = new Concert();
-        concert.setName("Test Concert");
-
+        Concert concert = createTestConcert();
         when(concertRepo.save(any(Concert.class))).thenReturn(concert);
 
-        Concert created = concertService.create(concert);
+        Concert created = concertService.save(concert);
         assertNotNull(created);
-        assertEquals("Test Concert", created.getName());
+        assertEquals(testArtist.getName(), created.getArtist().getName());
     }
 
     @Test
     void testUpdateConcertFound() {
         UUID id = UUID.randomUUID();
-        Concert updatedConcert = new Concert();
+        Concert updatedConcert = createTestConcert();
         updatedConcert.setId(id);
-        updatedConcert.setName("Updated");
 
         when(concertRepo.existsById(id)).thenReturn(true);
         when(concertRepo.save(updatedConcert)).thenReturn(updatedConcert);
 
         Optional<Concert> result = concertService.update(id, updatedConcert);
         assertTrue(result.isPresent());
-        assertEquals("Updated", result.get().getName());
+        assertEquals(id, result.get().getId());
     }
 
     @Test
     void testUpdateConcertNotFound() {
         UUID id = UUID.randomUUID();
+        Concert concert = createTestConcert();
+
         when(concertRepo.existsById(id)).thenReturn(false);
 
-        Optional<Concert> result = concertService.update(id, new Concert());
+        Optional<Concert> result = concertService.update(id, concert);
         assertTrue(result.isEmpty());
     }
 
@@ -78,7 +99,7 @@ class ConcertServiceImplTest {
     @Test
     void testGetById() {
         UUID id = UUID.randomUUID();
-        Concert concert = new Concert();
+        Concert concert = createTestConcert();
         concert.setId(id);
 
         when(concertRepo.findById(id)).thenReturn(Optional.of(concert));
@@ -90,7 +111,7 @@ class ConcertServiceImplTest {
 
     @Test
     void testGetAll() {
-        when(concertRepo.findAll()).thenReturn(List.of(new Concert(), new Concert()));
+        when(concertRepo.findAll()).thenReturn(List.of(createTestConcert(), createTestConcert()));
         List<Concert> all = concertService.getAll();
         assertEquals(2, all.size());
     }

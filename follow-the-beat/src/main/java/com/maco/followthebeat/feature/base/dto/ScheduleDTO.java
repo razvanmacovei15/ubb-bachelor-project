@@ -13,6 +13,5 @@ public class ScheduleDTO {
     private UUID id;
     private LocalDate date;
     private LocalTime startTime;
-    private LocalTime endTime;
     private ConcertDTO concertDTO;
 }

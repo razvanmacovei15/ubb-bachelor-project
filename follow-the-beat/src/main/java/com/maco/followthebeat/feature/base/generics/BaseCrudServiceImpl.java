@@ -12,7 +12,7 @@ public class BaseCrudServiceImpl<T> implements BaseCrudService<T> {
     protected final JpaRepository<T, UUID> repository;
 
     @Override
-    public T create(T entity) {
+    public T save(T entity) {
         return repository.save(entity);
     }
 

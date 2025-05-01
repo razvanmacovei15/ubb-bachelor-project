@@ -6,6 +6,7 @@ import java.util.Optional;
 
 public interface SpotifyArtistService {
     Optional<DbSpotifyArtist> getArtist(String spotifyId);
+    Optional<DbSpotifyArtist> getArtistByName(String name);
     DbSpotifyArtist saveArtist(DbSpotifyArtist artist);
     DbSpotifyArtist saveOrGetExistingArtist(DbSpotifyArtist artist);
     List<DbSpotifyArtist> getArtists(List<String> spotifyIds);

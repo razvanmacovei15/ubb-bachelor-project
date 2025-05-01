@@ -11,11 +11,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class ConcertDTO {
     private UUID id;
-    private String name;
-    private String description;
-    private Instant createdAt;
-    private Instant updatedAt;
     private LocationDTO locationDTO;
-    private List<ArtistDTO> dtoArtists;
+    private ArtistDTO artistDTO;
     private ScheduleDTO scheduleDTO;
 }
