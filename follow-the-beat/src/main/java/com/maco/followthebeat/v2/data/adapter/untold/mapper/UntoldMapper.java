@@ -1,4 +1,4 @@
-package com.maco.followthebeat.v2.data.adapter.mapper;
+package com.maco.followthebeat.v2.data.adapter.untold.mapper;
 
 import com.maco.followthebeat.v2.data.scrappers.untold.model.UntoldArtist;
 import com.maco.followthebeat.v2.data.scrappers.untold.config.UntoldConstants;

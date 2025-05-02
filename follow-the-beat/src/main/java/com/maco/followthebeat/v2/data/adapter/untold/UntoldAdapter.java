@@ -8,7 +8,7 @@ import com.maco.followthebeat.v2.core.entity.*;
 import com.maco.followthebeat.v2.core.service.impl.SuperService;
 import com.maco.followthebeat.v2.data.scrappers.untold.model.UntoldArtist;
 import com.maco.followthebeat.v2.data.scrappers.untold.model.UntoldFestivalResponse;
-import com.maco.followthebeat.v2.data.adapter.mapper.UntoldMapper;
+import com.maco.followthebeat.v2.data.adapter.untold.mapper.UntoldMapper;
 import com.maco.followthebeat.v2.data.scrappers.untold.api.UntoldService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

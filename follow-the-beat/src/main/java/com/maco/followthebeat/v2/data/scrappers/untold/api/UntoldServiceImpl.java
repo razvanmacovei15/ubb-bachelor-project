@@ -7,7 +7,7 @@ import com.maco.followthebeat.v2.core.dto.ArtistDTO;
 import com.maco.followthebeat.v2.core.dto.FestivalDTO;
 import com.maco.followthebeat.v2.core.dto.ScheduleDTO;
 import com.maco.followthebeat.v2.core.dto.StageDTO;
-import com.maco.followthebeat.v2.data.adapter.mapper.UntoldMapper;
+import com.maco.followthebeat.v2.data.adapter.untold.mapper.UntoldMapper;
 import com.maco.followthebeat.v2.spotify.artists.entity.DbSpotifyArtist;
 import com.maco.followthebeat.v2.spotify.artists.service.impl.SpotifyArtistServiceImpl;
 import lombok.RequiredArgsConstructor;
