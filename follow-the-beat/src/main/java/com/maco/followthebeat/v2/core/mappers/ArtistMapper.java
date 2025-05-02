@@ -1,0 +1,16 @@
+package com.maco.followthebeat.v2.core.mappers;
+
+import com.maco.followthebeat.v2.core.dto.ArtistDTO;
+import com.maco.followthebeat.v2.core.entity.Artist;
+import org.springframework.stereotype.Component;
+
+@Component
+
+public class ArtistMapper {
+    public Artist toEntity(ArtistDTO artistDTO) {
+        return Artist.builder()
+                .name(artistDTO.getName())
+                .imgUrl(artistDTO.getImgUrl())
+                .build();
+    }
+}

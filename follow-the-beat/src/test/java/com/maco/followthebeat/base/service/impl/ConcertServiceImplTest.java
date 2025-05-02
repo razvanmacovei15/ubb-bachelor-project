@@ -1,10 +1,10 @@
 package com.maco.followthebeat.base.service.impl;
 
-import com.maco.followthebeat.feature.base.entity.Artist;
-import com.maco.followthebeat.feature.base.entity.Concert;
-import com.maco.followthebeat.feature.base.entity.Location;
-import com.maco.followthebeat.feature.base.repo.ConcertRepo;
-import com.maco.followthebeat.feature.base.service.impl.ConcertServiceImpl;
+import com.maco.followthebeat.v2.core.entity.Artist;
+import com.maco.followthebeat.v2.core.entity.Concert;
+import com.maco.followthebeat.v2.core.entity.Location;
+import com.maco.followthebeat.v2.core.repo.ConcertRepo;
+import com.maco.followthebeat.v2.core.service.impl.ConcertServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
