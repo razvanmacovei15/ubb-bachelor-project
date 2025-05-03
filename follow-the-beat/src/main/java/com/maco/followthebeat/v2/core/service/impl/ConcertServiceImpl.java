@@ -13,7 +13,9 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class ConcertServiceImpl extends BaseCrudServiceImpl<Concert> implements ConcertService {
@@ -48,4 +50,21 @@ public class ConcertServiceImpl extends BaseCrudServiceImpl<Concert> implements 
     public Page<ConcertDTO> convertToDTO(Page<Concert> concerts) {
         return concerts.map(concertMapper::fromEntity);
     }
+
+    @Override
+    public List<Concert> getConcertsByFestivalId(UUID festivalId) {
+        return concertRepo.findByFestivalId(festivalId);
+    }
+
+    @Override
+    public void deleteByFestivalId(UUID festivalId) {
+        concertRepo.deleteByFestivalId(festivalId);
+    }
+
+    @Override
+    public void deleteConcertById(UUID concertId) {
+        concertRepo.deleteById(concertId);
+    }
+
+
 }

@@ -15,7 +15,7 @@ logging.basicConfig(
 )
 
 # Create a logger object
-logger = logging.getLogger(__name__)   # <<< THIS LINE is important!
+logger = logging.getLogger(__name__)
 
 app = FastAPI()
 
@@ -38,7 +38,7 @@ def scrape_ec():
     logger.info("Received request: /electric")
     data = scrape_electric_castle()
     logger.info("Finished /electric request")
-    return {"untold": data}
+    return {"electric": data}
 
 @app.get("/progress/untold")
 def get_untold_progress():

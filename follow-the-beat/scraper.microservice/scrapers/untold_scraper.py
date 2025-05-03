@@ -131,7 +131,7 @@ def scrape_untold_artists():
         logger.info("Closed browser")
 
     return {
-        "festival_name": "Untold",
+        "festival_name": "Untold 2025",
         "date_range": date_range,
         "location": location,
         "artists": artists

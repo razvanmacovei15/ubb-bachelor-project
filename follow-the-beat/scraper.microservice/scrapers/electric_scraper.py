@@ -38,7 +38,13 @@ def scrape_electric_castle():
             artists_data.append(artist_info)
 
         logger.info("Finished processing Electric Castle artists")
-        return artists_data
+        return {
+            "festival_name": "Electric Castle",
+            "location": "Bontida, Romania",
+            "start_date": "16-07-2025",
+            "end_date": "20-07-2025",
+            "artists": artists_data,
+        }
 
     except Exception as e:
         logger.error(f"Error during Electric Castle scraping: {str(e)}")

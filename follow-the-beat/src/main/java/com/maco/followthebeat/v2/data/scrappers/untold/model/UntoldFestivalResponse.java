@@ -1,12 +1,13 @@
 package com.maco.followthebeat.v2.data.scrappers.untold.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.maco.followthebeat.v2.data.scrappers.model.FestivalResponse;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
-public class UntoldFestivalResponse {
+public class UntoldFestivalResponse implements FestivalResponse {
 
     @JsonProperty("festival_name")
     private String festivalName;

@@ -7,10 +7,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public interface ConcertService extends BaseCrudService<Concert> {
     Page<Concert> getConcerts(Optional<String> artist, Optional<String> city, Optional<LocalDate> date, Pageable pageable);
     Page<ConcertDTO> convertToDTO(Page<Concert> concerts);
+    List<Concert> getConcertsByFestivalId(UUID festivalId);
+    void deleteByFestivalId(UUID festivalId);
+    void deleteConcertById(UUID concertId);
 
 }

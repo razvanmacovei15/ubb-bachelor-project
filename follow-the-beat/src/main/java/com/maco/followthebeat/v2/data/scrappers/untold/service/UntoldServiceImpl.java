@@ -1,4 +1,4 @@
-package com.maco.followthebeat.v2.data.scrappers.untold.api;
+package com.maco.followthebeat.v2.data.scrappers.untold.service;
 
 import com.maco.followthebeat.v2.data.scrappers.untold.model.UntoldArtist;
 import com.maco.followthebeat.v2.data.scrappers.untold.model.UntoldFestivalResponse;
@@ -74,17 +74,6 @@ public class UntoldServiceImpl implements UntoldService {
                 .build();
     }
 
-    @Override
-    public List<ArtistDTO> getArtists(List<UntoldArtist> untoldArtists) {
-        List<ArtistDTO> artists = new ArrayList<>();
-        for(UntoldArtist untoldArtist : untoldArtists){
-            ArtistDTO artistDTO = untoldMapper.mapArtistDTO(untoldArtist);
-            addGenresToArtistDTO(artistDTO);
-            artists.add(artistDTO);
-        }
-        return artists;
-    }
-
     public void addGenresToArtistDTO(ArtistDTO artistDTO){
         Optional<DbSpotifyArtist> artist = spotifyArtistService.getArtistByName(artistDTO.getName());
         if(artist.isPresent()){
@@ -93,15 +82,5 @@ public class UntoldServiceImpl implements UntoldService {
             //todo else implement search from spotify api for the artist to get more info maybe
             artistDTO.setGenres(Collections.emptyList());
         }
-    }
-
-    @Override
-    public String createConcertName(List<ArtistDTO> artistDTOs) {
-        StringBuilder artistNames = new StringBuilder();
-        for (ArtistDTO artist : artistDTOs) {
-            artistNames.append(artist.getName()).append(", ");
-        }
-        artistNames.append("Concert");
-        return artistNames.toString();
     }
 }

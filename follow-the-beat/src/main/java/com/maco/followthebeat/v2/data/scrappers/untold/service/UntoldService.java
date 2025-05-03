@@ -1,4 +1,4 @@
-package com.maco.followthebeat.v2.data.scrappers.untold.api;
+package com.maco.followthebeat.v2.data.scrappers.untold.service;
 
 import com.maco.followthebeat.v2.data.scrappers.untold.model.UntoldArtist;
 import com.maco.followthebeat.v2.data.scrappers.untold.model.UntoldFestivalResponse;
@@ -13,7 +13,5 @@ public interface UntoldService {
     FestivalDTO createFestival(UntoldFestivalResponse untoldFestivalResponse);
     StageDTO createStage(UntoldArtist untoldArtist, FestivalDTO festivalDTO);
     ScheduleDTO createSchedule(UntoldArtist untoldArtist);
-    List<ArtistDTO> getArtists(List<UntoldArtist> untoldArtists);
     void addGenresToArtistDTO(ArtistDTO artistDTO);
-    String createConcertName(List<ArtistDTO> artistDTOs);
 }
