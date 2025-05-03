@@ -19,6 +19,16 @@ public class UntoldFestivalManager {
     private final FestivalService festivalService;
     private final FestivalMapper festivalMapper;
 
+
+//    """
+//    todo this is one place for improvement
+//    this should be universal for any festivals i will have in my app
+//    as such i must design the scrapers to return the same type of data
+//    no matter what info i can get from scraping
+//    just have to adjust to what i have so far
+//    this would be a much better solution
+//    """
+
     public Festival checkOrCreateOrUpdate(UntoldFestivalResponse response) {
         FestivalDTO dto = untoldService.createFestival(response);
         Optional<Festival> existingOpt = festivalService.getFestivalByName(dto.getName());

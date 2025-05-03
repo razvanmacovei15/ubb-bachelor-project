@@ -40,6 +40,7 @@ public class ConcertController {
         Pageable pageable = PageRequest.of(page, size,
                 direction.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending());
 
+        //todo make in only one method
         Page<Concert> concerts = concertService.getConcerts(artist, city, date, pageable);
         Page<ConcertDTO> dtoPage = concertService.convertToDTO(concerts);
 
