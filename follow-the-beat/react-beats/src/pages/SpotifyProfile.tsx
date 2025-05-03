@@ -24,14 +24,31 @@ const SpotifyProfile: React.FC = () => {
     try {
       const response = await axios.get('http://localhost:8080/api/v1/untold/festival');
       console.log('✅ Success:', response.data);
-    } catch (error) {
+    } catch (error: any) {
       if (error.response) {
-        console.error('❌ Server responded with error:', error.response.status, error.response.data);
+        console.error('Server responded with error:', error.response.status, error.response.data);
       } else if (error.request) {
-        console.error('❌ No response received:', error.request);
+        console.error('No response received:', error.request);
       } else {
-        console.error('❌ Error setting up request:', error.message);
+        console.error('Error setting up request:', error.message);
       }
+    }
+  };
+
+  const fetchConcerts = async () => {
+    try {
+      const response = await axios.get('http://localhost:8080/api/v1/concerts', {
+        params: {
+          page: 0,
+          size: 10,
+          sortBy: 'createdAt',
+          direction: 'desc'
+        }
+      });
+
+      console.log('Concerts data:', response.data);
+    } catch (error) {
+      console.error('Error fetching concerts:', error);
     }
   };
 
