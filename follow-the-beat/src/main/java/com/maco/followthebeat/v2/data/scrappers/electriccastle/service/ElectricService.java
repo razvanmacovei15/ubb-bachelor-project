@@ -13,5 +13,6 @@ public interface ElectricService {
     FestivalDTO createFestivalDTO(ElectricFestivalResponse electricFestivalResponse);
     StageDTO createStageDTO(ElectricArtist electricArtist, FestivalDTO festivalDTO);
     ScheduleDTO createScheduleDTO(ElectricArtist electricArtist, LocalDate date);
+    ArtistDTO createArtistDTO(ElectricArtist electricArtist);
     void addGenresToArtistDTO(ArtistDTO artistDTO);
 }

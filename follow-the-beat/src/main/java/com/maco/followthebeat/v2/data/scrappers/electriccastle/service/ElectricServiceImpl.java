@@ -44,6 +44,12 @@ public class ElectricServiceImpl implements ElectricService{
     }
 
     @Override
+    public ArtistDTO createArtistDTO(ElectricArtist electricArtist) {
+        return electricMapper.mapToArtistDTO(electricArtist);
+    }
+
+
+    @Override
     public void addGenresToArtistDTO(ArtistDTO artistDTO) {
         Optional<DbSpotifyArtist> artist = spotifyArtistService.getArtistByName(artistDTO.getName());
         if(artist.isPresent()){
