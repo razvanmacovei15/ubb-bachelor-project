@@ -1,6 +1,5 @@
 package com.maco.followthebeat.v2.data.scrappers.untold.api;
 
-import com.maco.followthebeat.feature.base.dto.*;
 import com.maco.followthebeat.v2.data.scrappers.untold.model.UntoldArtist;
 import com.maco.followthebeat.v2.data.scrappers.untold.model.UntoldFestivalResponse;
 import com.maco.followthebeat.v2.core.dto.ArtistDTO;

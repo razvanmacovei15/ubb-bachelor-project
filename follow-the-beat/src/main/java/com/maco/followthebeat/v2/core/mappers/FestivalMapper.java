@@ -22,4 +22,19 @@ public class FestivalMapper {
                 .stages(new HashSet<>())
                 .build();
     }
+
+    public FestivalDTO toDTO(Festival festival) {
+        return FestivalDTO.builder()
+                .id(festival.getId())
+                .name(festival.getName())
+                .description(festival.getDescription())
+                .location(festival.getLocation())
+                .startDate(festival.getStartDate())
+                .endDate(festival.getEndDate())
+                .logoUrl(festival.getLogoUrl())
+                .websiteUrl(festival.getWebsiteUrl())
+                .isActive(festival.getIsActive())
+                .dtoStages(new HashSet<>())
+                .build();
+    }
 }

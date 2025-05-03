@@ -13,4 +13,12 @@ public class ScheduleMapper {
                 .startTime(scheduleDTO.getStartTime())
                 .build();
     }
+
+    public ScheduleDTO toDTO(Schedule schedule) {
+        return ScheduleDTO.builder()
+                .id(schedule.getId())
+                .date(schedule.getDate())
+                .startTime(schedule.getStartTime())
+                .build();
+    }
 }

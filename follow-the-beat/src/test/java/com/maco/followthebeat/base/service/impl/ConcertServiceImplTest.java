@@ -3,6 +3,7 @@ package com.maco.followthebeat.base.service.impl;
 import com.maco.followthebeat.v2.core.entity.Artist;
 import com.maco.followthebeat.v2.core.entity.Concert;
 import com.maco.followthebeat.v2.core.entity.Location;
+import com.maco.followthebeat.v2.core.mappers.ConcertMapper;
 import com.maco.followthebeat.v2.core.repo.ConcertRepo;
 import com.maco.followthebeat.v2.core.service.impl.ConcertServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,11 +20,12 @@ class ConcertServiceImplTest {
     private ConcertServiceImpl concertService;
     private Artist testArtist;
     private Location testLocation;
+    private ConcertMapper concertMapper;
 
     @BeforeEach
     void setUp() {
         concertRepo = mock(ConcertRepo.class);
-        concertService = new ConcertServiceImpl(concertRepo);
+        concertService = new ConcertServiceImpl(concertRepo, concertMapper);
 
         // Set up a test Artist and Location since they're required in Concert
         testArtist = Artist.builder()

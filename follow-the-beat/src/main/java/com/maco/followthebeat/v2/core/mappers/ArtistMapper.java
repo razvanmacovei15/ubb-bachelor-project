@@ -13,4 +13,13 @@ public class ArtistMapper {
                 .imgUrl(artistDTO.getImgUrl())
                 .build();
     }
+
+    public ArtistDTO toDTO(Artist artist) {
+        return ArtistDTO.builder()
+                .id(artist.getId())
+                .name(artist.getName())
+                .imgUrl(artist.getImgUrl())
+                .genres(artist.getGenres())
+                .build();
+    }
 }

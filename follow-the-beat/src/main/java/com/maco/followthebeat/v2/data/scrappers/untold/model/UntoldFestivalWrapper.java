@@ -6,6 +6,6 @@ import org.springframework.stereotype.Component;
 @Data
 @Component
 public class UntoldFestivalWrapper {
-    private UntoldFestivalResponse artists; // artists is the actual payload
+    private UntoldFestivalResponse untold;
 
 }

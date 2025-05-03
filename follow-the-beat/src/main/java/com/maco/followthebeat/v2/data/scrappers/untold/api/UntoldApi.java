@@ -25,11 +25,11 @@ public class UntoldApi {
             UntoldFestivalWrapper wrapper = objectMapper.readValue(jsonResponse, UntoldFestivalWrapper.class);
 
 
-            if (wrapper == null ||  wrapper.getArtists() == null) {
+            if (wrapper == null ||  wrapper.getUntold() == null) {
                 return null;
             }
 
-            return wrapper.getArtists();
+            return wrapper.getUntold();
 
         } catch (IOException e) {
             throw new RuntimeException("Failed to fetch or parse Untold festival data", e);

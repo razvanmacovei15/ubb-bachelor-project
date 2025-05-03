@@ -4,6 +4,7 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 @Data
 @Builder
@@ -20,5 +21,5 @@ public class FestivalDTO {
     private String websiteUrl;
     private Boolean isActive;
     private List<ArtistDTO> dtoArtists;
-    private List<StageDTO> dtoStages;
+    private Set<StageDTO> dtoStages;
 }

@@ -12,4 +12,10 @@ public class StageMapper {
         stage.setName(stageDTO.getName());
         return stage;
     }
+    public StageDTO toDTO(Stage stage) {
+        return StageDTO.builder()
+                .id(stage.getId())
+                .name(stage.getName())
+                .build();
+    }
 }

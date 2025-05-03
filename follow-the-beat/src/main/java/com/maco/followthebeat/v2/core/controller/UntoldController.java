@@ -33,8 +33,4 @@ public class UntoldController {
             return ResponseEntity.status(500).body("Internal error: " + e.getMessage());
         }
     }
-
-
-
-
 }
