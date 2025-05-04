@@ -1,4 +1,4 @@
-package com.maco.followthebeat.v2.data.adapter.untold.mapper;
+package com.maco.followthebeat.v2.data.adapter.electriccastle.mapper;
 
 import com.maco.followthebeat.v2.core.dto.ArtistDTO;
 import com.maco.followthebeat.v2.core.dto.FestivalDTO;
@@ -28,7 +28,7 @@ public class ElectricMapper {
         LocalDate startDate = parseStringDate(electricFestivalResponse.getStartDate());
         LocalDate endDate = parseStringDate(electricFestivalResponse.getEndDate());
 
-        FestivalDTO festivalDTO = FestivalDTO.builder()
+        return FestivalDTO.builder()
                 .name(electricFestivalResponse.getFestivalName())
                 .description(ElectricConstants.FESTIVAL_DESCRIPTION)
                 .location(electricFestivalResponse.getLocation())
@@ -38,8 +38,6 @@ public class ElectricMapper {
                 .websiteUrl(ElectricConstants.WEBSITE)
                 .isActive(checkCurrentDateInRange(startDate, endDate))
                 .build();
-
-        return new FestivalDTO();
     }
 
     public ArtistDTO mapToArtistDTO(ElectricArtist electricArtist) {

@@ -8,6 +8,7 @@ import java.util.Map;
 public class ElectricArtist {
     private String name;
     private String stage;
+    @JsonProperty("image_url")
     private String imgUrl;
     private String day;
     private int ranking;

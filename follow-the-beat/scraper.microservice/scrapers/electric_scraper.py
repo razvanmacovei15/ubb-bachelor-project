@@ -39,7 +39,7 @@ def scrape_electric_castle():
 
         logger.info("Finished processing Electric Castle artists")
         return {
-            "festival_name": "Electric Castle",
+            "festival_name": "Electric Castle 2025",
             "location": "Bontida, Romania",
             "start_date": "16-07-2025",
             "end_date": "20-07-2025",

@@ -4,7 +4,7 @@ import com.maco.followthebeat.v2.core.dto.ArtistDTO;
 import com.maco.followthebeat.v2.core.dto.FestivalDTO;
 import com.maco.followthebeat.v2.core.dto.ScheduleDTO;
 import com.maco.followthebeat.v2.core.dto.StageDTO;
-import com.maco.followthebeat.v2.data.adapter.untold.mapper.ElectricMapper;
+import com.maco.followthebeat.v2.data.adapter.electriccastle.mapper.ElectricMapper;
 import com.maco.followthebeat.v2.data.scrappers.electriccastle.model.ElectricArtist;
 import com.maco.followthebeat.v2.data.scrappers.electriccastle.model.ElectricFestivalResponse;
 import com.maco.followthebeat.v2.spotify.artists.entity.DbSpotifyArtist;
@@ -22,7 +22,6 @@ public class ElectricServiceImpl implements ElectricService{
     private final ElectricMapper electricMapper;
     private final SpotifyArtistServiceImpl spotifyArtistService;
 
-
     @Override
     public FestivalDTO createFestivalDTO(ElectricFestivalResponse electricFestivalResponse) {
         return electricMapper.mapToFestivalDTO(electricFestivalResponse);
@@ -34,9 +33,14 @@ public class ElectricServiceImpl implements ElectricService{
     }
 
     @Override
-    public ScheduleDTO createScheduleDTO(ElectricArtist electricArtist, LocalDate date) {
-        int day = Integer.parseInt(electricArtist.getDay());
-        LocalDate performanceDate = date.plusDays(day - 1);
+    public ScheduleDTO createScheduleDTO(ElectricArtist electricArtist, LocalDate startDate) {
+        LocalDate performanceDate;
+        if(electricArtist.getDay().equals("Unknown Day")){
+            performanceDate = null;
+        } else {
+            int day = Integer.parseInt(electricArtist.getDay());
+            performanceDate = startDate.plusDays(day - 1);
+        }
         return ScheduleDTO.builder()
                 .date(performanceDate)
                 .startTime(null)
