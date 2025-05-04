@@ -44,7 +44,7 @@ public class ConcertController {
         Page<Concert> concerts = concertService.getConcerts(artist, city, date, pageable);
         Page<ConcertDTO> dtoPage = concertService.convertToDTO(concerts);
 
-        //todo de intrebat pe alex care e treaba cu pagedResourcesAssembler
+        //todo de intrebat pe alex care e treaba cu pagedResourcesAssembler ?
         return pagedResourcesAssembler.toModel(dtoPage);
     }
 }

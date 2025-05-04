@@ -25,9 +25,16 @@ public class SpotifyClientFactory {
         this.redirectUri = redirectUri;
         this.scopes = scopes.split(",");
     }
+
     @Bean
     @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     public SpotifyClientI createSpotifyClient() {
         return new SpotifyClientI(clientId, clientSecret, redirectUri, scopes);
     }
+
+    //todo
+    //user context
+    //filters -> chain of responsabilty -> request thread local bean -> user ocntext
+    // session scope
+    //validate access token -> get user details() -> save details in DB
 }

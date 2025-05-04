@@ -37,5 +37,4 @@ public class UntoldMapper {
         festivalDTO.setIsActive(checkCurrentDateInRange(dateRange[0], dateRange[1]));
         return festivalDTO;
     }
-
 }

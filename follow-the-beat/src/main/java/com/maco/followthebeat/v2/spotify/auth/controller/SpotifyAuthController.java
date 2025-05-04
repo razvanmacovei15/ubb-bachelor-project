@@ -45,12 +45,14 @@ public class SpotifyAuthController {
             SpotifyClientI client = clientManager.getOrCreateSpotifyClient(userId);
 
             String loginUrl = client.getAuthorizationUrl(state) + "&userId=" + userId;
-
+            System.out.println(loginUrl);
             return ResponseEntity.ok(loginUrl);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error: " + e.getMessage());
         }
     }
+
+
 
     @GetMapping("/callback")
     public ResponseEntity<String> handleCallback(
@@ -83,6 +85,7 @@ public class SpotifyAuthController {
                         "<script>window.opener.postMessage({ userId: '" + linkedUser.getId() + "' }, '*'); window.close();</script>"
                 );
             }
+
             return ResponseEntity.ok(
                     "<script>window.opener.postMessage({ userId: '" + userId + "' }, '*'); window.close();</script>"
             );
