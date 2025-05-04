@@ -5,6 +5,8 @@ Archive.zip
 Framework Comparison.docx
 EY-tech-interview/
 .idea/
+/src/main/resources/postgres/local-dbs
+
 
 # Java
 HELP.md
