@@ -1,6 +1,6 @@
 import logging
 import requests
-from unified_structure import create_festival_template, create_artist_template, create_concert_template
+from unified_structure import create_festival_template, create_artist_template
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
@@ -29,11 +29,10 @@ def scrape_electric_castle_unified():
             artist_entry["img_url"] = artist.get("image")
 
             schedule = artist.get("schedule", [{}])[0] if artist.get("schedule") else {}
-            concert = create_concert_template()
-            concert["stage_name"] = schedule.get("stage", "Unknown Stage")
-            concert["date"] = schedule.get("day", "Unknown Day")
+            artist_entry["stage_name"] = schedule.get("stage", "Unknown Stage")
+            artist_entry["date"] = schedule.get("day", "Unknown Day")
+            artist_entry["start_time"] = None
 
-            artist_entry["concerts"].append(concert)
             festival["artists"].append(artist_entry)
 
         logger.info("Finished processing Electric Castle artists")

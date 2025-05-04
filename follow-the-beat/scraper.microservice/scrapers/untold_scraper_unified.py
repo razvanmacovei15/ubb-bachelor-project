@@ -7,7 +7,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 
-from unified_structure import create_festival_template, create_artist_template, create_concert_template
+from unified_structure import create_festival_template, create_artist_template
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
@@ -79,7 +79,7 @@ def scrape_untold_artists_unified():
             "festival_name": "Untold 2025",
             "location": location,
             "start_date": "2025-08-07",
-            "end_date": "2025-08-10",
+            "end_date": "2025-08-10"
         })
 
         logger.info("Navigating to Untold artists page...")
@@ -100,13 +100,10 @@ def scrape_untold_artists_unified():
             artist_entry = create_artist_template()
             artist_entry["name"] = artist_info["name"]
             artist_entry["img_url"] = artist_info["image_url"]
+            artist_entry["stage_name"] = artist_info["stage"]
+            artist_entry["date"] = artist_info["date"]
+            artist_entry["start_time"] = artist_info["time"]
 
-            concert = create_concert_template()
-            concert["stage_name"] = artist_info["stage"]
-            concert["date"] = artist_info["date"]
-            concert["start_time"] = artist_info["time"]
-
-            artist_entry["concerts"].append(concert)
             festival["artists"].append(artist_entry)
 
         return festival
