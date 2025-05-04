@@ -32,6 +32,9 @@ public class User {
     @Column(name = "is_anonymous")
     private boolean isAnonymous;
 
+    @Column(name = "has_spotify_connected")
+    private boolean hasSpotifyConnected;
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;

@@ -52,6 +52,7 @@ public class AuthServiceImpl implements AuthService {
         } else {
             SpotifyUserData sp = spotifyUserDataService.createSpotifyData(client, user);
             user.setSpotifyUserData(sp);
+            user.setHasSpotifyConnected(true);
             userService.updateUser(user);
             return user;
         }

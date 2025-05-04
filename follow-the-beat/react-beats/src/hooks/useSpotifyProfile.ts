@@ -1,7 +1,7 @@
+// src/hooks/useSpotifyProfile.ts
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
-import openSpotifyLoginPopup from "./useSpotifyLoginPopup.ts";
 
 export type ViewType = "artists" | "tracks";
 
@@ -22,10 +22,8 @@ export interface SpotifyTrack {
     albumImgUrl: string;
 }
 
-
 interface UserData {
     isConnectedToSpotify: boolean;
-    userId?: string;
 }
 
 const useSpotifyProfile = () => {
@@ -38,29 +36,33 @@ const useSpotifyProfile = () => {
     const [topTracks, setTopTracks] = useState<SpotifyTrack[]>([]);
     const [currentView, setCurrentView] = useState<ViewType>("artists");
 
-    const fetchTopArtists = async (userId: string, range: string) => {
+    const sessionToken = localStorage.getItem("sessionToken");
+
+    const fetchTopArtists = async (range: string) => {
         const response = await axios.get<SpotifyArtist[]>(`http://localhost:8080/api/spotify-artists/top-artists`, {
-            params: { userId, limit: 50, range },
+            headers: { Authorization: `Bearer ${sessionToken}` },
+            params: { limit: 50, range },
         });
         setTopArtists(response.data);
     };
 
-    const fetchTopTracks = async (userId: string, range: string) => {
+    const fetchTopTracks = async (range: string) => {
         const response = await axios.get<SpotifyTrack[]>(`http://localhost:8080/spotify-tracks/top-tracks`, {
-            params: { userId, limit: 50, range },
+            headers: { Authorization: `Bearer ${sessionToken}` },
+            params: { limit: 50, range },
         });
         setTopTracks(response.data);
     };
 
-    const fetchSpotifyData = async (userId: string, range : string) => {
-        await Promise.all([fetchTopArtists(userId, range), fetchTopTracks(userId, range)]);
-        setUserData({ isConnectedToSpotify: true, userId });
+    const fetchSpotifyData = async (range: string) => {
+        await Promise.all([fetchTopArtists(range), fetchTopTracks(range)]);
+        setUserData({ isConnectedToSpotify: true });
     };
 
-    const fetchInitialSpotifyData = async (userId: string) => {
+    const fetchInitialSpotifyData = async () => {
         setContentLoading(true);
         try {
-            await fetchSpotifyData(userId, timeRange);
+            await fetchSpotifyData(timeRange);
         } catch (err) {
             console.error(err);
             setError("Failed to fetch Spotify data");
@@ -70,10 +72,10 @@ const useSpotifyProfile = () => {
         }
     };
 
-    const fetchStatsSpotifyData = async (userId: string, range: string) => {
+    const fetchStatsSpotifyData = async (range: string) => {
         setStatsLoading(true);
         try {
-            await fetchSpotifyData(userId, range);
+            await fetchSpotifyData(range);
         } catch (err) {
             console.error(err);
             setError("Failed to fetch Spotify data");
@@ -83,43 +85,31 @@ const useSpotifyProfile = () => {
     };
 
     const handleSpotifyLogin = async () => {
-        try {
-            const localUserId = localStorage.getItem("userId") || uuidv4();
-            const authUrl = await axios
-                .get<string>("http://localhost:8080/spotify-auth/auth-url", {
-                    params: { state: localUserId },
-                })
-                .then((res) => res.data);
+        const state = uuidv4();
+        localStorage.setItem("authState", state);
 
-            const newUserId = await openSpotifyLoginPopup(authUrl);
-            if (newUserId) {
-                localStorage.setItem("userId", newUserId);
-                setUserData({ isConnectedToSpotify: true, userId: newUserId });
-                await fetchInitialSpotifyData(newUserId);
-            }
-        } catch (error) {
-            console.error(error);
-            setError("Spotify login failed. Please try again.");
-        }
+        const authUrl = await axios
+            .get("http://localhost:8080/spotify-auth/auth-url", { params: { state } })
+            .then((res) => res.data);
+
+        window.location.href = authUrl;
     };
 
     const handleTimeRangeChange = (newRange: string) => {
         setTimeRange(newRange);
-        const storedUserId = localStorage.getItem("userId");
-        if (storedUserId) {
-            fetchStatsSpotifyData(storedUserId, newRange);
+        if (sessionToken) {
+            fetchStatsSpotifyData(newRange);
         }
     };
 
     useEffect(() => {
-        const storedUserId = localStorage.getItem("userId");
-        if (storedUserId) {
-            setUserData({ isConnectedToSpotify: true, userId: storedUserId });
-            fetchInitialSpotifyData(storedUserId);
+        if (sessionToken) {
+            setUserData({ isConnectedToSpotify: true });
+            fetchInitialSpotifyData();
         } else {
             setContentLoading(false);
         }
-    }, []);
+    }, [sessionToken]);
 
     return {
         userData,

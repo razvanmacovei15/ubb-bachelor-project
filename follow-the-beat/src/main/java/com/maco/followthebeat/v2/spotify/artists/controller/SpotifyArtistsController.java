@@ -1,7 +1,10 @@
 package com.maco.followthebeat.v2.spotify.artists.controller;
 
+import com.maco.followthebeat.v2.cache.RedisStateCacheServiceImpl;
 import com.maco.followthebeat.v2.common.exceptions.UserNotFoundException;
 import com.maco.followthebeat.v2.spotify.artists.dto.SpotifyArtistDto;
+import com.maco.followthebeat.v2.user.context.IsConnected;
+import com.maco.followthebeat.v2.user.context.UserContext;
 import com.maco.followthebeat.v2.user.entity.User;
 import com.maco.followthebeat.v2.spotify.enums.SpotifyTimeRange;
 import com.maco.followthebeat.v2.user.service.interfaces.UserService;
@@ -22,36 +25,37 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class SpotifyArtistsController {
     private final SpotifyArtistStatsService spotifyArtistStatsService;
+    private final RedisStateCacheServiceImpl stateCacheService;
     private final UserService userService;
+    private final UserContext userContext;
 
+    @IsConnected
     @GetMapping("/top-artists")
     public ResponseEntity<List<SpotifyArtistDto>> getTopArtists(
-            @RequestParam(required = false) UUID userId,
+            @RequestHeader ("Authorization") String authHeader,
             @RequestParam(defaultValue = "medium_term") SpotifyTimeRange range,
             @RequestParam(defaultValue = "10") int limit,
             @RequestParam(defaultValue = "0", required = false) int offset) {
 
-        Optional<User> userOptional = userService.findUserById(userId);
-        if (userOptional.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(List.of());
-        }
-        User user = userOptional.get();
+        User user = userContext.get();
+        log.info("User ID from context: {}", user.getId());
 
-        if(!user.isActive()){
-            List<SpotifyArtistDto> artists = spotifyArtistStatsService.fetchAndSaveInitialStats(user, range);
-            return ResponseEntity.ok(artists);
+        List<SpotifyArtistDto> artists;
+        if (!user.isActive()) {
+            artists = spotifyArtistStatsService.fetchAndSaveInitialStats(user, range);
+        } else {
+            artists = spotifyArtistStatsService.getTopArtistsByTimeRange(user, range);
         }
-        List<SpotifyArtistDto> artists = spotifyArtistStatsService.getTopArtistsByTimeRange(user, range);
         return ResponseEntity.ok(artists);
     }
 
     @PostMapping(value = "/refresh", produces = "application/json")
     public ResponseEntity<Void> refreshStats(
-            @RequestParam UUID userId,
+            @RequestHeader ("Authorization") String authHeader,
             @RequestParam(defaultValue = "medium_term") String range) {
+        String sessionToken = authHeader.replace("Bearer ", "").trim();
+        UUID userId = stateCacheService.getUserBySession(sessionToken);
 
-//        UUID userUuid = UUID.fromString(userId);
         User user = userService.findUserById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId));
 

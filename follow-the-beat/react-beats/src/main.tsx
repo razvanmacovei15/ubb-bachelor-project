@@ -14,6 +14,7 @@ import { LineupProvider } from "./contexts/LineupContext.tsx";
 import ConcertsPage from "./pages/ConcertsPage.tsx";
 import StatisticsPage from "./pages/StatisticsPage.tsx";
 import { ConcertSortingFilteringProvider } from "./contexts/ConcertSortingFiltering.tsx";
+import SpotifyAuthSuccess from "./components/spotify/SpotifyAuthSuccess.tsx";
 
 const router = createBrowserRouter([
   {
@@ -46,6 +47,8 @@ const router = createBrowserRouter([
         path: "statistics",
         element: <StatisticsPage />,
       },
+      { path: "spotify-auth-success", element: <SpotifyAuthSuccess /> },
+
     ],
   },
 ]);

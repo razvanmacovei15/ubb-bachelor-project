@@ -1,6 +1,7 @@
 package com.maco.followthebeat.v2.user.repo;
 
 import com.maco.followthebeat.v2.user.entity.User;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,13 +14,10 @@ import java.util.UUID;
 public interface UserRepo extends JpaRepository<User, UUID> {
     @Query("SELECT u FROM User u JOIN u.spotifyUserData sp WHERE sp.spotifyUserId = :spotifyUserId")
     Optional<User> findBySpotifyUserId(@Param("spotifyUserId") String spotifyUserId);
-    @Query("""
-    SELECT CASE WHEN u.spotifyUserData IS NOT NULL THEN true ELSE false END
-    FROM User u
-    WHERE u.id = :userId
-""")
-    boolean hasSpotifyConnected(UUID userId);
+
     boolean existsById(UUID userId);
     boolean existsByEmail(String email);
     boolean existsByUsername(String username);
+    @NotNull
+    Optional<User> findById(@NotNull UUID userId);
 }

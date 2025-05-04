@@ -83,7 +83,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean hasConnectedSpotifyAccount(UUID userId) {
-        return userRepo.hasSpotifyConnected(userId);
+        Optional<User> userOptional = findUserById(userId);
+        if (userOptional.isEmpty()) {
+            throw new UserNotFoundException("User with id " + userId + " does not exist.");
+        }
+        User user = userOptional.get();
+        return user.isHasSpotifyConnected();
     }
 
     @Override
