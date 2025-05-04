@@ -10,7 +10,13 @@ import java.util.Set;
 import java.util.UUID;
 @Entity
 @Data
-@Table(name = "festivals")
+@Table(
+        name = "festivals",
+        indexes = {
+                @Index(name = "idx_festival_name", columnList = "name"),
+                @Index(name = "idx_festival_is_active", columnList = "isActive")
+        }
+)
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

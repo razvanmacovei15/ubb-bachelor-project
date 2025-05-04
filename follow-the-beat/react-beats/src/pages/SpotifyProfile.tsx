@@ -53,18 +53,34 @@ const SpotifyProfile: React.FC = () => {
     try {
       const response = await axios.get('http://localhost:8080/api/v1/concerts', {
         params: {
-          page: 0,
-          size: 10,
+          page: 50,
+          size: 50,
           sortBy: 'createdAt',
           direction: 'desc'
         }
       });
 
       console.log('Concerts data:', response.data);
+      // Use response.data._embedded if you're using Spring HATEOAS structure
     } catch (error) {
       console.error('Error fetching concerts:', error);
     }
   };
+
+  const fetchFakeConcerts = async () => {
+    try {
+      const response = await axios.post('http://localhost:8080/api/fake-data/festivals', null, {
+        params: {
+          count: 1000 // default = 1000, change if needed
+        }
+      });
+
+      console.log('Fake data generation response:', response.data);
+    } catch (error) {
+      console.error('Error generating fake concerts:', error);
+    }
+  };
+
 
   return (
     <div className="spotify-settings">
@@ -79,13 +95,16 @@ const SpotifyProfile: React.FC = () => {
           />
 
           <button onClick={fetchUntoldFestival}>
-            TEST
+            TEST UNTOLD
           </button>
           <button onClick={fetchElectricFestival}>
-            TEST
+            TEST ELECTRIC
           </button>
           <button onClick={fetchConcerts}>
-            TEST
+            TEST FETCH CONCERTS WITH PAGINATION
+          </button>
+          <button onClick={fetchFakeConcerts}>
+            TEST CREATING FAKE FESTIVALS
           </button>
 
           {userData.isConnectedToSpotify && (

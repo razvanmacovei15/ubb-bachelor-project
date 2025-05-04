@@ -8,7 +8,12 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
-@Table(name = "stages")
+@Table(
+        name = "stages",
+        indexes = {
+                @Index(name = "idx_stage_festival", columnList = "festival_id")
+        }
+)
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

@@ -11,7 +11,13 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "schedules")
+@Table(
+        name = "schedules",
+        indexes = {
+                @Index(name = "idx_schedule_concert", columnList = "concert_id"),
+                @Index(name = "idx_schedule_date", columnList = "date")
+        }
+)
 public class Schedule {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

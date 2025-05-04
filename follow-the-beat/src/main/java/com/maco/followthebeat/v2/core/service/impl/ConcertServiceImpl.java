@@ -28,15 +28,11 @@ public class ConcertServiceImpl extends BaseCrudServiceImpl<Concert> implements 
     }
 
     @Override
-    public Page<Concert> getConcerts(Optional<String> artist, Optional<String> city, Optional<LocalDate> date, Pageable pageable) {
+    public Page<Concert> getConcerts(Optional<String> artist,  Optional<LocalDate> date, Pageable pageable) {
         Specification<Concert> spec = Specification.where(null);
 
         if (artist.isPresent()) {
             spec = spec.and(ConcertSpecification.hasArtistName(artist.get()));
-        }
-
-        if (city.isPresent()) {
-            spec = spec.and(ConcertSpecification.hasCity(city.get()));
         }
 
         if (date.isPresent()) {

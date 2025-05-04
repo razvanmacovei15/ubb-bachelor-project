@@ -4,6 +4,7 @@ import com.maco.followthebeat.v2.core.dto.ConcertDTO;
 import com.maco.followthebeat.v2.core.entity.Concert;
 import com.maco.followthebeat.v2.core.service.interfaces.ConcertService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
 import java.util.Optional;
-
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/concerts")
 @RequiredArgsConstructor
@@ -29,7 +30,6 @@ public class ConcertController {
     @GetMapping
     public PagedModel<EntityModel<ConcertDTO>> getConcerts(
             @RequestParam Optional<String> artist,
-            @RequestParam Optional<String> city,
             @RequestParam Optional<LocalDate> date,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -41,7 +41,7 @@ public class ConcertController {
                 direction.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending());
 
         //todo make in only one method
-        Page<Concert> concerts = concertService.getConcerts(artist, city, date, pageable);
+        Page<Concert> concerts = concertService.getConcerts(artist, date, pageable);
         Page<ConcertDTO> dtoPage = concertService.convertToDTO(concerts);
 
         //todo de intrebat pe alex care e treaba cu pagedResourcesAssembler ?

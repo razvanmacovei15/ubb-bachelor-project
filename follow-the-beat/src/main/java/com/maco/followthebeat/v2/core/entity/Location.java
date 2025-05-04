@@ -6,7 +6,12 @@ import lombok.Data;
 import java.util.UUID;
 @Entity
 @Data
-@Table(name = "locations")
+@Table(
+        name = "locations",
+        indexes = {
+                @Index(name = "idx_location_name", columnList = "name")
+        }
+)
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "location_type")
 public abstract class Location {

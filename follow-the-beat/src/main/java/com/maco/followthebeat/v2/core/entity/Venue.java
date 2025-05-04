@@ -13,7 +13,13 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "venues")
+@Table(
+        name = "venues",
+        indexes = {
+                @Index(name = "idx_venue_city", columnList = "city"),
+                @Index(name = "idx_venue_country", columnList = "country")
+        }
+)
 @PrimaryKeyJoinColumn(name = "id")
 public class Venue extends Location {
 

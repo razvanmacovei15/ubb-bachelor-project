@@ -12,7 +12,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface ConcertService extends BaseCrudService<Concert> {
-    Page<Concert> getConcerts(Optional<String> artist, Optional<String> city, Optional<LocalDate> date, Pageable pageable);
+    Page<Concert> getConcerts(Optional<String> artist, Optional<LocalDate> date, Pageable pageable);
     Page<ConcertDTO> convertToDTO(Page<Concert> concerts);
     List<Concert> getConcertsByFestivalId(UUID festivalId);
     void deleteByFestivalId(UUID festivalId);

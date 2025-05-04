@@ -34,7 +34,7 @@ public class SpotifyApiTracksService extends SpotifyApiService<SpotifyTrackDto>{
                 .toList();
     }
 
-    protected List<SpotifyTrack> getTopItemsByRange(SpotifyClientI client, SpotifyTimeRange range, int limit, int offset) {
+    private List<SpotifyTrack> getTopItemsByRange(SpotifyClientI client, SpotifyTimeRange range, int limit, int offset) {
         return switch (range) {
             case SHORT_TERM -> client.getTopTracksLast4Weeks(limit, offset);
             case MEDIUM_TERM -> client.getTopTracksLast6Months(limit, offset);
