@@ -5,6 +5,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from scrapers.untold_scraper import scrape_untold_artists
 from scrapers.electric_scraper import scrape_electric_castle
+from scrapers.electric_scraper_unified import scrape_electric_castle_unified
+from scrapers.untold_scraper_unified import scrape_untold_artists_unified
 from shared import scrape_progress
 
 # Setup logging (stream to console immediately)
@@ -37,6 +39,20 @@ def scrape_untold():
 def scrape_ec():
     logger.info("Received request: /electric")
     data = scrape_electric_castle()
+    logger.info("Finished /electric request")
+    return {"electric": data}
+
+@app.get("/untold-unified")
+def scrape_untold():
+    logger.info("Received request: /untold")
+    data = scrape_untold_artists_unified()
+    logger.info("Finished /untold request")
+    return {"untold": data}
+
+@app.get("/electric-unified")
+def scrape_ec():
+    logger.info("Received request: /electric")
+    data = scrape_electric_castle_unified()
     logger.info("Finished /electric request")
     return {"electric": data}
 
