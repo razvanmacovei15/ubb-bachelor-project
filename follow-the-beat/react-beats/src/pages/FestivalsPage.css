@@ -1,12 +1,10 @@
-.concertpage-container {
+.concert-page-container {
   display: flex;
   flex-direction: column;
   background: linear-gradient(to top right,
       var(--color-secondary),
       var(--color-primary));
-  display: flex;
   flex: 1;
-  flex-direction: column;
   justify-content: start;
   align-items: start;
   min-height: 100vh;
@@ -14,7 +12,7 @@
   scrollbar-width: none;
 }
 
-.concertpage-container::-webkit-scrollbar {
+.concert-page-container::-webkit-scrollbar {
   display: none;
 }
 
@@ -27,6 +25,14 @@
   width: 100%;
 
 }
+
+.festival-carousel {
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  margin-right: 200px;
+  margin-left: 200px;
+}
+
 
 .concerts-container {
   display: flex;

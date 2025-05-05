@@ -1,37 +1,25 @@
 import "./ConcertCard.css";
+import {ConcertDto} from "../../types/ConcertDto.ts";
 
-interface Concert {
-  id: number;
-  artist: string;
-  location: string;
-  startTime: string;
+
+interface ConcertCardProps {
+  concert: ConcertDto;
+  onAdd: (concert: ConcertDto) => void;
+  onRemove: (id: string) => void;
 }
 
-interface Props {
-  concert: Concert;
-  isInLineup: boolean;
-  onAdd: (concert: Concert) => void;
-  onRemove: (id: number) => void;
-}
-
-const ConcertCard = ({ concert, isInLineup, onAdd, onRemove }: Props) => {
+const ConcertCard = ({ concert,  onAdd, onRemove }: ConcertCardProps) => {
   return (
-    <div className={`concert-card ${isInLineup ? "selected" : ""}`}>
+    <div className={`concert-card`}>
       <div className="concert-info">
         <p>
-          <strong>{concert.artist}</strong> - {concert.location}
+          <strong>{concert.artistDTO.name}</strong> - {concert.locationDTO.name}
         </p>
-        <p className="time">{new Date(concert.startTime).toLocaleString()}</p>
+        <p className="time">{new Date(concert.scheduleDTO.startTime).toLocaleString()}</p>
       </div>
-      {!isInLineup ? (
-        <button className="add-button" onClick={() => onAdd(concert)}>
-          Add to lineup
-        </button>
-      ) : (
-        <button className="remove-button" onClick={() => onRemove(concert.id)}>
-          Remove from lineup
-        </button>
-      )}
+      <button className="add-button" onClick={() => onAdd(concert)}>
+        Add to lineup
+      </button>
     </div>
   );
 };

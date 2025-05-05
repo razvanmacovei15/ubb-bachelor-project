@@ -1,6 +1,6 @@
-import Concert from '../types/Concert';
+import ConcertDto from '../types/ConcertDto.ts';
 
-const mockConcerts: Concert[] = Array.from({ length: 20 }, (_, i) => ({
+const mockConcerts: ConcertDto[] = Array.from({ length: 20 }, (_, i) => ({
     id: i + 1,
     artist: `Artist ${i + 1}`,
     location: `City ${i % 5}`,

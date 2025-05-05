@@ -18,9 +18,9 @@ const TopBar = () => {
           }}
         />
         <TopBarButton
-          title="Concerts"
+          title="Festivals"
           onClick={() => {
-            navigate("/concerts");
+            navigate("/festivals");
           }}
         />
         <TopBarButton

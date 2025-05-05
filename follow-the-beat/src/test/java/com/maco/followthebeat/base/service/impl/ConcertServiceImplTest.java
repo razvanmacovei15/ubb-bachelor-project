@@ -27,7 +27,7 @@ class ConcertServiceImplTest {
         concertRepo = mock(ConcertRepo.class);
         concertService = new ConcertServiceImpl(concertRepo, concertMapper);
 
-        // Set up a test Artist and Location since they're required in Concert
+        // Set up a test Artist and Location since they're required in ConcertDto
         testArtist = Artist.builder()
                 .id(UUID.randomUUID())
                 .name("Test Artist")

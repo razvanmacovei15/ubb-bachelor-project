@@ -1,5 +1,5 @@
 import { createContext, ReactNode, useContext, useState } from "react";
-import Concert from "../types/Concert";
+import {ConcertDto} from "../types/ConcertDto.ts";
 import LineupConcert from "../types/LineupConcert";
 import {
   addToLineup as addFn,
@@ -12,8 +12,8 @@ import {
 interface LineupContextType {
   lineup: LineupConcert[];
   setLineup: (lineup: LineupConcert[]) => void;
-  addToLineup: (concert: Concert) => void;
-  removeFromLineup: (id: number) => void;
+  addToLineup: (concert: ConcertDto) => void;
+  removeFromLineup: (id: string) => void;
   editConcert: (id: number, details: string) => void;
   getSortedLineup: (by: "artist" | "time") => LineupConcert[];
   filterLineup: (query: string) => LineupConcert[];
@@ -24,7 +24,7 @@ const LineupContext = createContext<LineupContextType | undefined>(undefined);
 export const LineupProvider = ({ children }: { children: ReactNode }) => {
   const [lineup, setLineup] = useState<LineupConcert[]>([]);
 
-  const addToLineup = (concert: Concert) => {
+  const addToLineup = (concert: ConcertDto) => {
     setLineup((prev) => addFn(prev, concert));
   };
 
@@ -32,7 +32,7 @@ export const LineupProvider = ({ children }: { children: ReactNode }) => {
     setLineup((prev) => removeFn(prev, id));
   };
 
-  const editConcert = (id: number, details: string) => {
+  const editConcert = (id: string, details: string) => {
     setLineup((prev) => editFn(prev, id, details));
   };
 

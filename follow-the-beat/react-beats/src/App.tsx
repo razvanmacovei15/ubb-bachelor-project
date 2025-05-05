@@ -1,6 +1,8 @@
 import { Outlet } from "react-router-dom";
 import TopBar from "./components/top-bar/TopBar";
 import "./styles/global.css";
+import "./index.css";
+
 
 function App() {
   return (

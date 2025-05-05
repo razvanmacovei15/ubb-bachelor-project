@@ -5,7 +5,7 @@
 ## 1. 🔥 Sources of Data (Input to System)
 
 - **Scraped Festival Data** (from web pages)
-- **Concert/Event API Data** (external API for events)
+- **ConcertDto/Event API Data** (external API for events)
 - **Spotify User Data** (already fetched and saved per user)
 
 ---

@@ -1,15 +1,15 @@
 import { createContext, ReactNode, useContext, useState } from "react";
-import Concert from "../types/Concert";
+import ConcertDto from "../types/ConcertDto.ts";
 
 interface ConcertContextType {
-    concerts: Concert[];
-    setConcerts: (concerts: Concert[]) => void;
+    concerts: ConcertDto[];
+    setConcerts: (concerts: ConcertDto[]) => void;
 }
 
 const ConcertContext = createContext<ConcertContextType | undefined>(undefined);
 
 export const ConcertProvider = ({children} : {children : ReactNode}) => {
-    const [concerts, setConcerts] = useState<Concert[]>([]);
+    const [concerts, setConcerts] = useState<ConcertDto[]>([]);
     return (
         <ConcertContext.Provider value={{concerts, setConcerts}}>
             {children}

@@ -1,6 +1,6 @@
-import Concert from "./Concert";
+import {ConcertDto} from "./ConcertDto.ts";
 
-interface LineupConcert extends Concert {
+interface LineupConcert extends ConcertDto {
     details: string;
 }
 

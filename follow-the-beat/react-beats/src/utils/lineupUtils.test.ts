@@ -1,7 +1,7 @@
 import { addToLineup, removeFromLineup, editConcert, sortLineup, filterLineup } from "./LineupUtils";
-import Concert from "../types/Concert";
+import ConcertDto from "../types/ConcertDto.ts";
 
-const baseConcert: Concert = {
+const baseConcert: ConcertDto = {
     id: 1,
     artist: "Zebra",
     location: "Berlin",

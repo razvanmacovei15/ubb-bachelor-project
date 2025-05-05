@@ -1,19 +1,19 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './App';
-import ProfilePage from './pages/ProfilePage';
-import SpotifyProfile from './pages/SpotifyProfile';
-import './index.css';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+import ProfilePage from "./pages/ProfilePage";
+import SpotifyProfile from "./pages/SpotifyProfile";
 import "./styles/global.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import HomePage from "./pages/HomePage.tsx";
 import Lineup from "./pages/LineupPage.tsx";
 import { ConcertProvider } from "./contexts/ConcertContext.tsx";
 import { LineupProvider } from "./contexts/LineupContext.tsx";
-import ConcertsPage from "./pages/ConcertsPage.tsx";
+import FestivalsPage from "./pages/FestivalsPage.tsx";
 import StatisticsPage from "./pages/StatisticsPage.tsx";
 import { ConcertSortingFilteringProvider } from "./contexts/ConcertSortingFiltering.tsx";
 import SpotifyAuthSuccess from "./components/spotify/SpotifyAuthSuccess.tsx";
+import LandingPage from "./pages/LandingPage.tsx";
 
 const router = createBrowserRouter([
   {
@@ -22,11 +22,15 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
+        element: <LandingPage />,
+      },
+      {
+        path: "home",
         element: <HomePage />,
       },
       {
-        path: "concerts",
-        element: <ConcertsPage />,
+        path: "festivals",
+        element: <FestivalsPage />,
       },
       {
         path: "profile",
@@ -47,12 +51,11 @@ const router = createBrowserRouter([
         element: <StatisticsPage />,
       },
       { path: "spotify-auth-success", element: <SpotifyAuthSuccess /> },
-
     ],
   },
 ]);
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
+ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <ConcertSortingFilteringProvider>
       <ConcertProvider>
