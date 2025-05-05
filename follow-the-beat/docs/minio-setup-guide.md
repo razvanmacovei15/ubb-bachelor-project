@@ -10,14 +10,7 @@ This guide provides step-by-step instructions for setting up a MinIO server usin
 mkdir -p ~/minio-data
 
 # Run MinIO container
-docker run -d \
-  --name minio \
-  -p 9000:9000 \
-  -p 9001:9001 \
-  -v ~/minio-data:/data \
-  -e "MINIO_ROOT_USER=minioadmin" \
-  -e "MINIO_ROOT_PASSWORD=minioadmin" \
-  quay.io/minio/minio server /data --console-address ":9001"
+docker run -d --name minio -p 9000:9000 -p 9001:9001 -v /c/Users/maco/Desktop/maco-codes/bachelor-project/ubb-bachelor-project/minio-data:/data -e "MINIO_ROOT_USER=razvan-admin" -e "MINIO_ROOT_PASSWORD=Cj159550285/" quay.io/minio/minio server /data --console-address ":9001"
 ```
 
 ### Verify MinIO is Running

@@ -25,9 +25,9 @@ public class SpotifyUserData {
     private User user;
     @Column(name = "spotify_user_id", unique = true, nullable = false)
     private String spotifyUserId;
-    @Column(name = "refresh_token", nullable = false)
+    @Column(name = "refresh_token", nullable = false, columnDefinition = "TEXT")
     private String refreshToken;
-    @Column(name = "access_token", nullable = false)
+    @Column(name = "access_token", nullable = false, columnDefinition = "TEXT")
     private String accessToken;
     @Column(name = "expires_in", nullable = false)
     private long expiresIn;
