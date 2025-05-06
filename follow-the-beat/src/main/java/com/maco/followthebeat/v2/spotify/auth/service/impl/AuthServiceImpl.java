@@ -1,7 +1,11 @@
 package com.maco.followthebeat.v2.spotify.auth.service.impl;
 
 import com.maco.client.v2.SpotifyClientI;
+import com.maco.followthebeat.v2.cache.RedisStateCacheServiceImpl;
+import com.maco.followthebeat.v2.common.exceptions.UserNotFoundException;
+import com.maco.followthebeat.v2.spotify.auth.client.SpotifyClientManager;
 import com.maco.followthebeat.v2.spotify.auth.userdata.entity.SpotifyUserData;
+import com.maco.followthebeat.v2.user.context.UserContext;
 import com.maco.followthebeat.v2.user.entity.User;
 import com.maco.followthebeat.v2.spotify.auth.service.interfaces.AuthService;
 import com.maco.followthebeat.v2.spotify.auth.userdata.service.interfaces.SpotifyUserDataService;
@@ -18,25 +22,9 @@ import java.util.UUID;
 @Service
 @AllArgsConstructor
 public class AuthServiceImpl implements AuthService {
+
     private final UserService userService;
     private final SpotifyUserDataService spotifyUserDataService;
-
-    @Override
-    public UUID ensureValidUser(String state) {
-        UUID userId;
-        try {
-            userId = UUID.fromString(state);
-            Optional<User> maybeExisting = userService.findUserById(userId);
-            if (maybeExisting.isPresent()) {
-                return userId;
-            } else {
-                return userService.createAnonymousUser();
-            }
-
-        } catch (IllegalArgumentException e) {
-            return userService.createAnonymousUser();
-        }
-    }
 
     @Override
     @Transactional
@@ -49,13 +37,12 @@ public class AuthServiceImpl implements AuthService {
                 userService.mergeAnonymousUser(user, maybeExisting.get());
             }
             return maybeExisting.get();
-        } else {
-            SpotifyUserData sp = spotifyUserDataService.createSpotifyData(client, user);
-            user.setSpotifyUserData(sp);
-            user.setHasSpotifyConnected(true);
-            userService.updateUser(user);
-            return user;
         }
-    }
 
+        SpotifyUserData sp = spotifyUserDataService.createSpotifyData(client, user);
+        user.setSpotifyUserData(sp);
+        user.setHasSpotifyConnected(true);
+        userService.updateUser(user);
+        return user;
+    }
 }

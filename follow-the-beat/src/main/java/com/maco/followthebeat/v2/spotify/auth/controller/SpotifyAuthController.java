@@ -3,6 +3,7 @@ package com.maco.followthebeat.v2.spotify.auth.controller;
 import com.maco.client.v2.SpotifyClientI;
 import com.maco.followthebeat.v2.cache.RedisStateCacheService;
 import com.maco.followthebeat.v2.cache.RedisStateCacheServiceImpl;
+import com.maco.followthebeat.v2.common.exceptions.UserNotFoundException;
 import com.maco.followthebeat.v2.spotify.auth.service.impl.StateCacheServiceImpl;
 import com.maco.followthebeat.v2.user.entity.User;
 import com.maco.followthebeat.v2.spotify.auth.service.interfaces.AuthService;
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -23,19 +25,16 @@ import java.util.UUID;
 public class SpotifyAuthController {
 
     private final SpotifyClientManager clientManager;
-    private final StateCacheService stateCacheService;
     private final RedisStateCacheServiceImpl redisStateCacheService;
     private final AuthService authService;
     private final UserService userService;
 
     @Autowired
     public SpotifyAuthController(
-            StateCacheService stateCacheService,
             AuthService authService,
             UserService userService,
             SpotifyClientManager clientManager,
             RedisStateCacheServiceImpl redisStateCacheService) {
-        this.stateCacheService = stateCacheService;
         this.authService = authService;
         this.userService = userService;
         this.clientManager = clientManager;
@@ -43,16 +42,15 @@ public class SpotifyAuthController {
     }
 
     @GetMapping("/auth-url")
-    public ResponseEntity<String> getLoginUrl(@RequestParam String state) {
+    public ResponseEntity<String> getLoginUrl() {
         try {
-            UUID userId = authService.ensureValidUser(state);
-
-            redisStateCacheService.store(state, userId);
+            UUID userId = userService.createAnonymousUser();
+            UUID stateUUID = UUID.randomUUID();
+            redisStateCacheService.store(stateUUID.toString(), userId);
 
             SpotifyClientI client = clientManager.getOrCreateSpotifyClient(userId);
 
-            String loginUrl = client.getAuthorizationUrl(state) + "&userId=" + userId;
-            System.out.println(loginUrl);
+            String loginUrl = client.getAuthorizationUrl(stateUUID.toString());
             return ResponseEntity.ok(loginUrl);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error: " + e.getMessage());
@@ -74,19 +72,29 @@ public class SpotifyAuthController {
         try {
             SpotifyClientI client = clientManager.getOrCreateSpotifyClient(userId);
             client.authenticate(code);
-
+            //at this point client should be authenticated
             UUID finalUserId = userId;
 
-            if (!userService.hasConnectedSpotifyAccount(userId)) {
+            String spotifyId = client.getCurrentUserDetails().getId();
+            //check if user already exists with this spotifyId
+            Optional<User> alreadyUser = userService.findUserBySpotifyId(spotifyId);
+            if(alreadyUser.isPresent()){
+                //user has already connected their spotify account
+                clientManager.changeClientKey(userId, alreadyUser.get().getId());
+                finalUserId = alreadyUser.get().getId();
+            } else {
                 User user = userService.findUserById(userId)
-                        .orElseThrow(() -> new IllegalStateException("User not found for ID: " + userId));
+                        .orElseThrow(() -> new UserNotFoundException("User with id " + userId + " does not exist."));
+
                 finalUserId = authService.linkSpotifyAccount(user, client).getId();
             }
+            String sessionToken = redisStateCacheService.getSessionTokenForUser(finalUserId);
 
-            String sessionToken = UUID.randomUUID().toString();
-            redisStateCacheService.storeSessionToken(state, sessionToken);
-            redisStateCacheService.storeUserForSession(sessionToken, finalUserId);
-
+            if (sessionToken == null) {
+                sessionToken = UUID.randomUUID().toString();
+                redisStateCacheService.storeUserForSession(sessionToken, finalUserId);
+                redisStateCacheService.storeSessionToken(state, sessionToken);
+            }
             return ResponseEntity.status(302).location(URI.create("http://localhost:5173/spotify-auth-success?state=" + state)).build();
         } catch (Exception e) {
             return ResponseEntity.status(302).location(URI.create("http://localhost:5173/spotify-auth-error")).build();

@@ -8,14 +8,17 @@ import com.maco.followthebeat.v2.core.repo.ConcertRepo;
 import com.maco.followthebeat.v2.core.service.interfaces.ConcertService;
 import com.maco.followthebeat.v2.core.specification.ConcertSpecification;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 @Service
 public class ConcertServiceImpl extends BaseCrudServiceImpl<Concert> implements ConcertService {
@@ -62,5 +65,23 @@ public class ConcertServiceImpl extends BaseCrudServiceImpl<Concert> implements 
         concertRepo.deleteById(concertId);
     }
 
+    @Override
+    public Page<ConcertDTO> findConcertsByFestivalId(
+            Optional<String> artist,
+            Optional<LocalDate> date,
+            Pageable pageable,
+            UUID festivalId
+    ) {
+        Specification<Concert> spec = Specification.where(ConcertSpecification.hasFestivalId(festivalId));
 
+        if (artist.isPresent()) {
+            spec = spec.and(ConcertSpecification.hasArtistName(artist.get()));
+        }
+
+        if (date.isPresent()) {
+            spec = spec.and(ConcertSpecification.hasDate(date.get()));
+        }
+
+        return concertRepo.findAll(spec, pageable).map(concertMapper::fromEntity);
+    }
 }

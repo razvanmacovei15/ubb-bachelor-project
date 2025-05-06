@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
 import java.util.Optional;
+import java.util.UUID;
+
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/concerts")
@@ -46,5 +48,24 @@ public class ConcertController {
 
         //todo de intrebat pe alex care e treaba cu pagedResourcesAssembler ?
         return pagedResourcesAssembler.toModel(dtoPage);
+    }
+
+    @GetMapping("/by-festival")
+    public PagedModel<EntityModel<ConcertDTO>> getConcertsByFestival(
+            @RequestParam UUID festivalId,
+            @RequestParam Optional<String> artist,
+            @RequestParam Optional<LocalDate> date,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "createdAt") String sortBy,
+            @RequestParam(defaultValue = "desc") String direction,
+            PagedResourcesAssembler<ConcertDTO> pagedResourcesAssembler
+    ) {
+        Pageable pageable = PageRequest.of(page, size,
+                direction.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending());
+
+        Page<ConcertDTO> concertPage = concertService.findConcertsByFestivalId(artist, date, pageable, festivalId);
+
+        return pagedResourcesAssembler.toModel(concertPage);
     }
 }

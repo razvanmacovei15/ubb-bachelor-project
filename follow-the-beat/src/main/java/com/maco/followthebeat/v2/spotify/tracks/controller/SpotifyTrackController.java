@@ -5,6 +5,8 @@ import com.maco.followthebeat.v2.spotify.enums.SpotifyTimeRange;
 import com.maco.followthebeat.v2.common.exceptions.UserNotFoundException;
 import com.maco.followthebeat.v2.spotify.tracks.dto.SpotifyTrackDto;
 import com.maco.followthebeat.v2.spotify.tracks.service.interfaces.SpotifyTrackStatsService;
+import com.maco.followthebeat.v2.user.context.IsConnected;
+import com.maco.followthebeat.v2.user.context.UserContext;
 import com.maco.followthebeat.v2.user.entity.User;
 import com.maco.followthebeat.v2.user.service.interfaces.UserService;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +27,9 @@ public class SpotifyTrackController {
     private final SpotifyTrackStatsService spotifyTrackStatsService;
     private final RedisStateCacheServiceImpl stateCacheService;
     private final UserService userService;
+    private final UserContext userContext;
 
+    @IsConnected
     @GetMapping("/top-tracks")
     public ResponseEntity<?> getTopTracks(
             @RequestHeader("Authorization") String authHeader,
@@ -33,20 +37,7 @@ public class SpotifyTrackController {
             @RequestParam(defaultValue = "0") int offset,
             @RequestParam(defaultValue = "medium_term") SpotifyTimeRange range) {
 
-        String sessionToken = authHeader.replace("Bearer ", "").trim();
-        UUID userId = stateCacheService.getUserBySession(sessionToken);
-
-        Optional<User> userOptional = userService.findUserById(userId);
-        if (userOptional.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(List.of());
-        }
-
-        User user = userOptional.get();
-
-        if (!user.isActive()) {
-            List<SpotifyTrackDto> artists = spotifyTrackStatsService.fetchAndSaveInitialStats(user, range);
-            return ResponseEntity.ok(artists);
-        }
+        User user = userContext.get();
 
         log.info("User ID from context: {}", user.getId());
 
@@ -55,16 +46,13 @@ public class SpotifyTrackController {
 
     }
 
+    @IsConnected
     @PostMapping("/refresh")
     public ResponseEntity<Void> refreshStats(
             @RequestHeader("Authorization") String authHeader,
             @RequestParam(defaultValue = "medium_term") String range) {
 
-        String sessionToken = authHeader.replace("Bearer ", "").trim();
-        UUID userId = stateCacheService.getUserBySession(sessionToken);
-
-        User user = userService.findUserById(userId)
-                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId));
+        User user = userContext.get();
 
         SpotifyTimeRange timeRange = SpotifyTimeRange.valueOf(range);
         spotifyTrackStatsService.updateStatsByTimeRange(user, timeRange);

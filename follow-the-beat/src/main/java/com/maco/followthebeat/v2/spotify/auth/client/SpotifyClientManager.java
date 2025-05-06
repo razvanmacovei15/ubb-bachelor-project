@@ -59,4 +59,9 @@ public class SpotifyClientManager {
         SpotifyClientI client = userClients.get(userId);
         return client.isAuthenticated();
     }
+
+    public void changeClientKey(UUID userId, UUID alreadyExistingUserId) {
+        userClients.put(alreadyExistingUserId, userClients.get(userId));
+        userClients.remove(userId);
+    }
 }
