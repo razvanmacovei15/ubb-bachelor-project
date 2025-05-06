@@ -5,7 +5,7 @@ import ConcertCard from "../components/concertspage/ConcertCard";
 import "./FestivalsPage.css";
 import Pagination from "../components/pagination/Pagination.tsx";
 import { useConcertSortingFilteringContext } from "../contexts/ConcertSortingFiltering";
-import RightSidebar from "../components/sidebars/RightSidebar";
+import FestivalConcertFilters from "../components/sidebars/FestivalConcertFilter.tsx";
 import {ConcertDto} from "../types/ConcertDto.ts";
 
 import { FestivalDto } from "../types/FestivalDto";
@@ -66,7 +66,7 @@ const mockConcerts: ConcertDto[] = [
     }
   },
   {
-    id: "2",
+    id: "9",
     artistDTO: {
       id: "a2",
       name: "Beyoncé",
@@ -85,6 +85,66 @@ const mockConcerts: ConcertDto[] = [
       concertDTO: {} as ConcertDto
     }
   },
+  {
+    id: "3",
+    artistDTO: {
+      id: "a2",
+      name: "Beyoncé",
+      imgUrl: "",
+      genres: ["Pop", "R&B"]
+    },
+    locationDTO: {
+      id: "l2",
+      name: "Paris, France",
+      imgUrl: ""
+    },
+    scheduleDTO: {
+      id: "s2",
+      date: "2025-08-03",
+      startTime: "21:00:00",
+      concertDTO: {} as ConcertDto
+    }
+  },
+  {
+    id: "4",
+    artistDTO: {
+      id: "a2",
+      name: "Beyoncé",
+      imgUrl: "",
+      genres: ["Pop", "R&B"]
+    },
+    locationDTO: {
+      id: "l2",
+      name: "Paris, France",
+      imgUrl: ""
+    },
+    scheduleDTO: {
+      id: "s2",
+      date: "2025-08-03",
+      startTime: "21:00:00",
+      concertDTO: {} as ConcertDto
+    }
+  },
+  {
+    id: "7",
+    artistDTO: {
+      id: "a2",
+      name: "Beyoncé",
+      imgUrl: "",
+      genres: ["Pop", "R&B"]
+    },
+    locationDTO: {
+      id: "l2",
+      name: "Paris, France",
+      imgUrl: ""
+    },
+    scheduleDTO: {
+      id: "s2",
+      date: "2025-08-03",
+      startTime: "21:00:00",
+      concertDTO: {} as ConcertDto
+    }
+  }
 ];
 
 
@@ -144,24 +204,26 @@ const FestivalsPage: React.FC = () => {
         <Carousel opts={{
           align: "start",
         }}
-                  className="w-full" setApi={setApi} >
-          <CarouselContent>
+                  className="w-full h-full" setApi={setApi} >
+          <CarouselContent className="h-full">
             {mockFestivals.map((festival) => (
-                <CarouselItem key={festival.id} className="md:basis-1/2 lg:basis-1/3">
-                  <div>
-                    <Card>
-                      <CardContent>
-                        <h3>{festival.name}</h3>
-                        <p>{festival.description}</p>
-                        <p>{festival.location}</p>
-                        <p>{`${new Date(festival.startDate).toLocaleDateString()} - ${new Date(festival.endDate).toLocaleDateString()}`}</p>
-                        <a href={festival.websiteUrl} target="_blank" rel="noopener noreferrer">Visit Website</a>
+                <CarouselItem key={festival.id} className="md:basis-1/2 lg:basis-1/3 h-[30vh]">
+                  <div className="h-full">
+                    <Card className="h-full">
+                      <CardContent className="h-full flex flex-col justify-between">
+                        <h3 className="text-lg font-semibold">{festival.name}</h3>
+                        <div className="text-sm flex-1">
+                          <p>{festival.description}</p>
+                          <p>{festival.location}</p>
+                          <p>{`${new Date(festival.startDate).toLocaleDateString()} - ${new Date(festival.endDate).toLocaleDateString()}`}</p>
+                        </div>
+                        <a className="underline mt-2" href={festival.websiteUrl} target="_blank" rel="noopener noreferrer">Visit Website</a>
                       </CardContent>
                     </Card>
                   </div>
                 </CarouselItem>
             ))}
-            <CarouselItem className="md:basis-1/2 lg:basis-1/3">
+            <CarouselItem className="md:basis-1/2 lg:basis-1/3 h-full">
                 <div>
                     <Card>
                       <CardContent>
@@ -206,7 +268,7 @@ const FestivalsPage: React.FC = () => {
             </>
           )}
         </div>
-        <RightSidebar />
+        <FestivalConcertFilters />
       </div>
     </div>
   );

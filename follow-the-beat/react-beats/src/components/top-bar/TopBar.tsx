@@ -8,7 +8,7 @@ const TopBar = () => {
   return (
     <div className="top-bar">
       <div className="logo-container">
-        <h1 className="text-4xl text-white ">Follow your beat</h1>
+        <h1>Follow The Beat</h1>
       </div>
       <div className="menu-container">
         <TopBarButton

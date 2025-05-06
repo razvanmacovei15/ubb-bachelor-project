@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useConcertSortingFilteringContext } from "../../contexts/ConcertSortingFiltering";
-import "./RightSidebar.css";
+import "./FestivalConcertFilter.css";
 
-const RightSidebar = () => {
+const FestivalConcertFilter = () => {
   const { searchTerm, setSearchTerm, setSortBy, setItemsPerPage } =
     useConcertSortingFilteringContext();
 
@@ -51,4 +51,4 @@ const RightSidebar = () => {
   );
 };
 
-export default RightSidebar;
+export default FestivalConcertFilter;

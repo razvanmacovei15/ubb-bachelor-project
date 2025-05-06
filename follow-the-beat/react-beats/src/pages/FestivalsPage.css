@@ -37,12 +37,10 @@
 .concerts-container {
   display: flex;
   flex-direction: column;
-
   width: 100%;
-  max-width: 1200px;
   margin: 0 auto;
-  padding: 0 24px;
-  padding-bottom: 24px;
+  justify-content: start;
+  align-items: start;
 }
 
 .concerts-container h1 {
@@ -55,12 +53,24 @@
 
 .concert-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(1, 1fr); /* default: 1 per row */
   gap: 25px;
-  padding: 25px;
   width: 100%;
-  margin: auto;
+  margin: 0 auto;
 }
+
+@media (min-width: 768px) {
+  .concert-grid {
+    grid-template-columns: repeat(3, 1fr); /* medium: 3 per row */
+  }
+}
+
+@media (min-width: 1280px) {
+  .concert-grid {
+    grid-template-columns: repeat(5, 1fr); /* large: 5 per row */
+  }
+}
+
 
 .pagination-bar {
   width: 100%;

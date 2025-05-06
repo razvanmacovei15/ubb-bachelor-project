@@ -12,6 +12,19 @@
   display: flex;
   flex-grow: 1;
   align-items: center;
+
+}
+
+.logo-container h1{
+  font-size: 2rem;
+  line-height: 2.5rem;
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  background: linear-gradient(45deg, var(--color-primary), var(--color-accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
 }
 
 .menu-container {

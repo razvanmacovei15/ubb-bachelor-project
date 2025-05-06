@@ -1,62 +1,88 @@
 .concert-card {
-  width: 100%;
-  max-width: 35vw;
-  height: 25vh;
-  border-radius: 20px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  aspect-ratio: 1 / 1;
+  background-size: cover;
+  background-position: center;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   overflow: hidden;
+  position: relative;
+  transition: transform 0.2s ease;
+  display: flex;
+  align-items: flex-end;
+
+}
+
+.concert-card:hover {
+  transform: translateY(-4px);
 }
 
 .concert-card.selected {
   border: 2px solid var(--color-accent);
 }
 
-.concert-info {
+.concert-overlay {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), transparent 60%);
+  color: white;
   display: flex;
   flex-direction: column;
+  justify-content: flex-end;
   height: 100%;
-  justify-content: end;
-  padding: 10px;
-  background-image: linear-gradient(to top,
-      rgba(0, 0, 0, 0.8),
-      rgba(0, 0, 0, 0.2)),
-    url("/images/image.jpg");
-  background-size: cover;
-  background-position: center;
-  backdrop-filter: blur(40px);
 }
 
-.concert-info p {
+.concert-overlay p {
+  margin: 2px 0;
+  font-size: 0.75rem;
+  line-height: 1.2;
+}
+
+.concert-overlay h3 {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.genres,
+.datetime,
+.location {
   margin: 4px 0;
-  color: white;
+  font-size: 0.75rem;
+
 }
 
-.concert-info .time {
-  font-size: 0.9rem;
+.button-group {
+  margin-top: auto;
+  display: flex;
+  justify-content: flex-end;
+
+}
+
+.add-button,
+.remove-button {
+  margin-top: 8px;
+  padding: 6px 10px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
   color: white;
+  transition: background-color 0.2s ease;
 }
 
 .add-button {
-  padding: 8px 12px;
   background-color: var(--color-accent);
-  color: white;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.remove-button {
-  padding: 8px 12px;
-  background-color: var(--color-error);
-  color: white;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
 }
 
 .add-button:hover {
   background-color: #1b5e20;
+}
+
+.remove-button {
+  background-color: var(--color-error);
+}
+
+.remove-button:hover {
+  background-color: #c62828;
 }
