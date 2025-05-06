@@ -27,6 +27,9 @@ interface UserData {
 }
 
 const useSpotifyProfile = () => {
+    const API_URL = import.meta.env.VITE_API_URL;
+
+
     const [userData, setUserData] = useState<UserData>({ isConnectedToSpotify: false });
     const [contentLoading, setContentLoading] = useState<boolean>(true);
     const [statsLoading, setStatsLoading] = useState<boolean>(false);
@@ -39,7 +42,7 @@ const useSpotifyProfile = () => {
     const sessionToken = localStorage.getItem("sessionToken");
 
     const fetchTopArtists = async (range: string) => {
-        const response = await axios.get<SpotifyArtist[]>(`http://localhost:8080/api/spotify-artists/top-artists`, {
+        const response = await axios.get<SpotifyArtist[]>(`${API_URL}/api/spotify-artists/top-artists`, {
             headers: { Authorization: `Bearer ${sessionToken}` },
             params: { limit: 50, range },
         });
@@ -47,7 +50,7 @@ const useSpotifyProfile = () => {
     };
 
     const fetchTopTracks = async (range: string) => {
-        const response = await axios.get<SpotifyTrack[]>(`http://localhost:8080/spotify-tracks/top-tracks`, {
+        const response = await axios.get<SpotifyTrack[]>(`${API_URL}/spotify-tracks/top-tracks`, {
             headers: { Authorization: `Bearer ${sessionToken}` },
             params: { limit: 50, range },
         });
@@ -85,11 +88,11 @@ const useSpotifyProfile = () => {
     };
 
     const handleSpotifyLogin = async () => {
-        const state = uuidv4();
-        localStorage.setItem("authState", state);
+        console.log("handleSpotifyLogin called");
+        console.log(API_URL);
 
         const authUrl = await axios
-            .get("http://localhost:8080/spotify-auth/auth-url", { params: { state } })
+            .get(`${API_URL}/spotify-auth/auth-url`)
             .then((res) => res.data);
 
         window.location.href = authUrl;

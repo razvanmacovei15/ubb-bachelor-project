@@ -15,6 +15,9 @@ type ConcertSortingFilteringContextType = {
     concerts: ConcertDto[];
     totalCount: number;
     resetFilters: () => void;
+    festivalId: string | null;
+    setFestivalId: (id: string | null) => void;
+    resetAndSelectFestival: (id: string | null) => void;
 };
 
 const ConcertSortingFilteringContext = createContext<
@@ -36,6 +39,8 @@ export const ConcertSortingFilteringProvider = ({
     const [concerts, setConcerts] = useState<ConcertDto[]>([]);
     const [totalCount, setTotalCount] = useState(0);
 
+    const [festivalId, setFestivalId] = useState<string | null>(null);
+
     const fetchConcerts = async () => {
         const params = new URLSearchParams({
             artist: searchTerm,
@@ -46,7 +51,6 @@ export const ConcertSortingFilteringProvider = ({
         });
 
         if (date) params.append("date", date);
-        genres.forEach((genre) => params.append("genres", genre));
 
         const response = await fetch(
             `http://localhost:8080/api/v1/concerts?${params.toString()}`
@@ -58,9 +62,38 @@ export const ConcertSortingFilteringProvider = ({
         setTotalCount(data.page?.totalElements || 0);
     };
 
+    const fetchFestivalConcerts = async (festivalId: string) => {
+        const params = new URLSearchParams({
+            artist: searchTerm,
+            page: (currentPage - 1).toString(),
+            size: itemsPerPage.toString(),
+            sortBy: sortBy === "artist" ? "artist.name" : "schedule.date",
+            direction: "asc",
+            festivalId: festivalId,
+        });
+        if (date) params.append("date", date);
+        const response = await fetch(
+            `http://localhost:8080/api/v1/concerts/by-festival?${params.toString()}`
+        );
+        const data = await response.json();
+        const concertsList = data._embedded?.concertDTOList || [];
+        setConcerts(concertsList);
+        setTotalCount(data.page?.totalElements || 0);
+    }
+
+    const resetAndSelectFestival = (id: string | null) => {
+        resetFilters();
+        setFestivalId(id);
+    };
+
     useEffect(() => {
-        fetchConcerts();
-    }, [searchTerm, sortBy, date, genres, itemsPerPage, currentPage]);
+        if (festivalId) {
+            fetchFestivalConcerts(festivalId);
+        } else {
+            fetchConcerts();
+        }
+    }, [searchTerm, sortBy, date, itemsPerPage, currentPage, festivalId]);
+
 
     useEffect(() => {
         setCurrentPage(1);
@@ -90,6 +123,10 @@ export const ConcertSortingFilteringProvider = ({
                 concerts,
                 totalCount,
                 resetFilters,
+                festivalId,
+                setFestivalId,
+                resetAndSelectFestival,
+
             }}
         >
             {children}
