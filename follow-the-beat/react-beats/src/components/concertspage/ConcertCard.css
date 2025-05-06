@@ -39,8 +39,30 @@
 
 .concert-overlay h3 {
   margin: 0;
-  font-size: 2rem;
+  font-size: 1.25rem; /* base size for mobile */
   font-weight: bold;
+}
+
+/* Medium screens (≥768px) */
+@media (min-width: 768px) {
+  .concert-overlay p {
+    font-size: 0.875rem;
+  }
+
+  .concert-overlay h3 {
+    font-size: 1.5rem;
+  }
+}
+
+/* Large screens (≥1280px) */
+@media (min-width: 1280px) {
+  .concert-overlay p {
+    font-size: 1rem;
+  }
+
+  .concert-overlay h3 {
+    font-size: 2rem;
+  }
 }
 
 .genres,

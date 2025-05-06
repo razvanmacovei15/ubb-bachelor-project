@@ -14,8 +14,8 @@ const ConcertCard = ({ concert, onAdd, onRemove, isSelected }: ConcertCardProps)
     const [imgError, setImgError] = useState(false);
 
     const bgImage = !imgError && artistDTO.imgUrl
-        ? `url(${artistDTO.imgUrl})`
-        : `url(/images/image.jpg)`;
+        ? `url(/images/image.jpg)`
+        : `url(${artistDTO.imgUrl})`;
 
     const performanceDay = scheduleDTO.date
         ? new Date(scheduleDTO.date).toLocaleDateString(undefined, { weekday: "long", month: "short", day: "numeric" })

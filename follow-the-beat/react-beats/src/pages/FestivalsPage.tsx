@@ -1,12 +1,9 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { useConcertContext } from "../contexts/ConcertContext";
-import { useLineup } from "../contexts/LineupContext";
+import React from "react";
 import ConcertCard from "../components/concertspage/ConcertCard";
 import "./FestivalsPage.css";
 import Pagination from "../components/pagination/Pagination.tsx";
 import { useConcertSortingFilteringContext } from "../contexts/ConcertSortingFiltering";
 import FestivalConcertFilters from "../components/sidebars/FestivalConcertFilter.tsx";
-import {ConcertDto} from "../types/ConcertDto.ts";
 
 import { FestivalDto } from "../types/FestivalDto";
 
@@ -42,147 +39,20 @@ const mockFestivals: FestivalDto[] = [
     dtoStages: []
   },
 ];
-
-
-const mockConcerts: ConcertDto[] = [
-  {
-    id: "1",
-    artistDTO: {
-      id: "a1",
-      name: "Arctic Monkeys",
-      imgUrl: "",
-      genres: ["Rock"]
-    },
-    locationDTO: {
-      id: "l1",
-      name: "London, UK",
-      imgUrl: ""
-    },
-    scheduleDTO: {
-      id: "s1",
-      date: "2025-07-15",
-      startTime: "20:00:00",
-      concertDTO: {} as ConcertDto // temp placeholder to avoid circular typing
-    }
-  },
-  {
-    id: "9",
-    artistDTO: {
-      id: "a2",
-      name: "Beyoncé",
-      imgUrl: "",
-      genres: ["Pop", "R&B"]
-    },
-    locationDTO: {
-      id: "l2",
-      name: "Paris, France",
-      imgUrl: ""
-    },
-    scheduleDTO: {
-      id: "s2",
-      date: "2025-08-03",
-      startTime: "21:00:00",
-      concertDTO: {} as ConcertDto
-    }
-  },
-  {
-    id: "3",
-    artistDTO: {
-      id: "a2",
-      name: "Beyoncé",
-      imgUrl: "",
-      genres: ["Pop", "R&B"]
-    },
-    locationDTO: {
-      id: "l2",
-      name: "Paris, France",
-      imgUrl: ""
-    },
-    scheduleDTO: {
-      id: "s2",
-      date: "2025-08-03",
-      startTime: "21:00:00",
-      concertDTO: {} as ConcertDto
-    }
-  },
-  {
-    id: "4",
-    artistDTO: {
-      id: "a2",
-      name: "Beyoncé",
-      imgUrl: "",
-      genres: ["Pop", "R&B"]
-    },
-    locationDTO: {
-      id: "l2",
-      name: "Paris, France",
-      imgUrl: ""
-    },
-    scheduleDTO: {
-      id: "s2",
-      date: "2025-08-03",
-      startTime: "21:00:00",
-      concertDTO: {} as ConcertDto
-    }
-  },
-  {
-    id: "7",
-    artistDTO: {
-      id: "a2",
-      name: "Beyoncé",
-      imgUrl: "",
-      genres: ["Pop", "R&B"]
-    },
-    locationDTO: {
-      id: "l2",
-      name: "Paris, France",
-      imgUrl: ""
-    },
-    scheduleDTO: {
-      id: "s2",
-      date: "2025-08-03",
-      startTime: "21:00:00",
-      concertDTO: {} as ConcertDto
-    }
-  }
-];
-
-
 const FestivalsPage: React.FC = () => {
 
-  const { concerts } = useConcertContext();
-  const { searchTerm, sortBy, itemsPerPage } =
-    useConcertSortingFilteringContext();
-
-  const [currentPage, setCurrentPage] = useState(1);
-
-  const filteredConcerts = mockConcerts.filter(
-      (concert) =>
-          concert.artistDTO.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          concert.locationDTO.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const sortedConcerts = [...filteredConcerts].sort((a, b) => {
-    if (sortBy === "artist") return a.artistDTO.name.localeCompare(b.artistDTO.name);
-    if (sortBy === "time")
-      return new Date(`${a.scheduleDTO.date}T${a.scheduleDTO.startTime}`).getTime() -
-          new Date(`${b.scheduleDTO.date}T${b.scheduleDTO.startTime}`).getTime();
-    return 0;
-  });
-
-
-  const currentTableData = useMemo(() => {
-    const firstPageIndex = (currentPage - 1) * itemsPerPage;
-    const lastPageIndex = firstPageIndex + itemsPerPage;
-    return sortedConcerts.slice(firstPageIndex, lastPageIndex);
-  }, [currentPage, itemsPerPage, sortedConcerts]);
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [itemsPerPage]);
+  const {
+    concerts,
+    totalCount,
+    currentPage,
+    itemsPerPage,
+    setCurrentPage
+  } = useConcertSortingFilteringContext();
 
   const [api, setApi] = React.useState<CarouselApi>()
+  // @ts-ignore
   const [current, setCurrent] = React.useState(0)
+  // @ts-ignore
   const [count, setCount] = React.useState(0)
 
   React.useEffect(() => {
@@ -242,30 +112,28 @@ const FestivalsPage: React.FC = () => {
       <div className="content-container">
         <div className="concerts-container">
 
-          {mockConcerts.length === 0 ? (
+          {concerts.length === 0 ? (
             <h2>No concerts available. Please check back later.</h2>
           ) : (
-            <>
-              <div className="concert-grid">
-                {mockConcerts.map((concert) => {
-                  return (
-                    <ConcertCard
-                      key={concert.id}
-                      concert={concert}
-                      onAdd={() => console.log("Add to lineup")}
-                      onRemove={() => console.log("Remove from lineup")}
-                    />
-                  );
-                })}
-              </div>
-              <Pagination
-                className="pagination-bar"
-                currentPage={currentPage}
-                totalCount={sortedConcerts.length}
-                pageSize={itemsPerPage}
-                onPageChange={(page) => setCurrentPage(page)}
-              />
-            </>
+              <>
+                <div className="concert-grid">
+                  {concerts.map((concert) => (
+                      <ConcertCard
+                          key={concert.id}
+                          concert={concert}
+                          onAdd={() => console.log("Add to lineup")}
+                          onRemove={() => console.log("Remove from lineup")}
+                      />
+                  ))}
+                </div>
+                <Pagination
+                    className="pagination-bar"
+                    currentPage={currentPage}
+                    totalCount={totalCount}
+                    pageSize={itemsPerPage}
+                    onPageChange={(page) => setCurrentPage(page)}
+                />
+              </>
           )}
         </div>
         <FestivalConcertFilters />

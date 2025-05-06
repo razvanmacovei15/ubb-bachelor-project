@@ -5,9 +5,7 @@ import ProfilePage from "./pages/ProfilePage";
 import SpotifyProfile from "./pages/SpotifyProfile";
 import "./styles/global.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import HomePage from "./pages/HomePage.tsx";
 import Lineup from "./pages/LineupPage.tsx";
-import { ConcertProvider } from "./contexts/ConcertContext.tsx";
 import { LineupProvider } from "./contexts/LineupContext.tsx";
 import FestivalsPage from "./pages/FestivalsPage.tsx";
 import StatisticsPage from "./pages/StatisticsPage.tsx";
@@ -26,7 +24,7 @@ const router = createBrowserRouter([
       },
       {
         path: "home",
-        element: <HomePage />,
+        element: <LandingPage />,
       },
       {
         path: "festivals",
@@ -58,11 +56,9 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <ConcertSortingFilteringProvider>
-      <ConcertProvider>
         <LineupProvider>
           <RouterProvider router={router} />
         </LineupProvider>
-      </ConcertProvider>
     </ConcertSortingFilteringProvider>
   </React.StrictMode>
 );
