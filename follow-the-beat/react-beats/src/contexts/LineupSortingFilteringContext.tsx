@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { LineupEntryDto } from "../types/LineupEntryDto";
+import { mockLineupEntries } from "../mocks/mockLineupEntries";
 
 type LineupSortingFilteringContextType = {
     searchTerm: string;
@@ -15,6 +16,9 @@ type LineupSortingFilteringContextType = {
     resetFilters: () => void;
     userId: string | null;
     setUserId: (id: string | null) => void;
+    addLineupEntry: (entry: Omit<LineupEntryDto, "id">) => Promise<void>;
+    updateLineupEntry: (id: string, entry: Partial<LineupEntryDto>) => Promise<void>;
+    removeLineupEntry: (id: string) => Promise<void>;
 };
 
 const LineupSortingFilteringContext = createContext<
@@ -37,6 +41,35 @@ export const LineupSortingFilteringProvider = ({
     const [userId, setUserId] = useState<string | null>(null);
 
     const fetchLineupEntries = async () => {
+        // In development, use mock data
+        if (process.env.NODE_ENV === 'development') {
+            let filteredEntries = [...mockLineupEntries];
+            
+            // Apply search filter
+            if (searchTerm) {
+                filteredEntries = filteredEntries.filter(entry => 
+                    entry.notes?.toLowerCase().includes(searchTerm.toLowerCase())
+                );
+            }
+
+            // Apply sorting
+            if (sortBy === "priority") {
+                filteredEntries.sort((a, b) => (a.priority || 0) - (b.priority || 0));
+            } else if (sortBy === "compatibility") {
+                filteredEntries.sort((a, b) => (a.compatibility || 0) - (b.compatibility || 0));
+            }
+
+            // Apply pagination
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const paginatedEntries = filteredEntries.slice(startIndex, endIndex);
+
+            setLineupEntries(paginatedEntries);
+            setTotalCount(filteredEntries.length);
+            return;
+        }
+
+        // In production, fetch from API
         const params = new URLSearchParams({
             userId: userId || "",
             page: (currentPage - 1).toString(),
@@ -57,8 +90,95 @@ export const LineupSortingFilteringProvider = ({
         setTotalCount(data.totalElements || 0);
     };
 
+    const addLineupEntry = async (entry: Omit<LineupEntryDto, "id">) => {
+        try {
+            if (process.env.NODE_ENV === 'development') {
+                const newEntry: LineupEntryDto = {
+                    ...entry,
+                    id: Math.random().toString(36).substring(7),
+                };
+                setLineupEntries(prev => [...prev, newEntry]);
+                setTotalCount(prev => prev + 1);
+                return;
+            }
+
+            const response = await fetch("http://localhost:8080/api/lineup", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(entry),
+            });
+
+            if (!response.ok) {
+                const error = await response.text();
+                throw new Error(error);
+            }
+
+            await fetchLineupEntries();
+        } catch (error) {
+            console.error("Failed to add lineup entry:", error);
+            throw error;
+        }
+    };
+
+    const updateLineupEntry = async (id: string, entry: Partial<LineupEntryDto>) => {
+        try {
+            if (process.env.NODE_ENV === 'development') {
+                setLineupEntries(prev => 
+                    prev.map(item => 
+                        item.id === id ? { ...item, ...entry } : item
+                    )
+                );
+                return;
+            }
+
+            const response = await fetch(`http://localhost:8080/api/lineup/${id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(entry),
+            });
+
+            if (!response.ok) {
+                const error = await response.text();
+                throw new Error(error);
+            }
+
+            await fetchLineupEntries();
+        } catch (error) {
+            console.error("Failed to update lineup entry:", error);
+            throw error;
+        }
+    };
+
+    const removeLineupEntry = async (id: string) => {
+        try {
+            if (process.env.NODE_ENV === 'development') {
+                setLineupEntries(prev => prev.filter(item => item.id !== id));
+                setTotalCount(prev => prev - 1);
+                return;
+            }
+
+            const response = await fetch(`http://localhost:8080/api/lineup/${id}`, {
+                method: "DELETE",
+            });
+
+            if (!response.ok) {
+                const error = await response.text();
+                throw new Error(error);
+            }
+
+            await fetchLineupEntries();
+        } catch (error) {
+            console.error("Failed to remove lineup entry:", error);
+            throw error;
+        }
+    };
+
     useEffect(() => {
-        if (userId) {
+        if (userId || process.env.NODE_ENV === 'development') {
             fetchLineupEntries();
         }
     }, [searchTerm, sortBy, itemsPerPage, currentPage, userId]);
@@ -89,6 +209,9 @@ export const LineupSortingFilteringProvider = ({
                 resetFilters,
                 userId,
                 setUserId,
+                addLineupEntry,
+                updateLineupEntry,
+                removeLineupEntry,
             }}
         >
             {children}

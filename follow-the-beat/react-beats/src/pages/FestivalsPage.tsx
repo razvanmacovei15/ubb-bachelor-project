@@ -13,6 +13,26 @@ const FestivalsPage: React.FC = () => {
 
     const [festivals, setFestivals] = useState<FestivalDto[]>([]);
 
+
+
+  const {
+    concerts,
+    totalCount,
+    currentPage,
+    itemsPerPage,
+    setCurrentPage,
+      festivalId,
+      setFestivalId,
+      resetAndSelectFestival,
+      fetchConcerts,
+  } = useConcertSortingFilteringContext();
+
+  const [api, setApi] = React.useState<CarouselApi>()
+  // @ts-ignore
+  const [current, setCurrent] = React.useState(0)
+  // @ts-ignore
+  const [count, setCount] = React.useState(0)
+
     useEffect(() => {
         const fetchFestivals = async () => {
             const sessionToken = localStorage.getItem("sessionToken");
@@ -28,25 +48,8 @@ const FestivalsPage: React.FC = () => {
         };
 
         fetchFestivals();
+        fetchConcerts();
     }, []);
-
-  const {
-    concerts,
-    totalCount,
-    currentPage,
-    itemsPerPage,
-    setCurrentPage,
-      festivalId,
-      setFestivalId,
-      resetAndSelectFestival
-  } = useConcertSortingFilteringContext();
-
-  const [api, setApi] = React.useState<CarouselApi>()
-  // @ts-ignore
-  const [current, setCurrent] = React.useState(0)
-  // @ts-ignore
-  const [count, setCount] = React.useState(0)
-
   React.useEffect(() => {
     if (!api) {
       return

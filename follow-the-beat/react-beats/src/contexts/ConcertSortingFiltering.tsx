@@ -18,6 +18,7 @@ type ConcertSortingFilteringContextType = {
     festivalId: string | null;
     setFestivalId: (id: string | null) => void;
     resetAndSelectFestival: (id: string | null) => void;
+    fetchConcerts: () => Promise<void>;
 };
 
 const ConcertSortingFilteringContext = createContext<
@@ -126,6 +127,7 @@ export const ConcertSortingFilteringProvider = ({
                 festivalId,
                 setFestivalId,
                 resetAndSelectFestival,
+                fetchConcerts,
 
             }}
         >

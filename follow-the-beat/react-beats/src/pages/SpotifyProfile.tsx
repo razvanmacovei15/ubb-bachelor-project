@@ -152,7 +152,7 @@ const SpotifyProfile: React.FC = () => {
                                       </div>
                                   ) : (
                                       topTracks.map((track, index) => (
-                                          <div key={track.id} className="track-item">
+                                          <div key={track.id} className="track-item" >
                                             <span className="rank">#{index + 1}</span>
                                             <img src={track.albumImgUrl} alt={track.name} />
                                             <div className="track-info">

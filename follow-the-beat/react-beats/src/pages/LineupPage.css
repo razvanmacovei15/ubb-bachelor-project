@@ -1,9 +1,14 @@
 .lineup-page-container {
   display: flex;
   flex-direction: column;
-  background: linear-gradient(to top right,
-      var(--color-secondary),
-      var(--color-primary));
+  background: linear-gradient(
+    90deg,
+    #121212,
+    #1a1a1a,
+    #121212
+  );
+  background-size: 200% 100%;
+  animation: gradientAnimation 20s linear infinite;
   flex: 1;
   justify-content: start;
   align-items: start;
@@ -23,6 +28,13 @@
   align-items: start;
   justify-content: start;
   width: 100%;
+  padding: 20px;
+  max-width: 1920px;
+  margin: 0 auto;
+  min-height: 100%;
+  background: rgba(18, 18, 18, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .lineup-stats {
@@ -30,9 +42,11 @@
   padding: 1rem;
   margin-right: 200px;
   margin-left: 200px;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(26, 26, 26, 0.9);
   border-radius: 8px;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
 .lineup-container {
@@ -46,11 +60,12 @@
 }
 
 .lineup-container h1 {
-  color: white;
-  font-size: 3rem;
+  color: #ffffff;
+  font-size: 2.5rem;
   text-align: center;
   padding: 50px 10px;
-  font-weight: bold;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .lineup-grid {
@@ -90,21 +105,26 @@
 }
 
 .stat-card {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(26, 26, 26, 0.9);
   padding: 1rem;
   border-radius: 8px;
   color: white;
   text-align: center;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
 .stat-card h3 {
   font-size: 1.2rem;
   margin-bottom: 0.5rem;
+  color: var(--color-accent);
 }
 
 .stat-card p {
   font-size: 1.5rem;
   font-weight: bold;
+  color: white;
 }
 
 .filters-container {
@@ -115,13 +135,18 @@
   justify-content: center;
   align-items: center;
   margin-bottom: 2rem;
+  background: rgba(26, 26, 26, 0.9);
+  border-radius: 8px;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
 .search-input {
   padding: 0.5rem 1rem;
   border-radius: 4px;
   border: 1px solid rgba(255, 255, 255, 0.2);
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(26, 26, 26, 0.9);
   color: white;
   max-width: 300px;
   width: 100%;
@@ -136,7 +161,7 @@
   padding: 0.5rem 1rem;
   border-radius: 4px;
   border: 1px solid rgba(255, 255, 255, 0.2);
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(26, 26, 26, 0.9);
   color: white;
   cursor: pointer;
 }
@@ -150,10 +175,13 @@
 }
 
 .lineup-card {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(26, 26, 26, 0.9);
   border-radius: 8px;
   overflow: hidden;
   transition: transform 0.2s, box-shadow 0.2s;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
 .lineup-card:hover {
@@ -170,6 +198,7 @@
   font-size: 1.25rem;
   font-weight: 600;
   margin-bottom: 1rem;
+  color: var(--color-accent);
 }
 
 .entry-details {
@@ -180,6 +209,11 @@
 
 .entry-details p {
   margin: 0;
+  color: white;
+}
+
+.entry-details strong {
+  color: var(--color-accent);
 }
 
 .no-entries-message {
@@ -188,4 +222,5 @@
   width: 100%;
   font-size: 1.5rem;
   margin-top: 2rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 } 
