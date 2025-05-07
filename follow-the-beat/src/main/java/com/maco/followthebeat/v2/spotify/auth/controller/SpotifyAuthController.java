@@ -66,7 +66,7 @@ public class SpotifyAuthController {
         UUID userId = redisStateCacheService.retrieve(state);
 
         if (userId == null) {
-            return ResponseEntity.status(302).location(URI.create("http://localhost:5173/spotify-auth-error")).build();
+            return ResponseEntity.status(302).location(URI.create("http://localhost:8010/spotify-auth-error")).build();
         }
 
         try {
@@ -95,9 +95,9 @@ public class SpotifyAuthController {
                 redisStateCacheService.storeUserForSession(sessionToken, finalUserId);
                 redisStateCacheService.storeSessionToken(state, sessionToken);
             }
-            return ResponseEntity.status(302).location(URI.create("http://localhost:5173/spotify-auth-success?state=" + state)).build();
+            return ResponseEntity.status(302).location(URI.create("http://localhost:8010/spotify-auth-success?state=" + state)).build();
         } catch (Exception e) {
-            return ResponseEntity.status(302).location(URI.create("http://localhost:5173/spotify-auth-error")).build();
+            return ResponseEntity.status(302).location(URI.create("http://localhost:8010/spotify-auth-error")).build();
         }
 
     }
