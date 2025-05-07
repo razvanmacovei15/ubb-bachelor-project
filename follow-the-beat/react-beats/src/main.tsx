@@ -12,6 +12,7 @@ import StatisticsPage from "./pages/StatisticsPage.tsx";
 import { ConcertSortingFilteringProvider } from "./contexts/ConcertSortingFiltering.tsx";
 import SpotifyAuthSuccess from "./components/spotify/SpotifyAuthSuccess.tsx";
 import LandingPage from "./pages/LandingPage.tsx";
+import {LineupSortingFilteringProvider} from "@/contexts/LineupSortingFilteringContext.tsx";
 
 const router = createBrowserRouter([
   {
@@ -55,10 +56,12 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <ConcertSortingFilteringProvider>
-        <LineupProvider>
-          <RouterProvider router={router} />
-        </LineupProvider>
-    </ConcertSortingFilteringProvider>
+    <LineupSortingFilteringProvider>
+      <ConcertSortingFilteringProvider>
+          <LineupProvider>
+            <RouterProvider router={router} />
+          </LineupProvider>
+      </ConcertSortingFilteringProvider>
+    </LineupSortingFilteringProvider>
   </React.StrictMode>
 );

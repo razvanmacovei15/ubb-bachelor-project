@@ -1,4 +1,4 @@
-package com.maco.followthebeat.base.service.impl;
+package com.maco.followthebeat.core.service.impl;
 
 import com.maco.followthebeat.v2.core.entity.Artist;
 import com.maco.followthebeat.v2.core.entity.Concert;
