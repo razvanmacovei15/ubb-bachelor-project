@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import "./LineupPage.css";
 import Pagination from "../components/pagination/Pagination";
 import { useLineupSortingFilteringContext } from "../contexts/LineupSortingFilteringContext";
@@ -101,16 +101,16 @@ const LineupPage: React.FC = () => {
     setItemsPerPage,
     currentPage,
     setCurrentPage,
-    lineupEntries,
+    // lineupEntries,
     totalCount,
-    resetFilters,
+    // resetFilters,
   } = useLineupSortingFilteringContext();
 
   // Calculate statistics
-  const totalPriority = lineupEntries.reduce((sum, entry) => sum + (entry.priority || 0), 0);
-  const avgCompatibility = lineupEntries.length > 0
-    ? lineupEntries.reduce((sum, entry) => sum + (entry.compatibility || 0), 0) / lineupEntries.length
-    : 0;
+  // const totalPriority = lineupEntries.reduce((sum, entry) => sum + (entry.priority || 0), 0);
+  // const avgCompatibility = lineupEntries.length > 0
+  //   ? lineupEntries.reduce((sum, entry) => sum + (entry.compatibility || 0), 0) / lineupEntries.length
+  //   : 0;
 
   return (
     <div className="lineup-page-container">

@@ -1,7 +1,6 @@
 // src/hooks/useSpotifyProfile.ts
-import { useState, useEffect } from "react";
+import {useEffect, useState} from "react";
 import axios from "axios";
-import { v4 as uuidv4 } from "uuid";
 
 export type ViewType = "artists" | "tracks";
 
@@ -25,6 +24,7 @@ export interface SpotifyTrack {
 interface UserData {
     isConnectedToSpotify: boolean;
 }
+
 
 const useSpotifyProfile = () => {
     const API_URL = import.meta.env.VITE_API_URL;
@@ -91,11 +91,8 @@ const useSpotifyProfile = () => {
         console.log("handleSpotifyLogin called");
         console.log(API_URL);
 
-        const authUrl = await axios
-            .get(`${API_URL}/spotify-auth/auth-url`)
-            .then((res) => res.data);
-
-        window.location.href = authUrl;
+        const res = await axios.get<string>(`${API_URL}/spotify-auth/auth-url`);
+        window.location.href = res.data;
     };
 
     const handleTimeRangeChange = (newRange: string) => {

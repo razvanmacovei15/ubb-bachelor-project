@@ -4,8 +4,8 @@ import "./LineupConcertCard.css";
 interface LineupConcertCardProps {
   concert: LineupConcert;
   getGradientClass: (compatibility: number) => string;
-  handleUpdate: (id: number) => void;
-  removeFromLineup: (id: number) => void;
+  handleUpdate: (id: string) => void;
+  removeFromLineup: (id: string) => void;
 }
 
 const LineupConcertCard = ({
@@ -18,12 +18,12 @@ const LineupConcertCard = ({
     <div className="lineupconcertcard-container">
       <div className="lineupconcertcard-date">
         <p className="font-bold text-lg text-white overflow-ellipsis flex flex-col">
-          {new Date(concert.startTime).getUTCDate().toLocaleString()}
+          {new Date(concert.scheduleDTO.startTime).getUTCDate().toLocaleString()}
           <p>Mar</p>
         </p>
       </div>
       <div className="lineupconcertcard-part-one">
-        <img src="/images/image.jpg" alt={`${concert.artist} concert`} />
+        <img src="/images/image.jpg" alt={`${concert.artistDTO.imgUrl} concert`} />
       </div>
       <div className="lineupcard-part-two">
         <div
@@ -32,10 +32,10 @@ const LineupConcertCard = ({
           )}`}
         >
           <div>
-            <p className="font-bold">{concert.artist}</p>
-            <p>{concert.location}</p>
+            <p className="font-bold">{concert.artistDTO.name}</p>
+            <p>{concert.locationDTO.name}</p>
             <p className="text-sm text-gray-700">
-              {new Date(concert.startTime).toLocaleString()}
+              {new Date(concert.scheduleDTO.startTime).toLocaleString()}
             </p>
           </div>
         </div>
