@@ -14,6 +14,7 @@ export default defineConfig({
   },
   server: {
     host: "0.0.0.0",
+    allowedHosts:["maco-coding.go.ro"],
     port: 8050,
   },
   
