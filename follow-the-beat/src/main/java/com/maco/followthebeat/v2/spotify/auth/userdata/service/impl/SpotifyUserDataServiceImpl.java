@@ -1,6 +1,6 @@
 package com.maco.followthebeat.v2.spotify.auth.userdata.service.impl;
 
-import com.maco.client.v2.SpotifyClientI;
+import com.maco.client.v2.SpotifyClient;
 import com.maco.followthebeat.v2.spotify.auth.userdata.service.interfaces.SpotifyUserDataService;
 import com.maco.followthebeat.v2.spotify.auth.userdata.entity.SpotifyUserData;
 import com.maco.followthebeat.v2.user.entity.User;
@@ -23,7 +23,7 @@ public class SpotifyUserDataServiceImpl implements SpotifyUserDataService {
     }
 
     @Override
-    public SpotifyUserData createSpotifyData(SpotifyClientI spotifyClient, User user) {
+    public SpotifyUserData createSpotifyData(SpotifyClient spotifyClient, User user) {
         return tokenMapper.toEntity(spotifyClient, user);
     }
 

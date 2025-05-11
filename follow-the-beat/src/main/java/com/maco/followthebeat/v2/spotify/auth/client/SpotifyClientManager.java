@@ -1,6 +1,6 @@
 package com.maco.followthebeat.v2.spotify.auth.client;
 
-import com.maco.client.v2.SpotifyClientI;
+import com.maco.client.v2.SpotifyClient;
 import com.maco.followthebeat.v2.spotify.auth.mapper.TokenMapper;
 import com.maco.followthebeat.v2.spotify.auth.userdata.entity.SpotifyUserData;
 import com.maco.followthebeat.v2.spotify.auth.userdata.repo.SpotifyUserDataRepo;
@@ -20,19 +20,18 @@ import java.util.concurrent.ConcurrentHashMap;
 @Scope("singleton")
 @AllArgsConstructor
 public class SpotifyClientManager {
-    private final Map<UUID, SpotifyClientI> userClients = new ConcurrentHashMap<>();
+    private final Map<UUID, SpotifyClient> userClients = new ConcurrentHashMap<>();
     private final SpotifyClientFactory clientFactory;
-
     private final UserService userService;
     private final TokenMapper tokenMapper;
     private final SpotifyUserDataRepo spotifyUserDataRepo;
 
-    public SpotifyClientI getOrCreateSpotifyClient(UUID userId) {
+    public SpotifyClient getOrCreateSpotifyClient(UUID userId) {
         if (userClients.containsKey(userId)) {
             return userClients.get(userId);
         }
 
-        SpotifyClientI client = clientFactory.createSpotifyClient();
+        SpotifyClient client = clientFactory.createSpotifyClient();
 
         client.setTokenUpdateListener(newToken -> {
             log.info("Persisting updated token for user {}", userId);
@@ -46,7 +45,7 @@ public class SpotifyClientManager {
         return client;
     }
 
-    public void updateClientToken(UUID userId, SpotifyClientI client) {
+    public void updateClientToken(UUID userId, SpotifyClient client) {
         if (userClients.containsKey(userId)) {
             userClients.put(userId, client);
         }
@@ -56,7 +55,7 @@ public class SpotifyClientManager {
         if (!userClients.containsKey(userId)) {
             return false;
         }
-        SpotifyClientI client = userClients.get(userId);
+        SpotifyClient client = userClients.get(userId);
         return client.isAuthenticated();
     }
 

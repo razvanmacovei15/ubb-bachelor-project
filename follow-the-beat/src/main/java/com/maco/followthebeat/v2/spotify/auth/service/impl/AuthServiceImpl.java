@@ -1,6 +1,6 @@
 package com.maco.followthebeat.v2.spotify.auth.service.impl;
 
-import com.maco.client.v2.SpotifyClientI;
+import com.maco.client.v2.SpotifyClient;
 import com.maco.followthebeat.v2.cache.RedisStateCacheServiceImpl;
 import com.maco.followthebeat.v2.common.exceptions.UserNotFoundException;
 import com.maco.followthebeat.v2.spotify.auth.client.SpotifyClientManager;
@@ -28,7 +28,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public User linkSpotifyAccount(User user, SpotifyClientI client) {
+    public User linkSpotifyAccount(User user, SpotifyClient client) {
         String spotifyUserId = client.getCurrentUserDetails().getId();
         Optional<User> maybeExisting = userService.findUserBySpotifyId(spotifyUserId);
 

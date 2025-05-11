@@ -1,6 +1,6 @@
 package com.maco.followthebeat.v2.spotify.auth.controller;
 
-import com.maco.client.v2.SpotifyClientI;
+import com.maco.client.v2.SpotifyClient;
 import com.maco.followthebeat.v2.cache.RedisStateCacheService;
 import com.maco.followthebeat.v2.cache.RedisStateCacheServiceImpl;
 import com.maco.followthebeat.v2.common.exceptions.UserNotFoundException;
@@ -48,7 +48,7 @@ public class SpotifyAuthController {
             UUID stateUUID = UUID.randomUUID();
             redisStateCacheService.store(stateUUID.toString(), userId);
 
-            SpotifyClientI client = clientManager.getOrCreateSpotifyClient(userId);
+            SpotifyClient client = clientManager.getOrCreateSpotifyClient(userId);
 
             String loginUrl = client.getAuthorizationUrl(stateUUID.toString());
             return ResponseEntity.ok(loginUrl);
@@ -66,11 +66,11 @@ public class SpotifyAuthController {
         UUID userId = redisStateCacheService.retrieve(state);
 
         if (userId == null) {
-            return ResponseEntity.status(302).location(URI.create("http://localhost:8010/spotify-auth-error")).build();
+            return ResponseEntity.status(302).location(URI.create("http://localhost:8050/spotify-auth-error")).build();
         }
 
         try {
-            SpotifyClientI client = clientManager.getOrCreateSpotifyClient(userId);
+            SpotifyClient client = clientManager.getOrCreateSpotifyClient(userId);
             client.authenticate(code);
             //at this point client should be authenticated
             UUID finalUserId = userId;
@@ -95,9 +95,9 @@ public class SpotifyAuthController {
                 redisStateCacheService.storeUserForSession(sessionToken, finalUserId);
                 redisStateCacheService.storeSessionToken(state, sessionToken);
             }
-            return ResponseEntity.status(302).location(URI.create("http://localhost:8010/spotify-auth-success?state=" + state)).build();
+            return ResponseEntity.status(302).location(URI.create("http://localhost:8050/spotify-auth-success?state=" + state)).build();
         } catch (Exception e) {
-            return ResponseEntity.status(302).location(URI.create("http://localhost:8010/spotify-auth-error")).build();
+            return ResponseEntity.status(302).location(URI.create("http://localhost:8050/spotify-auth-error")).build();
         }
 
     }
