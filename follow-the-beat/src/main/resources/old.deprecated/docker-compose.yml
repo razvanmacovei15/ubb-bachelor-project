@@ -1,8 +1,8 @@
 services:
   backend:
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ../../../..
+      dockerfile: ../../../../Dockerfile
     container_name: backend
     ports:
       - "${BACKEND_PORT:-8060}:8060"
@@ -23,8 +23,8 @@ services:
 
   frontend:
     build:
-      context: ./react-beats
-      dockerfile: Dockerfile
+      context: ../../../../react-beats
+      dockerfile: ../../../../react-beats/Dockerfile
     container_name: frontend
     ports:
       - "${FRONTEND_PORT:-8055}:80"
@@ -32,8 +32,8 @@ services:
 
   scraper:
     build:
-      context: ./scraper-microservice
-      dockerfile: Dockerfile
+      context: ../../../../scraper-microservice
+      dockerfile: ../../../../scraper-microservice/Dockerfile
     container_name: scraper
     ports:
       - "${SCRAPER_PORT:-8070}:8070"
