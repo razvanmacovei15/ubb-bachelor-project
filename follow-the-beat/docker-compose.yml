@@ -8,19 +8,22 @@ services:
     ports:
       - "${BACKEND_PORT}:8060"
     environment:
-      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/dev_db
+#      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
       SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
       SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
-      SPRING_DATA_REDIS_HOST: ${SPRING_DATA_REDIS_HOST}
-      SPRING_DATA_REDIS_PORT: ${SPRING_DATA_REDIS_PORT}
+#      SPRING_DATA_REDIS_HOST: ${SPRING_DATA_REDIS_HOST}
+#      SPRING_DATA_REDIS_PORT: ${SPRING_DATA_REDIS_PORT}
       SPRING_SCRAPER_URL: ${SCRAPER_URL}
       SPRING_SCRAPER_ELECTRIC_ENDPOINT: ${ELECTRIC_ENDPOINT}
     depends_on:
       - redis
       - scraper
       - db
-    volumes:
-      - ./src/main/resources/application.properties:/app/src/main/resources/application.properties
+#    volumes:
+#      - ./src/main/resources/application.properties:/app/src/main/resources/application.properties
     restart: unless-stopped
 
   frontend:
