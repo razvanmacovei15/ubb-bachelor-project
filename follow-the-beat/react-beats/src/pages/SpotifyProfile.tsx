@@ -5,6 +5,8 @@ import FilterSidebar from "../components/spotify/FilterSidebar";
 import useSpotifyProfile from "../hooks/useSpotifyProfile";
 import "./ProfilePage.css";
 import axios from "axios";
+import SpotifyTrackCard from "@/components/spotify/SpotifyTrackCard.tsx";
+import SpotifyArtistCard from "@/components/spotify/SpotifyArtistCard.tsx";
 
 const SpotifyProfile: React.FC = () => {
   const {
@@ -21,9 +23,11 @@ const SpotifyProfile: React.FC = () => {
     handleSpotifyLogin,
   } = useSpotifyProfile();
 
+  const API_URL = import.meta.env.VITE_API_URL;
+
   const fetchUntoldFestival = async () => {
     try {
-      const response = await axios.post("http://localhost:8080/api/untold/sync");
+      const response = await axios.post(`${API_URL}/api/untold/sync`);
       console.log("Success:", response.data);
     } catch (error: any) {
       if (error.response) {
@@ -38,7 +42,7 @@ const SpotifyProfile: React.FC = () => {
 
   const fetchElectricFestival = async () => {
     try {
-      const response = await axios.post("http://localhost:8080/api/electric/sync");
+      const response = await axios.post(`${API_URL}/api/electric/sync`);
       console.log("Success:", response.data);
     } catch (error: any) {
       if (error.response) {
@@ -53,7 +57,7 @@ const SpotifyProfile: React.FC = () => {
 
   const fetchConcerts = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/api/v1/concerts", {
+      const response = await axios.get(`${API_URL}/api/v1/concerts`, {
         params: {
           page: 50,
           size: 50,
@@ -70,9 +74,9 @@ const SpotifyProfile: React.FC = () => {
 
   const fetchFakeConcerts = async () => {
     try {
-      const response = await axios.post("http://localhost:8080/api/fake-data/festivals", null, {
+      const response = await axios.post(`${API_URL}/api/fake-data/festivals`, null, {
         params: {
-          count: 1000,
+          count: 100000,
         },
       });
 
@@ -134,13 +138,7 @@ const SpotifyProfile: React.FC = () => {
                                       </div>
                                   ) : (
                                       topArtists.map((artist, index) => (
-                                          <div key={artist.id} className="artist-card">
-                                            <img src={artist.imageUrl} alt={artist.name} />
-                                            <div className="artist-info">
-                                              <span className="rank">#{index + 1}</span>
-                                              <h4>{artist.name}</h4>
-                                            </div>
-                                          </div>
+                                          <SpotifyArtistCard key={index} spotifyArtistDto={artist}/>
                                       ))
                                   )}
                                 </div>
@@ -152,14 +150,7 @@ const SpotifyProfile: React.FC = () => {
                                       </div>
                                   ) : (
                                       topTracks.map((track, index) => (
-                                          <div key={track.id} className="track-item" >
-                                            <span className="rank">#{index + 1}</span>
-                                            <img src={track.albumImgUrl} alt={track.name} />
-                                            <div className="track-info">
-                                              <h4>{track.name}</h4>
-                                              <p>{track.artists.map((a) => a.name).join(", ")}</p>
-                                            </div>
-                                          </div>
+                                          <SpotifyTrackCard key={index} spotifyTrackDto={track}/>
                                       ))
                                   )}
                                 </div>

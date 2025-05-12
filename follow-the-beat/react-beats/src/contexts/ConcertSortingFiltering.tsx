@@ -42,6 +42,7 @@ export const ConcertSortingFilteringProvider = ({
 
     const [festivalId, setFestivalId] = useState<string | null>(null);
 
+    const API_URL = import.meta.env.VITE_API_URL;
     const fetchConcerts = async () => {
         const params = new URLSearchParams({
             artist: searchTerm,
@@ -54,7 +55,7 @@ export const ConcertSortingFilteringProvider = ({
         if (date) params.append("date", date);
 
         const response = await fetch(
-            `http://localhost:8080/api/v1/concerts?${params.toString()}`
+            `${API_URL}/api/v1/concerts?${params.toString()}`
         );
         const data = await response.json();
 
@@ -74,7 +75,7 @@ export const ConcertSortingFilteringProvider = ({
         });
         if (date) params.append("date", date);
         const response = await fetch(
-            `http://localhost:8080/api/v1/concerts/by-festival?${params.toString()}`
+            `${API_URL}/api/v1/concerts/by-festival?${params.toString()}`
         );
         const data = await response.json();
         const concertsList = data._embedded?.concertDTOList || [];

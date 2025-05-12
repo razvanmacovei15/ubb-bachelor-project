@@ -11,6 +11,8 @@ services:
       - ./src/main/resources/application.properties:/app/src/main/resources/application.properties
     environment:
       SPRING_PROFILES_ACTIVE: dev
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
     ports:
       - "8060:8060"
 

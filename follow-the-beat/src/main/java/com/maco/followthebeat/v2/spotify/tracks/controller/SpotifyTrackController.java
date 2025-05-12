@@ -31,7 +31,7 @@ public class SpotifyTrackController {
 
     @IsConnected
     @GetMapping("/top-tracks")
-    public ResponseEntity<?> getTopTracks(
+    public ResponseEntity<List<SpotifyTrackDto>> getTopTracks(
             @RequestHeader("Authorization") String authHeader,
             @RequestParam(defaultValue = "10") int limit,
             @RequestParam(defaultValue = "0") int offset,

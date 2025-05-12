@@ -44,15 +44,26 @@ public class SpotifyAuthController {
     @GetMapping("/auth-url")
     public ResponseEntity<String> getLoginUrl() {
         try {
+            log.info("Starting Spotify auth URL generation...");
+
             UUID userId = userService.createAnonymousUser();
+            log.info("Created anonymous user with ID: {}", userId);
+
             UUID stateUUID = UUID.randomUUID();
+            log.info("Generated state UUID: {}", stateUUID);
+
             redisStateCacheService.store(stateUUID.toString(), userId);
+            log.info("Stored state in Redis with key: {} and value: {}", stateUUID, userId);
 
             SpotifyClient client = clientManager.getOrCreateSpotifyClient(userId);
+            log.info("Obtained SpotifyClient for user ID: {}", userId);
 
             String loginUrl = client.getAuthorizationUrl(stateUUID.toString());
+            log.info("Generated Spotify login URL: {}", loginUrl);
+
             return ResponseEntity.ok(loginUrl);
         } catch (Exception e) {
+            log.error("Error generating Spotify login URL", e);
             return ResponseEntity.badRequest().body("Error: " + e.getMessage());
         }
     }

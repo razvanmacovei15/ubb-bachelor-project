@@ -2,13 +2,6 @@ FROM maven:3.9.6-eclipse-temurin-21
 
 WORKDIR /app
 
-# Accept GitHub credentials as build args
-ARG GITHUB_USER
-ARG GITHUB_TOKEN
-
-# Copy your custom Maven settings file
-COPY maven/settings.xml /root/.m2/settings.xml
-
 # Copy pom.xml
 COPY pom.xml .
 

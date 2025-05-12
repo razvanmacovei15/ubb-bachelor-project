@@ -10,6 +10,7 @@ import {Carousel, CarouselApi, CarouselContent, CarouselNext, CarouselPrevious, 
 import { Card, CardContent } from "@/components/ui/card"
 
 const FestivalsPage: React.FC = () => {
+const API_URL = import.meta.env.VITE_API_URL;
 
     const [festivals, setFestivals] = useState<FestivalDto[]>([]);
 
@@ -37,7 +38,7 @@ const FestivalsPage: React.FC = () => {
         const fetchFestivals = async () => {
             const sessionToken = localStorage.getItem("sessionToken");
             try {
-                const res = await axios.get<FestivalDto[]>("http://localhost:8080/api/festivals", {
+                const res = await axios.get<FestivalDto[]>(`${API_URL}/api/festivals`, {
                     headers: { Authorization: `Bearer ${sessionToken}` }
                 });
                 console.log("Fetched festivals:", res.data);
