@@ -17,4 +17,6 @@ WORKDIR /app
 COPY --from=builder /app/target/*.jar app.jar
 
 EXPOSE 8060
-ENTRYPOINT ["java", "-jar", "app.jar"]
+
+# Activate the 'docker' Spring profile
+ENTRYPOINT ["java", "-Dspring.profiles.active=docker", "-jar", "app.jar"]
