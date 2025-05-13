@@ -15,9 +15,6 @@ import java.util.UUID;
 public class LineupEntryDTO {
     private UUID id;
 
-//    @NotNull
-//    private UUID userId;
-
     @NotNull
     private UUID concertId;
 

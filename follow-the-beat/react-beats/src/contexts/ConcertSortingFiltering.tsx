@@ -53,10 +53,12 @@ export const ConcertSortingFilteringProvider = ({
             ...(date ? { date } : {}),
         };
 
-        const response = await axios.get(`${API_URL}/api/v1/concerts`, {
-            params,
-        });
-        const data = response.data;
+        const response = await axios.get(`${API_URL}/api/v1/concerts`, { params });
+        const data = response.data as {
+            _embedded?: { concertDTOList: ConcertDto[] };
+            page?: { totalElements: number };
+        };
+
         const concertsList = data._embedded?.concertDTOList || [];
         setConcerts(concertsList);
         setTotalCount(data.page?.totalElements || 0);
@@ -73,12 +75,12 @@ export const ConcertSortingFilteringProvider = ({
             ...(date ? { date } : {}),
         };
 
-        const response = await axios.get(
-            `${API_URL}/api/v1/concerts/by-festival`,
-            { params }
-        );
+        const response = await axios.get(`${API_URL}/api/v1/concerts/by-festival`, { params });
+        const data = response.data as {
+            _embedded?: { concertDTOList: ConcertDto[] };
+            page?: { totalElements: number };
+        };
 
-        const data = response.data;
         const concertsList = data._embedded?.concertDTOList || [];
         setConcerts(concertsList);
         setTotalCount(data.page?.totalElements || 0);

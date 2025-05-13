@@ -1,6 +1,7 @@
 import {createContext, useContext, useEffect, useState} from "react";
-import {LineupEntryDto} from "../types/LineupEntryDto";
+import {LineupEntryDto} from "../types/LineupEntryDto.ts";
 import axios from "axios";
+import {LineupDetailDto} from "@/types/LineupDetailDto.ts";
 
 type LineupSortingFilteringContextType = {
     searchTerm: string;
@@ -11,7 +12,7 @@ type LineupSortingFilteringContextType = {
     setItemsPerPage: (count: number) => void;
     currentPage: number;
     setCurrentPage: (page: number) => void;
-    lineupEntries: LineupEntryDto[];
+    lineupEntries: LineupDetailDto[];
     totalCount: number;
     resetFilters: () => void;
     userId: string | null;
@@ -30,61 +31,45 @@ export const LineupSortingFilteringProvider = ({children}: { children: React.Rea
     const [sortBy, setSortBy] = useState<"none" | "priority" | "compatibility">("none");
     const [itemsPerPage, setItemsPerPage] = useState(5);
     const [currentPage, setCurrentPage] = useState(1);
-    const [lineupEntries, setLineupEntries] = useState<LineupEntryDto[]>([]);
+    const [lineupEntries, setLineupEntries] = useState<LineupDetailDto[]>([]);
     const [totalCount, setTotalCount] = useState(0);
     const [userId, setUserId] = useState<string | null>(null);
 
     const API_URL = import.meta.env.VITE_API_URL;
 
-    const fetchLineupEntries = async () => {
-        const params = new URLSearchParams();
-        params.append("page", (currentPage - 1).toString());
-        params.append("size", itemsPerPage.toString());
-        params.append("sortBy",
-            sortBy === "priority"
-                ? "priority"
-                : sortBy === "compatibility"
-                    ? "compatibility"
-                    : "addedAt"
-        );
+    const fetchLineupDetails = async () => {
 
-        params.append("direction", "asc");
+        const newParams = {
+            artist: searchTerm,
+            page: currentPage - 1,
+            size: itemsPerPage,
+            sortBy: sortBy === "priority" ? "priority" : "compatibility",
+            direction: "asc",
 
-        if (sortBy === "priority") {
-            params.append("hasPriority", "1");
-            params.append("hasPriorityGreaterThan", "0");
-            params.append("minPriority", "0");
         }
 
-        if (sortBy === "compatibility") {
-            params.append("hasCompatibilityGreaterThan", "0");
-            params.append("minCompatibility", "0");
-        }
-        const response = await axios.get(`${API_URL}/api/lineup/search`, {
-            params: params,
+        const response = await axios.get(`${API_URL}/api/lineup/search/details`, {
+            params: newParams,
             headers: {
                 Authorization: `Bearer ${sessionToken}`,
-            }
+            },
         });
-        const data = response.data;
-        const entries = data._embedded?.lineupEntryDTOList || [];
+        const data = response.data as {
+            _embedded?: { lineupDetailDtoList: LineupDetailDto[] };
+            page?: { totalElements: number };
+        };
+        const entries = data._embedded?.lineupDetailDtoList || []; // Spring Boot returns a Page object with content
         setLineupEntries(entries);
         setTotalCount(data.page?.totalElements || 0);
+
     };
 
     const addLineupEntry = async (entry: LineupEntryDto) => {
         try {
-            const response = await axios.post(`${API_URL}/api/lineup`, entry, {
-                headers: {
-                    Authorization: `Bearer ${sessionToken}`,
-                },
+            await axios.post(`${API_URL}/api/lineup`, entry, {
+                headers: {Authorization: `Bearer ${sessionToken}`},
             });
-            console.log("Session token:", sessionToken);
-            if (response.status === 201) {
-                const newEntry = response.data;
-                setLineupEntries((prev) => [...prev, newEntry]);
-                await fetchLineupEntries();
-            }
+            await fetchLineupDetails(); // Always refresh full details after a mutation
         } catch (err: any) {
             if (err.response?.status === 400) {
                 console.error("Validation error:", err.response.data);
@@ -98,11 +83,10 @@ export const LineupSortingFilteringProvider = ({children}: { children: React.Rea
 
     const updateLineupEntry = async (id: string, entry: Partial<LineupEntryDto>) => {
         try {
-            const response = await axios.put(`${API_URL}/api/lineup/${id}`, entry);
-            const updated = response.data;
-            setLineupEntries((prev) =>
-                prev.map((e) => (e.id === id ? updated : e))
-            );
+            await axios.put(`${API_URL}/api/lineup/${id}`, entry, {
+                headers: {Authorization: `Bearer ${sessionToken}`},
+            });
+            await fetchLineupDetails(); // Refresh details
         } catch (err: any) {
             if (err.response?.status === 404) {
                 console.error("Entry not found:", err.response.data);
@@ -118,7 +102,7 @@ export const LineupSortingFilteringProvider = ({children}: { children: React.Rea
         try {
             await axios.delete(`${API_URL}/api/lineup/${id}`);
             setLineupEntries((prev) => prev.filter((e) => e.id !== id));
-            await fetchLineupEntries();
+            await fetchLineupDetails();
         } catch (err: any) {
             if (err.response?.status === 404) {
                 console.error("Entry not found:", err.response.data);
@@ -129,10 +113,11 @@ export const LineupSortingFilteringProvider = ({children}: { children: React.Rea
     };
 
     useEffect(() => {
-        if (userId || import.meta.env.MODE === "development") {
-            fetchLineupEntries();
-        }
+
+        fetchLineupDetails();
+
     }, [searchTerm, sortBy, itemsPerPage, currentPage, userId]);
+
 
     useEffect(() => {
         setCurrentPage(1);

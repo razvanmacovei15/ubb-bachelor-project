@@ -20,6 +20,16 @@
 .lineup-page-container::-webkit-scrollbar {
   display: none;
 }
+.lineup-title {
+  font-size: 3rem;
+  font-weight: 800;
+  text-align: center;
+  color: var(--color-accent);
+  text-shadow: 0 0 8px rgba(0, 255, 224, 0.6), 0 0 20px rgba(0, 255, 224, 0.4);
+  margin-bottom: 1rem;
+  letter-spacing: 1px;
+  font-family: "Orbitron", sans-serif; /* You can pick any futuristic font */
+}
 
 .main-container {
   flex: 1;
@@ -59,15 +69,6 @@
   height: 100%;
 }
 
-.lineup-container h1 {
-  color: #ffffff;
-  font-size: 2.5rem;
-  text-align: center;
-  padding: 50px 10px;
-  font-weight: 700;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-}
-
 .lineup-grid {
   display: grid;
   grid-template-columns: repeat(1, 1fr);
@@ -90,11 +91,11 @@
   }
 }
 
+
 .pagination-bar {
   width: 100%;
   display: flex;
   justify-content: center;
-  margin-top: 2rem;
 }
 
 .stats-grid {

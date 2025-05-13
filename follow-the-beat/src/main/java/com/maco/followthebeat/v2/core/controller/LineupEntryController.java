@@ -3,6 +3,7 @@ package com.maco.followthebeat.v2.core.controller;
 import com.maco.followthebeat.v2.core.dto.LineupEntryDTO;
 import com.maco.followthebeat.v2.core.entity.LineupEntry;
 import com.maco.followthebeat.v2.core.mappers.LineupEntryMapper;
+import com.maco.followthebeat.v2.core.model.LineupDetailDto;
 import com.maco.followthebeat.v2.core.service.interfaces.LineupEntryService;
 import com.maco.followthebeat.v2.user.context.IsConnected;
 import com.maco.followthebeat.v2.user.context.UserContext;
@@ -81,6 +82,38 @@ public class LineupEntryController {
         return pagedResourcesAssembler.toModel(result);
     }
 
+    @IsConnected
+    @GetMapping("/search/details")
+    public PagedModel<EntityModel<LineupDetailDto>> searchLineupDetails(
+            @RequestParam Optional<String> artist,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "addedAt") String sortBy,
+            @RequestParam(defaultValue = "asc") String direction,
+            @RequestParam(required = false) Integer hasPriority,
+            @RequestParam(required = false) Integer hasPriorityGreaterThan,
+            @RequestParam(required = false) Integer hasCompatibilityGreaterThan,
+            @RequestParam(required = false) Integer minPriority,
+            @RequestParam(required = false) Integer minCompatibility,
+            PagedResourcesAssembler<LineupDetailDto> pagedResourcesAssembler
+    ) {
+        User user = userContext.getOrThrow();
+        Pageable pageable = PageRequest.of(page, size,
+                direction.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending());
+        Page<LineupDetailDto> result = lineupEntryService.searchLineupDetails(
+                user.getId(),
+                artist,
+                hasPriority,
+                hasPriorityGreaterThan,
+                hasCompatibilityGreaterThan,
+                minPriority,
+                minCompatibility,
+                pageable
+        );
+        log.info("result: {}", result);
+        return pagedResourcesAssembler.toModel(result);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<?> getLineupEntry(@PathVariable UUID id) {
         Optional<LineupEntry> entry = lineupEntryService.getById(id);
@@ -128,5 +161,17 @@ public class LineupEntryController {
         }
         lineupEntryService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @IsConnected
+    @GetMapping("/details")
+    public ResponseEntity<?> getLineupDetails() {
+        User user = userContext.getOrThrow();
+        List<LineupDetailDto> details = lineupEntryService.getLineupDetailsByUserId(user.getId());
+        if (details.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("No lineup details found for user with id: " + user.getId());
+        }
+        return ResponseEntity.ok(details);
     }
 }

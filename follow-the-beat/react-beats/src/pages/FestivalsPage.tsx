@@ -24,7 +24,6 @@ const FestivalsPage: React.FC = () => {
 
     const {addLineupEntry} = useLineupSortingFilteringContext();
     const onAddToLineup = async (concertId: string) => {
-        const sessionToken = localStorage.getItem("sessionToken");
         try {
             await addLineupEntry({
                 concertId,

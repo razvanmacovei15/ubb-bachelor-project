@@ -1,13 +1,14 @@
 package com.maco.followthebeat.v2.core.service.impl;
 
 import com.maco.followthebeat.v2.core.dto.LineupEntryDTO;
-import com.maco.followthebeat.v2.core.entity.Concert;
-import com.maco.followthebeat.v2.core.entity.LineupEntry;
+import com.maco.followthebeat.v2.core.entity.*;
 import com.maco.followthebeat.v2.core.generics.BaseCrudServiceImpl;
 import com.maco.followthebeat.v2.core.mappers.LineupEntryMapper;
+import com.maco.followthebeat.v2.core.model.LineupDetailDto;
 import com.maco.followthebeat.v2.core.repo.LineupEntryRepo;
 import com.maco.followthebeat.v2.core.service.interfaces.ConcertService;
 import com.maco.followthebeat.v2.core.service.interfaces.LineupEntryService;
+import com.maco.followthebeat.v2.core.specification.ConcertSpecification;
 import com.maco.followthebeat.v2.core.specification.LineupEntrySpecification;
 import com.maco.followthebeat.v2.user.entity.User;
 import com.maco.followthebeat.v2.user.service.interfaces.UserService;
@@ -15,12 +16,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -30,12 +30,15 @@ public class LineupEntryServiceImpl extends BaseCrudServiceImpl<LineupEntry> imp
     private final UserService userService;
     private final ConcertService concertService;
     private final LineupEntryMapper lineupEntryMapper;
-    public LineupEntryServiceImpl(LineupEntryRepo repo,UserService userService, ConcertService concertService, LineupEntryMapper lineupEntryMapper) {
+    private final LineupEntryRepo lineupEntryRepo;
+
+    public LineupEntryServiceImpl(LineupEntryRepo repo, UserService userService, ConcertService concertService, LineupEntryMapper lineupEntryMapper, LineupEntryRepo lineupEntryRepo) {
         super(repo);
         this.repo = repo;
         this.userService = userService;
         this.concertService = concertService;
         this.lineupEntryMapper = lineupEntryMapper;
+        this.lineupEntryRepo = lineupEntryRepo;
     }
 
     @Override
@@ -71,6 +74,66 @@ public class LineupEntryServiceImpl extends BaseCrudServiceImpl<LineupEntry> imp
         }
 
         return repo.findAll(spec, pageable).map(lineupEntryMapper::toDTO);
+    }
+
+    @Override
+    public List<LineupDetailDto> getLineupDetailsByUserId(UUID userId) {
+        return lineupEntryRepo.findLineupDetailsByUserId(userId);
+    }
+
+    @Override
+    public Page<LineupDetailDto> searchLineupDetails(
+            UUID userId,
+            Optional<String> artistName,
+            Integer hasPriority,
+            Integer hasPriorityGreaterThan,
+            Integer hasCompatibilityGreaterThan,
+            Integer minPriority,
+            Integer minCompatibility,
+            Pageable pageable
+    ) {
+        Specification<LineupEntry> spec = Specification.where(LineupEntrySpecification.hasUserId(userId));
+        if (artistName.isPresent()) {
+            spec = spec.and(LineupEntrySpecification.hasArtistName(artistName.get()));
+        }
+        if (hasPriority != null) {
+            spec = spec.and(LineupEntrySpecification.hasPriority(hasPriority));
+        }
+        if (hasPriorityGreaterThan != null) {
+            spec = spec.and(LineupEntrySpecification.hasPriorityGreaterThan(hasPriorityGreaterThan));
+        }
+        if (hasCompatibilityGreaterThan != null) {
+            spec = spec.and(LineupEntrySpecification.hasCompatibilityGreaterThan(hasCompatibilityGreaterThan));
+        }
+        if (minPriority != null) {
+            spec = spec.and(LineupEntrySpecification.hasMinPriority(minPriority));
+        }
+        if (minCompatibility != null) {
+            spec = spec.and(LineupEntrySpecification.hasMinCompatibility(minCompatibility));
+        }
+
+        return lineupEntryRepo.findAll(spec, pageable)
+                .map(entry -> {
+                    Concert concert = entry.getConcert();
+                    Artist artist = concert.getArtist();
+                    Schedule schedule = concert.getSchedule();
+                    Location location = concert.getLocation();
+                    Stage stage = (location instanceof Stage) ? (Stage) location : null;
+
+                    return new LineupDetailDto(
+                            entry.getId(),
+                            artist.getName(),
+                            artist.getImgUrl(),
+                            null, // spotifyUrl not available here
+                            entry.getNotes(),
+                            entry.getPriority(),
+                            entry.getCompatibility(),
+                            schedule != null ? schedule.getStartTime() : null,
+                            schedule != null ? schedule.getDate() : null,
+                            location != null ? location.getName() : null,
+                            stage != null && stage.getFestival() != null ? stage.getFestival().getName() : null
+                    );
+                });
     }
 
 
