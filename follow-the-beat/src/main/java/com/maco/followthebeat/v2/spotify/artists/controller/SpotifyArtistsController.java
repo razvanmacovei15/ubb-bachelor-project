@@ -1,7 +1,6 @@
 package com.maco.followthebeat.v2.spotify.artists.controller;
 
 import com.maco.followthebeat.v2.cache.RedisStateCacheServiceImpl;
-import com.maco.followthebeat.v2.common.exceptions.UserNotFoundException;
 import com.maco.followthebeat.v2.spotify.artists.dto.SpotifyArtistDto;
 import com.maco.followthebeat.v2.user.context.IsConnected;
 import com.maco.followthebeat.v2.user.context.UserContext;
@@ -15,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -34,7 +32,7 @@ public class SpotifyArtistsController {
             @RequestParam(defaultValue = "10") int limit,
             @RequestParam(defaultValue = "0", required = false) int offset) {
 
-        User user = userContext.get();
+        User user = userContext.getOrThrow();
         log.info("Fetching top artists for user: {}", user.getId());
 
         List<SpotifyArtistDto> artists;
@@ -51,7 +49,7 @@ public class SpotifyArtistsController {
     public ResponseEntity<Void> refreshStats(
             @RequestParam(defaultValue = "medium_term") String range) {
 
-        User user = userContext.get();
+        User user = userContext.getOrThrow();
 
         SpotifyTimeRange timeRange = SpotifyTimeRange.valueOf(range);
 

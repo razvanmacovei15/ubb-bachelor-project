@@ -11,6 +11,7 @@ import com.maco.followthebeat.v2.core.service.interfaces.LineupEntryService;
 import com.maco.followthebeat.v2.core.specification.LineupEntrySpecification;
 import com.maco.followthebeat.v2.user.entity.User;
 import com.maco.followthebeat.v2.user.service.interfaces.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -23,6 +24,7 @@ import java.util.NoSuchElementException;
 import java.util.UUID;
 
 @Service
+@Slf4j
 public class LineupEntryServiceImpl extends BaseCrudServiceImpl<LineupEntry> implements LineupEntryService {
     private final LineupEntryRepo repo;
     private final UserService userService;
@@ -36,7 +38,6 @@ public class LineupEntryServiceImpl extends BaseCrudServiceImpl<LineupEntry> imp
         this.lineupEntryMapper = lineupEntryMapper;
     }
 
-
     @Override
     public List<LineupEntry> getLineupForUserId(UUID userId) {
         return repo.findByUserId(userId);
@@ -44,21 +45,15 @@ public class LineupEntryServiceImpl extends BaseCrudServiceImpl<LineupEntry> imp
 
     public Page<LineupEntryDTO> searchLineupEntries(
             UUID userId,
-            UUID concertId,
             Integer hasPriority,
             Integer hasPriorityGreaterThan,
             Integer hasCompatibilityGreaterThan,
             Integer minPriority,
             Integer minCompatibility,
-            Instant addedAfter,
-            Instant updatedAfter,
             Pageable pageable
     ) {
         Specification<LineupEntry> spec = Specification.where(LineupEntrySpecification.hasUserId(userId));
 
-        if (concertId != null) {
-            spec = spec.and(LineupEntrySpecification.hasConcertId(concertId));
-        }
         if (hasPriority != null) {
             spec = spec.and(LineupEntrySpecification.hasPriority(hasPriority));
         }
@@ -74,13 +69,6 @@ public class LineupEntryServiceImpl extends BaseCrudServiceImpl<LineupEntry> imp
         if (minCompatibility != null) {
             spec = spec.and(LineupEntrySpecification.hasMinCompatibility(minCompatibility));
         }
-        if (addedAfter != null) {
-            spec = spec.and(LineupEntrySpecification.addedAfter(addedAfter));
-        }
-        if (updatedAfter != null) {
-            spec = spec.and(LineupEntrySpecification.updatedAfter(updatedAfter));
-        }
-
 
         return repo.findAll(spec, pageable).map(lineupEntryMapper::toDTO);
     }
@@ -93,11 +81,14 @@ public class LineupEntryServiceImpl extends BaseCrudServiceImpl<LineupEntry> imp
     }
 
     @Override
-    public LineupEntry createLineupEntry(LineupEntryDTO dto) {
-        User user = userService.findUserById(dto.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
+    public LineupEntry createLineupEntry(LineupEntryDTO dto, User user) {
+        log.info("Creating lineup entry for user: {}", user.getId());
+        if (dto.getConcertId() == null) {
+            throw new IllegalArgumentException("Concert ID cannot be null");
+        }
         Concert concert = concertService.getById(dto.getConcertId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid concert ID"));
+        log.info("Concert found: {}", concert.getId());
         if (repo.existsByUserIdAndConcertId(user.getId(), concert.getId())) {
             throw new IllegalStateException("Concert already exists in user's lineup");
         }
@@ -107,12 +98,10 @@ public class LineupEntryServiceImpl extends BaseCrudServiceImpl<LineupEntry> imp
     }
 
     @Override
-    public LineupEntry updateLineupEntry(UUID id, LineupEntryDTO dto) {
+    public LineupEntry updateLineupEntry(UUID id, LineupEntryDTO dto, User user) {
         LineupEntry existing = repo.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Lineup entry not found"));
 
-        User user = userService.findUserById(dto.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
         Concert concert = concertService.getById(dto.getConcertId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid concert ID"));
 

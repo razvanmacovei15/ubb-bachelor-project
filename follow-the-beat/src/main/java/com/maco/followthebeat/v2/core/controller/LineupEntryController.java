@@ -4,21 +4,23 @@ import com.maco.followthebeat.v2.core.dto.LineupEntryDTO;
 import com.maco.followthebeat.v2.core.entity.LineupEntry;
 import com.maco.followthebeat.v2.core.mappers.LineupEntryMapper;
 import com.maco.followthebeat.v2.core.service.interfaces.LineupEntryService;
+import com.maco.followthebeat.v2.user.context.IsConnected;
+import com.maco.followthebeat.v2.user.context.UserContext;
+import com.maco.followthebeat.v2.user.entity.User;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PagedResourcesAssembler;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.Instant;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -28,15 +30,20 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/lineup")
 @RequiredArgsConstructor
+@Slf4j
 public class LineupEntryController {
 
     private final LineupEntryService lineupEntryService;
     private final LineupEntryMapper lineupEntryMapper;
+    private final UserContext userContext;
 
+    @IsConnected
     @PostMapping
     public ResponseEntity<?> addLineupEntry(@Valid @RequestBody LineupEntryDTO dto) {
+        User user = userContext.getOrThrow();
+        log.info("Creating lineup entry for user: {}", user.getId());
         try {
-            LineupEntry saved = lineupEntryService.createLineupEntry(dto);
+            LineupEntry saved = lineupEntryService.createLineupEntry(dto, user);
             return ResponseEntity.status(HttpStatus.CREATED).body(lineupEntryMapper.toDTO(saved));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
@@ -44,37 +51,35 @@ public class LineupEntryController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }
     }
-
+    @IsConnected
     @GetMapping("/search")
-    public ResponseEntity<Page<LineupEntryDTO>> searchLineupEntries(
-            @RequestParam(required = false) UUID userId,
-            @RequestParam(required = false) UUID concertId,
+    public PagedModel<EntityModel<LineupEntryDTO>> searchLineupEntries(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "addedAt") String sortBy,
+            @RequestParam(defaultValue = "desc") String direction,
             @RequestParam(required = false) Integer hasPriority,
             @RequestParam(required = false) Integer hasPriorityGreaterThan,
             @RequestParam(required = false) Integer hasCompatibilityGreaterThan,
             @RequestParam(required = false) Integer minPriority,
             @RequestParam(required = false) Integer minCompatibility,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant addedAfter,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant updatedAfter,
-            Pageable pageable
+            PagedResourcesAssembler<LineupEntryDTO> pagedResourcesAssembler
     ) {
+        User user = userContext.getOrThrow();
+        Pageable pageable = PageRequest.of(page, size,
+                direction.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending());
         Page<LineupEntryDTO> result = lineupEntryService.searchLineupEntries(
-                userId,
-                concertId,
+                user.getId(),
                 hasPriority,
                 hasPriorityGreaterThan,
                 hasCompatibilityGreaterThan,
                 minPriority,
                 minCompatibility,
-                addedAfter,
-                updatedAfter,
                 pageable
         );
-        return ResponseEntity.ok(result);
+        log.info("result: {}", result);
+        return pagedResourcesAssembler.toModel(result);
     }
-
-
-
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getLineupEntry(@PathVariable UUID id) {
@@ -88,7 +93,6 @@ public class LineupEntryController {
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
 
-
     @GetMapping("/user/{userId}")
     public ResponseEntity<?> getUserLineup(@PathVariable UUID userId) {
         List<LineupEntry> lineup = lineupEntryService.getLineupForUserId(userId);
@@ -101,11 +105,12 @@ public class LineupEntryController {
                 .collect(Collectors.toList());
         return ResponseEntity.ok(dtoList);
     }
-
+    @IsConnected
     @PutMapping("/{id}")
     public ResponseEntity<?> updateLineupEntry(@PathVariable UUID id, @Valid @RequestBody LineupEntryDTO dto) {
         try {
-            LineupEntry updated = lineupEntryService.updateLineupEntry(id, dto);
+            User user = userContext.getOrThrow();
+            LineupEntry updated = lineupEntryService.updateLineupEntry(id, dto, user);
             return ResponseEntity.ok(lineupEntryMapper.toDTO(updated));
         } catch (NoSuchElementException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());

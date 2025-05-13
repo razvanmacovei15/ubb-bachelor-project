@@ -22,7 +22,6 @@ public class LineupEntryMapper {
     public LineupEntryDTO toDTO(LineupEntry entity) {
         LineupEntryDTO dto = new LineupEntryDTO();
         dto.setId(entity.getId());
-        dto.setUserId(entity.getUser().getId());
         dto.setConcertId(entity.getConcert().getId());
         dto.setNotes(entity.getNotes());
         dto.setPriority(entity.getPriority());

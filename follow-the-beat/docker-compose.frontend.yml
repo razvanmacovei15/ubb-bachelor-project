@@ -1,0 +1,12 @@
+services:
+  frontend:
+    build:
+      context: ./react-beats
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8050:8050"
+    volumes:
+      - ./react-beats:/app
+      - /app/node_modules
+    environment:
+      - VITE_API_URL=http://localhost:8060

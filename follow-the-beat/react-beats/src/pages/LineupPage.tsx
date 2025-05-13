@@ -101,16 +101,10 @@ const LineupPage: React.FC = () => {
     setItemsPerPage,
     currentPage,
     setCurrentPage,
-    // lineupEntries,
+    lineupEntries,
     totalCount,
     // resetFilters,
   } = useLineupSortingFilteringContext();
-
-  // Calculate statistics
-  // const totalPriority = lineupEntries.reduce((sum, entry) => sum + (entry.priority || 0), 0);
-  // const avgCompatibility = lineupEntries.length > 0
-  //   ? lineupEntries.reduce((sum, entry) => sum + (entry.compatibility || 0), 0) / lineupEntries.length
-  //   : 0;
 
   return (
     <div className="lineup-page-container">
@@ -147,14 +141,14 @@ const LineupPage: React.FC = () => {
             </Select>
           </div>
 
-          {mockLineupEntries.length === 0 ? (
+          {lineupEntries.length === 0 ? (
             <h2 style={{ color: 'white', textAlign: 'center', width: '100%' }}>
               No entries in your lineup. Start adding some concerts!
             </h2>
           ) : (
             <>
               <div className="lineup-grid">
-                {mockLineupEntries.map((entry) => (
+                {lineupEntries.map((entry) => (
                   <Card key={entry.id} className="hover:shadow-lg transition-shadow">
                     <CardContent className="p-4">
                       <h3 className="text-lg font-semibold mb-2">Entry #{entry.id.slice(0, 8)}</h3>

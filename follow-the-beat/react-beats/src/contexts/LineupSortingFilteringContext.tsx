@@ -1,6 +1,6 @@
-import { createContext, useContext, useEffect, useState } from "react";
-import { LineupEntryDto } from "../types/LineupEntryDto";
-import { mockLineupEntries } from "../mocks/mockLineupEntries";
+import {createContext, useContext, useEffect, useState} from "react";
+import {LineupEntryDto} from "../types/LineupEntryDto";
+import axios from "axios";
 
 type LineupSortingFilteringContextType = {
     searchTerm: string;
@@ -16,169 +16,120 @@ type LineupSortingFilteringContextType = {
     resetFilters: () => void;
     userId: string | null;
     setUserId: (id: string | null) => void;
-    addLineupEntry: (entry: Omit<LineupEntryDto, "id">) => Promise<void>;
+    addLineupEntry: (lineupEntryDto: LineupEntryDto) => Promise<void>;
     updateLineupEntry: (id: string, entry: Partial<LineupEntryDto>) => Promise<void>;
     removeLineupEntry: (id: string) => Promise<void>;
 };
 
-const LineupSortingFilteringContext = createContext<
-    LineupSortingFilteringContextType | undefined
->(undefined);
+const LineupSortingFilteringContext = createContext<LineupSortingFilteringContextType | undefined>(undefined);
 
-export const LineupSortingFilteringProvider = ({
-    children,
-}: {
-    children: React.ReactNode;
-}) => {
+export const LineupSortingFilteringProvider = ({children}: { children: React.ReactNode }) => {
+    const sessionToken = localStorage.getItem("sessionToken");
+
     const [searchTerm, setSearchTerm] = useState("");
     const [sortBy, setSortBy] = useState<"none" | "priority" | "compatibility">("none");
     const [itemsPerPage, setItemsPerPage] = useState(5);
     const [currentPage, setCurrentPage] = useState(1);
-
     const [lineupEntries, setLineupEntries] = useState<LineupEntryDto[]>([]);
     const [totalCount, setTotalCount] = useState(0);
-
     const [userId, setUserId] = useState<string | null>(null);
 
+    const API_URL = import.meta.env.VITE_API_URL;
+
     const fetchLineupEntries = async () => {
-        // In development, use mock data
-        if (process.env.NODE_ENV === 'development') {
-            let filteredEntries = [...mockLineupEntries];
-            
-            // Apply search filter
-            if (searchTerm) {
-                filteredEntries = filteredEntries.filter(entry => 
-                    entry.notes?.toLowerCase().includes(searchTerm.toLowerCase())
-                );
-            }
+        const params = new URLSearchParams();
+        params.append("page", (currentPage - 1).toString());
+        params.append("size", itemsPerPage.toString());
+        params.append("sortBy",
+            sortBy === "priority"
+                ? "priority"
+                : sortBy === "compatibility"
+                    ? "compatibility"
+                    : "addedAt"
+        );
 
-            // Apply sorting
-            if (sortBy === "priority") {
-                filteredEntries.sort((a, b) => (a.priority || 0) - (b.priority || 0));
-            } else if (sortBy === "compatibility") {
-                filteredEntries.sort((a, b) => (a.compatibility || 0) - (b.compatibility || 0));
-            }
+        params.append("direction", "asc");
 
-            // Apply pagination
-            const startIndex = (currentPage - 1) * itemsPerPage;
-            const endIndex = startIndex + itemsPerPage;
-            const paginatedEntries = filteredEntries.slice(startIndex, endIndex);
-
-            setLineupEntries(paginatedEntries);
-            setTotalCount(filteredEntries.length);
-            return;
+        if (sortBy === "priority") {
+            params.append("hasPriority", "1");
+            params.append("hasPriorityGreaterThan", "0");
+            params.append("minPriority", "0");
         }
 
-        // In production, fetch from API
-        const params = new URLSearchParams({
-            userId: userId || "",
-            page: (currentPage - 1).toString(),
-            size: itemsPerPage.toString(),
-            sortBy: sortBy === "priority" ? "hasPriority" : "hasCompatibility",
-            direction: "asc",
+        if (sortBy === "compatibility") {
+            params.append("hasCompatibilityGreaterThan", "0");
+            params.append("minCompatibility", "0");
+        }
+        const response = await axios.get(`${API_URL}/api/lineup/search`, {
+            params: params,
+            headers: {
+                Authorization: `Bearer ${sessionToken}`,
+            }
         });
-
-        if (searchTerm) params.append("search", searchTerm);
-
-        const response = await fetch(
-            `http://localhost:8080/api/lineup/search?${params.toString()}`
-        );
-        const data = await response.json();
-
-        const lineupList = data.content || [];
-        setLineupEntries(lineupList);
-        setTotalCount(data.totalElements || 0);
+        const data = response.data;
+        const entries = data._embedded?.lineupEntryDTOList || [];
+        setLineupEntries(entries);
+        setTotalCount(data.page?.totalElements || 0);
     };
 
-    const addLineupEntry = async (entry: Omit<LineupEntryDto, "id">) => {
+    const addLineupEntry = async (entry: LineupEntryDto) => {
         try {
-            if (process.env.NODE_ENV === 'development') {
-                const newEntry: LineupEntryDto = {
-                    ...entry,
-                    id: Math.random().toString(36).substring(7),
-                };
-                setLineupEntries(prev => [...prev, newEntry]);
-                setTotalCount(prev => prev + 1);
-                return;
-            }
-
-            const response = await fetch("http://localhost:8080/api/lineup", {
-                method: "POST",
+            const response = await axios.post(`${API_URL}/api/lineup`, entry, {
                 headers: {
-                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${sessionToken}`,
                 },
-                body: JSON.stringify(entry),
             });
-
-            if (!response.ok) {
-                const error = await response.text();
-                throw new Error(error);
+            console.log("Session token:", sessionToken);
+            if (response.status === 201) {
+                const newEntry = response.data;
+                setLineupEntries((prev) => [...prev, newEntry]);
+                await fetchLineupEntries();
             }
-
-            await fetchLineupEntries();
-        } catch (error) {
-            console.error("Failed to add lineup entry:", error);
-            throw error;
+        } catch (err: any) {
+            if (err.response?.status === 400) {
+                console.error("Validation error:", err.response.data);
+            } else if (err.response?.status === 409) {
+                console.error("Conflict error:", err.response.data);
+            } else {
+                console.error("Unexpected error:", err);
+            }
         }
     };
 
     const updateLineupEntry = async (id: string, entry: Partial<LineupEntryDto>) => {
         try {
-            if (process.env.NODE_ENV === 'development') {
-                setLineupEntries(prev => 
-                    prev.map(item => 
-                        item.id === id ? { ...item, ...entry } : item
-                    )
-                );
-                return;
+            const response = await axios.put(`${API_URL}/api/lineup/${id}`, entry);
+            const updated = response.data;
+            setLineupEntries((prev) =>
+                prev.map((e) => (e.id === id ? updated : e))
+            );
+        } catch (err: any) {
+            if (err.response?.status === 404) {
+                console.error("Entry not found:", err.response.data);
+            } else if (err.response?.status === 400) {
+                console.error("Validation error:", err.response.data);
+            } else {
+                console.error("Unexpected error:", err);
             }
-
-            const response = await fetch(`http://localhost:8080/api/lineup/${id}`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(entry),
-            });
-
-            if (!response.ok) {
-                const error = await response.text();
-                throw new Error(error);
-            }
-
-            await fetchLineupEntries();
-        } catch (error) {
-            console.error("Failed to update lineup entry:", error);
-            throw error;
         }
     };
 
     const removeLineupEntry = async (id: string) => {
         try {
-            if (process.env.NODE_ENV === 'development') {
-                setLineupEntries(prev => prev.filter(item => item.id !== id));
-                setTotalCount(prev => prev - 1);
-                return;
-            }
-
-            const response = await fetch(`http://localhost:8080/api/lineup/${id}`, {
-                method: "DELETE",
-            });
-
-            if (!response.ok) {
-                const error = await response.text();
-                throw new Error(error);
-            }
-
+            await axios.delete(`${API_URL}/api/lineup/${id}`);
+            setLineupEntries((prev) => prev.filter((e) => e.id !== id));
             await fetchLineupEntries();
-        } catch (error) {
-            console.error("Failed to remove lineup entry:", error);
-            throw error;
+        } catch (err: any) {
+            if (err.response?.status === 404) {
+                console.error("Entry not found:", err.response.data);
+            } else {
+                console.error("Unexpected error:", err);
+            }
         }
     };
 
     useEffect(() => {
-        if (userId || process.env.NODE_ENV === 'development') {
+        if (userId || import.meta.env.MODE === "development") {
             fetchLineupEntries();
         }
     }, [searchTerm, sortBy, itemsPerPage, currentPage, userId]);
@@ -222,9 +173,7 @@ export const LineupSortingFilteringProvider = ({
 export const useLineupSortingFilteringContext = () => {
     const context = useContext(LineupSortingFilteringContext);
     if (context === undefined) {
-        throw new Error(
-            "useLineupSortingFilteringContext must be used within a LineupSortingFilteringProvider"
-        );
+        throw new Error("useLineupSortingFilteringContext must be used within a LineupSortingFilteringProvider");
     }
     return context;
 };

@@ -15,7 +15,7 @@ public class IsConnectedAspect {
 
     @Before("@annotation(IsConnected)")
     public void validateUserConnection() {
-        User user = userContext.get();
+        User user = userContext.getOrThrow();
         if (!user.isHasSpotifyConnected()) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User must have connected Spotify.");
         }

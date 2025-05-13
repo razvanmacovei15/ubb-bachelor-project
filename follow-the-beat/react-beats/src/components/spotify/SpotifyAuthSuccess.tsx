@@ -19,6 +19,8 @@ const SpotifyAuthSuccess = () => {
                 const res : ResponseData = await axios.get<string>(`${API_URL}/spotify-auth/auth-status?state=${state}`);
                 if (res.status === 200 && res.data) {
                     localStorage.setItem("sessionToken", res.data);
+                    const token = localStorage.getItem(res.data);
+                    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
                     clearInterval(interval);
                     navigate("/profile");
                 }
