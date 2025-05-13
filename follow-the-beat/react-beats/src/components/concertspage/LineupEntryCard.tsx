@@ -18,9 +18,9 @@ const LineupEntryCard = ({ lineupDetail }: LineupConcertCardProps) => {
 
   return (
       <Card key={lineupDetail.id} className="hover:shadow-lg transition-shadow w-full">
-        <CardContent className="p-4 flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+        <CardContent className="p-2 flex flex-col sm:flex-row gap-2 items-start sm:items-center">
           {/* Artist Image */}
-          <div className="w-24 h-24 shrink-0 rounded-full overflow-hidden border">
+          <div className="w-30 h-30 shrink-0 rounded-full overflow-hidden border">
             <img
                 src={lineupDetail.artistImageUrl || "/default-artist.png"}
                 alt={lineupDetail.artistName}

@@ -25,35 +25,7 @@ const SpotifyProfile: React.FC = () => {
 
   const API_URL = import.meta.env.VITE_API_URL;
 
-  const fetchUntoldFestival = async () => {
-    try {
-      const response = await axios.post(`${API_URL}/api/untold/sync`);
-      console.log("Success:", response.data);
-    } catch (error: any) {
-      if (error.response) {
-        console.error("Server responded with error:", error.response.status, error.response.data);
-      } else if (error.request) {
-        console.error("No response received:", error.request);
-      } else {
-        console.error("Error setting up request:", error.message);
-      }
-    }
-  };
 
-  const fetchElectricFestival = async () => {
-    try {
-      const response = await axios.post(`${API_URL}/api/electric/sync`);
-      console.log("Success:", response.data);
-    } catch (error: any) {
-      if (error.response) {
-        console.error("Server responded with error:", error.response.status, error.response.data);
-      } else if (error.request) {
-        console.error("No response received:", error.request);
-      } else {
-        console.error("Error setting up request:", error.message);
-      }
-    }
-  };
 
   const fetchConcerts = async () => {
     try {
@@ -98,8 +70,6 @@ const SpotifyProfile: React.FC = () => {
                 onRefresh={() => window.location.reload()}
             />
 
-            <button onClick={fetchUntoldFestival}>TEST UNTOLD</button>
-            <button onClick={fetchElectricFestival}>TEST ELECTRIC</button>
             <button onClick={fetchConcerts}>TEST FETCH CONCERTS WITH PAGINATION</button>
             <button onClick={fetchFakeConcerts}>TEST CREATING FAKE FESTIVALS</button>
 
