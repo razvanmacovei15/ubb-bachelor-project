@@ -45,6 +45,7 @@ public class LongTermArtistSaveStrategy extends AbstractArtistSaveStrategy<LongT
         entity.setUser(user);
         entity.setArtist(artist);
         entity.setRank(rank);
+        entity.setProfile(user.getUserListeningProfile());
         return entity;
     }
 

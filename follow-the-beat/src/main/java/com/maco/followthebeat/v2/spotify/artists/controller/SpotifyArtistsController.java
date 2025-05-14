@@ -6,6 +6,8 @@ import com.maco.followthebeat.v2.user.context.IsConnected;
 import com.maco.followthebeat.v2.user.context.UserContext;
 import com.maco.followthebeat.v2.user.entity.User;
 import com.maco.followthebeat.v2.spotify.enums.SpotifyTimeRange;
+import com.maco.followthebeat.v2.user.service.impl.ListeningProfileOrchestrationService;
+import com.maco.followthebeat.v2.user.service.interfaces.UserGenreFrequencyService;
 import com.maco.followthebeat.v2.user.service.interfaces.UserService;
 import com.maco.followthebeat.v2.spotify.artists.service.interfaces.SpotifyArtistStatsService;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +26,8 @@ public class SpotifyArtistsController {
     private final RedisStateCacheServiceImpl redisStateCacheService;
     private final UserService userService;
     private final UserContext userContext;
+    private final ListeningProfileOrchestrationService listeningProfileOrchestrationService;
+
 
     @IsConnected
     @GetMapping("/top-artists")
@@ -38,6 +42,8 @@ public class SpotifyArtistsController {
         List<SpotifyArtistDto> artists;
         if (!user.isActive()) {
             artists = spotifyArtistStatsService.fetchAndSaveInitialStats(user, range);
+
+            listeningProfileOrchestrationService.enrichUserProfileWithGenres(user);
         } else {
             artists = spotifyArtistStatsService.getTopArtistsByTimeRange(user, range);
         }

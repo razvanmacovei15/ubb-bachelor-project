@@ -9,6 +9,7 @@ import com.maco.followthebeat.v2.user.context.UserContext;
 import com.maco.followthebeat.v2.user.entity.User;
 import com.maco.followthebeat.v2.spotify.auth.service.interfaces.AuthService;
 import com.maco.followthebeat.v2.spotify.auth.userdata.service.interfaces.SpotifyUserDataService;
+import com.maco.followthebeat.v2.user.service.interfaces.UserListeningProfileService;
 import com.maco.followthebeat.v2.user.service.interfaces.UserService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -25,10 +26,12 @@ public class AuthServiceImpl implements AuthService {
 
     private final UserService userService;
     private final SpotifyUserDataService spotifyUserDataService;
+    private final UserListeningProfileService userListeningProfileService;
+
 
     @Override
     @Transactional
-    public User linkSpotifyAccount(User user, SpotifyClient client) {
+    public User linkSpotifyAccountAndStoreListeningProfile(User user, SpotifyClient client) {
         String spotifyUserId = client.getCurrentUserDetails().getId();
         Optional<User> maybeExisting = userService.findUserBySpotifyId(spotifyUserId);
 
@@ -44,5 +47,9 @@ public class AuthServiceImpl implements AuthService {
         user.setHasSpotifyConnected(true);
         userService.updateUser(user);
         return user;
+    }
+
+    private void storeListeningProfile(User user){
+
     }
 }

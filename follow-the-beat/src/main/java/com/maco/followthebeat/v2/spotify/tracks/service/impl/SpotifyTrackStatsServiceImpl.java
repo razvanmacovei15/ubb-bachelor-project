@@ -61,7 +61,7 @@ public class SpotifyTrackStatsServiceImpl implements SpotifyTrackStatsService {
         saveTracksAndStats(user, requestedTracks, timeRange);
         // 2.1. Async fetch and save the other two time ranges
         CompletableFuture.runAsync(() -> fetchAndSaveOtherTimeRanges(user, timeRange), executor);
-        // 3. Optionally mark user active
+
         userService.setIsActive(true, user);
 
         // 4. Return fetched tracks

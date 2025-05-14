@@ -82,9 +82,6 @@ const useSpotifyProfile = () => {
     };
 
     const handleSpotifyLogin = async () => {
-        console.log("handleSpotifyLogin called");
-        console.log(API_URL);
-
         const res = await axios.get<string>(`${API_URL}/spotify-auth/auth-url`);
         window.location.href = res.data;
     };

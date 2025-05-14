@@ -11,6 +11,7 @@ import com.maco.followthebeat.v2.spotify.artists.strategy.ArtistSaveStrategy;
 import com.maco.followthebeat.v2.spotify.artists.strategy.ArtistSaveStrategyFactory;
 import com.maco.followthebeat.v2.spotify.artists.service.interfaces.SpotifyArtistService;
 import com.maco.followthebeat.v2.spotify.artists.service.interfaces.SpotifyArtistStatsService;
+import com.maco.followthebeat.v2.user.service.interfaces.UserGenreFrequencyService;
 import com.maco.followthebeat.v2.user.service.interfaces.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

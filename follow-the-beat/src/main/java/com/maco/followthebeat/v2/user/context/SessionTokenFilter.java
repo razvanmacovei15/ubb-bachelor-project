@@ -35,25 +35,18 @@ public class SessionTokenFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain)
             throws ServletException, IOException {
-        log.info("SessionTokenFilter: Processing request...");
         String authHeader = request.getHeader("Authorization");
-        log.info("Authorization header: {}", authHeader);
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            log.info("Extracting token from Authorization header...");
             String token = authHeader.substring(7);
-            log.info("Extracted token: {}", token);
             UUID userId = stateCacheService.getUserBySession(token);
-            log.info("User ID from token: {}", userId);
 
             if (userId != null) {
                 userService.findUserById(userId).ifPresent(userContext::set);
-                log.info("User context set for user ID: {}", userId);
             }
         }
 
         try {
             filterChain.doFilter(request, response);
-            log.info("Filter chain processed successfully.");
         } finally {
             userContext.clear();
         }
