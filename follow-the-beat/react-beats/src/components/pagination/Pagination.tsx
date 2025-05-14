@@ -40,11 +40,6 @@ const Pagination: React.FC<PaginationProps> = ({
     };
 
     const lastPage = paginationRange[paginationRange.length - 1];
-    console.log("lastPage", lastPage);
-    console.log("paginationRange", paginationRange);
-    console.log("currentPage", currentPage);
-    console.log("totalCount", totalCount);
-    console.log("pageSize", pageSize);
 
     return (
         <ul className={classnames("pagination-container", className)}>
