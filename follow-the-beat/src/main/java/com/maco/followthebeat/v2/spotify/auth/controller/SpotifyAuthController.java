@@ -86,11 +86,10 @@ public class SpotifyAuthController {
             Optional<User> alreadyUser = userService.findUserBySpotifyId(spotifyId);
 
             if(alreadyUser.isPresent()){
-                userListeningProfileService.findByUserId(finalUserId);
-                //user has already connected their spotify account
                 clientManager.changeClientKey(userId, alreadyUser.get().getId());
                 finalUserId = alreadyUser.get().getId();
             } else {
+                //case 2. no user with spotify ID
                 User user = userService.findUserById(userId)
                         .orElseThrow(() -> new UserNotFoundException("User with id " + userId + " does not exist."));
 

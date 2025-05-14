@@ -53,14 +53,16 @@ public class UserListeningProfileServiceImpl implements UserListeningProfileServ
         return mapper.toDto(repo.save(mapper.toEntity(dto)));
     }
 
-    public UserListeningProfileDto getOrCreateListeningProfile(User user){
+    private UserListeningProfile createFreshProfile(User user){
+        UserListeningProfile profile = new UserListeningProfile();
+        profile.setUser(user);
+        return repo.save(profile);
+    }
+
+    public UserListeningProfile getOrCreateListeningProfile(User user){
         return repo.findByUserId(user.getId())
-                .map(mapper::toDto)
                 .orElseGet(() -> {
-                    UserListeningProfile profile = new UserListeningProfile();
-                    profile.setUser(user);
-                    UserListeningProfile savedProfile = repo.save(profile);
-                    return mapper.toDto(savedProfile);
+                    return createFreshProfile(user);
                 });
     }
 

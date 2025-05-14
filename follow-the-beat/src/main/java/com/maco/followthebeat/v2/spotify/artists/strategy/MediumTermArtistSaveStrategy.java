@@ -46,6 +46,7 @@ public class MediumTermArtistSaveStrategy extends AbstractArtistSaveStrategy<Med
         entity.setArtist(artist);
         entity.setRank(rank);
         entity.setProfile(user.getUserListeningProfile());
+        mediumTermArtistRepository.save(entity);
         return entity;
     }
 

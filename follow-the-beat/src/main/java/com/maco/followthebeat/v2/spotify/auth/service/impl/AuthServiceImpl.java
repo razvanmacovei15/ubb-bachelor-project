@@ -9,6 +9,7 @@ import com.maco.followthebeat.v2.user.context.UserContext;
 import com.maco.followthebeat.v2.user.entity.User;
 import com.maco.followthebeat.v2.spotify.auth.service.interfaces.AuthService;
 import com.maco.followthebeat.v2.spotify.auth.userdata.service.interfaces.SpotifyUserDataService;
+import com.maco.followthebeat.v2.user.entity.UserListeningProfile;
 import com.maco.followthebeat.v2.user.service.interfaces.UserListeningProfileService;
 import com.maco.followthebeat.v2.user.service.interfaces.UserService;
 import jakarta.transaction.Transactional;
@@ -32,24 +33,16 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public User linkSpotifyAccountAndStoreListeningProfile(User user, SpotifyClient client) {
-        String spotifyUserId = client.getCurrentUserDetails().getId();
-        Optional<User> maybeExisting = userService.findUserBySpotifyId(spotifyUserId);
-
-        if (maybeExisting.isPresent()) {
-            if (user.isAnonymous()) {
-                userService.mergeAnonymousUser(user, maybeExisting.get());
-            }
-            return maybeExisting.get();
-        }
-
         SpotifyUserData sp = spotifyUserDataService.createSpotifyData(client, user);
         user.setSpotifyUserData(sp);
         user.setHasSpotifyConnected(true);
+        storeListeningProfile(user);
         userService.updateUser(user);
         return user;
     }
 
     private void storeListeningProfile(User user){
-
+        UserListeningProfile listeningProfile = userListeningProfileService.getOrCreateListeningProfile(user);
+        user.setUserListeningProfile(listeningProfile);
     }
 }

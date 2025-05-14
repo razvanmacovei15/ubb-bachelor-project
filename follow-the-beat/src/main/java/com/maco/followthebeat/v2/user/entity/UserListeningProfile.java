@@ -34,7 +34,6 @@ public class UserListeningProfile {
     @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL)
     private List<LongTermArtist> longTermArtists = new ArrayList<>();
 
-    // Same for tracks...
     @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL)
     private List<ShortTermTrack> shortTermTracks = new ArrayList<>();
 
