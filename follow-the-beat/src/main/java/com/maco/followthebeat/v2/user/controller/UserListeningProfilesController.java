@@ -18,15 +18,6 @@ public class UserListeningProfilesController {
 
     private UserListeningProfileServiceImpl service;
 
-    @GetMapping("/{id}/embedding-payload")
-    public ResponseEntity<UserEmbeddingPayloadDto> getEmbeddingPayload(
-            @PathVariable UUID id,
-            @RequestParam(defaultValue = "MEDIUM_TERM") SpotifyTimeRange range
-    ) {
-        UserEmbeddingPayloadDto payload = service.getEmbeddingPayload(id, range);
-        return ResponseEntity.ok(payload);
-    }
-
     @GetMapping
     public List<UserListeningProfileDto> all() {
         return service.findAll();

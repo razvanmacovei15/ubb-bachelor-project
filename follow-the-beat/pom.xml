@@ -77,7 +77,7 @@
         <dependency>
             <groupId>com.macocoding.spotify-api</groupId>
             <artifactId>spotify-api</artifactId>
-            <version>4.0.2</version>
+            <version>4.0.7</version>
         </dependency>
         <dependency>
             <groupId>com.github.ben-manes.caffeine</groupId>

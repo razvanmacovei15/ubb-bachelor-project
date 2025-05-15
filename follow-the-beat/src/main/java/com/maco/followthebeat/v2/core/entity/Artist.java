@@ -36,6 +36,10 @@ public class Artist {
     @Column(name = "genre")
     private List<String> genres;
 
+    private String spotifyId;
+
+    private String spotifyUrl;
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;

@@ -1,5 +1,6 @@
 package com.maco.followthebeat.v2.user.mapper;
 
+import com.maco.followthebeat.v2.core.dto.ArtistForSuggestionDto;
 import com.maco.followthebeat.v2.spotify.artists.entity.BaseUserTopArtist;
 import com.maco.followthebeat.v2.spotify.enums.SpotifyTimeRange;
 import com.maco.followthebeat.v2.user.dto.UserEmbeddingPayloadDto;
@@ -11,11 +12,12 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Component
 public class UserEmbeddingPayloadMapper {
-    public UserEmbeddingPayloadDto toDto(UserListeningProfile profile, SpotifyTimeRange timeRange) {
+    public UserEmbeddingPayloadDto toDto(UserListeningProfile profile,
+                                         SpotifyTimeRange timeRange,
+                                         List<ArtistForSuggestionDto> artists) {
         UserEmbeddingPayloadDto dto =  new UserEmbeddingPayloadDto();
         List<String> topArtists = switch(timeRange){
             case SHORT_TERM -> extractArtistNames(profile.getShortTermArtists());
@@ -29,15 +31,16 @@ public class UserEmbeddingPayloadMapper {
                     UserGenreFrequency::getCount
                 ));
 
-        dto.setTopArtists(topArtists);
+        dto.setTopUserArtists(topArtists);
         dto.setGenreFrequencies(genreMap);
+        dto.setFestivalArtists(artists);
         return dto;
     }
 
     private List<String> extractArtistNames(List<? extends BaseUserTopArtist> artists) {
         return artists.stream()
                 .sorted(Comparator.comparing(BaseUserTopArtist::getRank))
-                .limit(15)
+                .limit(50)
                 .map(a -> a.getArtist().getName())
                 .toList();
     }

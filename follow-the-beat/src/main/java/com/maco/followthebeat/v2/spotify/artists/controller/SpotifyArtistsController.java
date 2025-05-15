@@ -37,7 +37,6 @@ public class SpotifyArtistsController {
             @RequestParam(defaultValue = "0", required = false) int offset) {
 
         User user = userContext.getOrThrow();
-        log.info("Fetching top artists for user: {}", user.getId());
 
         List<SpotifyArtistDto> artists;
         if (!user.isActive()) {
@@ -47,7 +46,6 @@ public class SpotifyArtistsController {
         } else {
             artists = spotifyArtistStatsService.getTopArtistsByTimeRange(user, range);
         }
-        log.info("Fetched {} top artists for user: {} {}", artists.size(), user.getId(), artists.getFirst().toString());
         return ResponseEntity.ok(artists);
     }
 
