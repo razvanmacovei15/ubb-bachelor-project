@@ -41,6 +41,7 @@ public class LineupEntryController {
     @IsConnected
     @PostMapping
     public ResponseEntity<?> addLineupEntry(@Valid @RequestBody LineupEntryDTO dto) {
+        log.info("Received request to create lineup entry: {}", dto);
         User user = userContext.getOrThrow();
         log.info("Creating lineup entry for user: {}", user.getId());
         try {

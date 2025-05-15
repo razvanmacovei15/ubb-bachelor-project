@@ -35,13 +35,10 @@ public class SpotifyTrackController {
 
         User user = userContext.getOrThrow();
 
-        log.info("User ID from context: {}", user.getId());
         List<SpotifyTrackDto> tracks;
         if (!user.isActive()) {
-            log.info("User is not active, fetching initial stats");
             tracks = spotifyTrackStatsService.fetchAndSaveInitialStats(user, range);
         } else {
-            log.info("Fetching top tracks for user: {}", user.getId());
             tracks = spotifyTrackStatsService.getTopTracksByTimeRange(user, range);
         }
         return ResponseEntity.ok(tracks);

@@ -1,5 +1,5 @@
 // src/pages/SpotifyProfile.tsx
-import React from "react";
+import React, {useEffect} from "react";
 import SpotifyConnection from "../components/spotify/SpotifyConnection";
 import FilterSidebar from "../components/spotify/FilterSidebar";
 import useSpotifyProfile from "../hooks/useSpotifyProfile";
@@ -75,6 +75,8 @@ const SpotifyProfile: React.FC = () => {
             console.error("Error generating fake concerts:", error);
         }
     };
+
+
 
     return (
         <div className="spotify-settings">

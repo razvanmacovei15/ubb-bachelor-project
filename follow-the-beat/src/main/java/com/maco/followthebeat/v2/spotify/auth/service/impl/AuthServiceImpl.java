@@ -38,6 +38,7 @@ public class AuthServiceImpl implements AuthService {
         user.setHasSpotifyConnected(true);
         storeListeningProfile(user);
         userService.updateUser(user);
+        log.info("User {} linked Spotify account and is connected {} and active {}", user.getId(), user.isHasSpotifyConnected(), user.isActive());
         return user;
     }
 
