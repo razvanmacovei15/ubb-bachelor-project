@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.IntStream;
 
 @Slf4j
 @Service
@@ -27,12 +28,17 @@ public class SpotifyApiArtistsService extends SpotifyApiService<SpotifyArtistDto
         validateUserAndAuthentication(userId);
 
         SpotifyClient client = clientManager.getOrCreateSpotifyClient(userId);
-        List<SpotifyArtist> tracks = getTopItemsByRange(client, range, limit, offset);
+        List<SpotifyArtist> artists = getTopItemsByRange(client, range, limit, offset);
 
-        return tracks.stream()
-                .map(spotifyArtistMapper::clientToDto)
+        return IntStream.range(0, artists.size())
+                .mapToObj(i -> {
+                    SpotifyArtistDto dto = spotifyArtistMapper.clientToDto(artists.get(i));
+                    dto.setRank(i + offset + 1); // rank should be 1-based and respect pagination offset
+                    return dto;
+                })
                 .toList();
     }
+
 
     protected List<SpotifyArtist> getTopItemsByRange(SpotifyClient client, SpotifyTimeRange range, int limit, int offset) {
         return switch (range) {

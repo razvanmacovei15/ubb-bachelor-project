@@ -40,6 +40,7 @@ const useSpotifyProfile = () => {
             headers: { Authorization: `Bearer ${sessionToken}` },
             params: { limit: 50, range },
         });
+        console.log("Top artists response:", response.data);
         setTopArtists(response.data);
     };
 

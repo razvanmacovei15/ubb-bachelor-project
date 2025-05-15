@@ -47,6 +47,7 @@ public class SpotifyArtistsController {
         } else {
             artists = spotifyArtistStatsService.getTopArtistsByTimeRange(user, range);
         }
+        log.info("Fetched {} top artists for user: {} {}", artists.size(), user.getId(), artists.getFirst().toString());
         return ResponseEntity.ok(artists);
     }
 
