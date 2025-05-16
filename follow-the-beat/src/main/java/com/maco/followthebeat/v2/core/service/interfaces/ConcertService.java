@@ -18,4 +18,5 @@ public interface ConcertService extends BaseCrudService<Concert> {
     void deleteByFestivalId(UUID festivalId);
     void deleteConcertById(UUID concertId);
     Page<ConcertDTO> findConcertsByFestivalId(Optional<String> artist,  Optional<LocalDate> date, Pageable pageable, UUID festivalId);
+    long countConcertsByArtistName(String artistName);
 }

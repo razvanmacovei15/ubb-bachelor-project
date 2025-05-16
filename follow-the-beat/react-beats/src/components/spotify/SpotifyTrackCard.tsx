@@ -1,5 +1,3 @@
-import React from "react";
-import SpotifyArtistDto from "../../types/SpotifyArtistDto.ts"
 import SpotifyTrackDto from "../../types/SpotifyTrackDto.ts"
 
 interface SpotifyTrackCardProps {

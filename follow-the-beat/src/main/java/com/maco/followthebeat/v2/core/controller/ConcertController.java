@@ -12,6 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -66,5 +67,11 @@ public class ConcertController {
         Page<ConcertDTO> concertPage = concertService.findConcertsByFestivalId(artist, date, pageable, festivalId);
 
         return pagedResourcesAssembler.toModel(concertPage);
+    }
+
+    @GetMapping("/count-by-artist")
+    public ResponseEntity<Long> countConcertsByArtist(@RequestParam String artistName) {
+        long count = concertService.countConcertsByArtistName(artistName);
+        return ResponseEntity.ok(count);
     }
 }

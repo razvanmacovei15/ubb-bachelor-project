@@ -1,5 +1,5 @@
 // src/pages/SpotifyProfile.tsx
-import React, {useEffect} from "react";
+import React from "react";
 import SpotifyConnection from "../components/spotify/SpotifyConnection";
 import FilterSidebar from "../components/spotify/FilterSidebar";
 import useSpotifyProfile from "../hooks/useSpotifyProfile";
@@ -62,6 +62,21 @@ const SpotifyProfile: React.FC = () => {
         }
     };
 
+    const countByArtist = async () => {
+        try {
+            const response = await axios.get(`${API_URL}/api/v1/concerts/count-by-artist`, {
+                params: {
+                    artistName: "AC/DC",
+                },
+
+            });
+
+            console.log("payload data:", response.data);
+        } catch (error) {
+            console.error("Error fetching payload:", error);
+        }
+    };
+
     const fetchFakeConcerts = async () => {
         try {
             const response = await axios.post(`${API_URL}/api/fake-data/festivals`, null, {
@@ -93,6 +108,7 @@ const SpotifyProfile: React.FC = () => {
                     <button onClick={fetchConcerts}>TEST FETCH CONCERTS WITH PAGINATION</button>
                     <button onClick={fetchFakeConcerts}>TEST CREATING FAKE FESTIVALS</button>
                     <button onClick={fetchPayload}>TEST PAYLOAD</button>
+                    <button onClick={countByArtist}>TEST COUNT</button>
 
                     {userData.isConnectedToSpotify && (
                         <>

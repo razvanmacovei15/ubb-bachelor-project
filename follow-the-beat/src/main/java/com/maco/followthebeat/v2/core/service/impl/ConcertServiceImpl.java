@@ -84,4 +84,9 @@ public class ConcertServiceImpl extends BaseCrudServiceImpl<Concert> implements 
 
         return concertRepo.findAll(spec, pageable).map(concertMapper::fromEntity);
     }
+
+    @Override
+    public long countConcertsByArtistName(String artistName) {
+        return concertRepo.countConcertsByArtistName(artistName);
+    }
 }

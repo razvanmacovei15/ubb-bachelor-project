@@ -31,4 +31,7 @@ public interface ConcertRepo extends JpaRepository<Concert, UUID>, JpaSpecificat
 """)
     List<Concert> findConcertsByFestivalId(@Param("festivalId") UUID festivalId);
 
+    @Query("SELECT COUNT(c) FROM Concert c WHERE LOWER(c.artist.name) = LOWER(:artistName)")
+    long countConcertsByArtistName(@Param("artistName") String artistName);
+
 }
