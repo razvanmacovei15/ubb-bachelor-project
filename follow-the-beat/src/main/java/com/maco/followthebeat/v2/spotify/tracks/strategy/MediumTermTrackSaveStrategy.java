@@ -38,6 +38,8 @@ public class MediumTermTrackSaveStrategy extends AbstractTrackSaveStrategy<Mediu
         mediumTermTrack.setUser(user);
         mediumTermTrack.setTrack(track);
         mediumTermTrack.setRank(rank);
+        mediumTermTrack.setProfile(user.getUserListeningProfile());
+        mediumTermTrackRepository.save(mediumTermTrack);
         return mediumTermTrack;
     }
 

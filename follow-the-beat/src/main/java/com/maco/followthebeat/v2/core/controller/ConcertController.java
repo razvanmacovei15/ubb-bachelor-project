@@ -12,6 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
 import java.util.Optional;
+import java.util.UUID;
+
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/concerts")
@@ -44,7 +47,31 @@ public class ConcertController {
         Page<Concert> concerts = concertService.getConcerts(artist, date, pageable);
         Page<ConcertDTO> dtoPage = concertService.convertToDTO(concerts);
 
-        //todo de intrebat pe alex care e treaba cu pagedResourcesAssembler ?
         return pagedResourcesAssembler.toModel(dtoPage);
+    }
+
+    @GetMapping("/by-festival")
+    public PagedModel<EntityModel<ConcertDTO>> getConcertsByFestival(
+            @RequestParam UUID festivalId,
+            @RequestParam Optional<String> artist,
+            @RequestParam Optional<LocalDate> date,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "createdAt") String sortBy,
+            @RequestParam(defaultValue = "desc") String direction,
+            PagedResourcesAssembler<ConcertDTO> pagedResourcesAssembler
+    ) {
+        Pageable pageable = PageRequest.of(page, size,
+                direction.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending());
+
+        Page<ConcertDTO> concertPage = concertService.findConcertsByFestivalId(artist, date, pageable, festivalId);
+
+        return pagedResourcesAssembler.toModel(concertPage);
+    }
+
+    @GetMapping("/count-by-artist")
+    public ResponseEntity<Long> countConcertsByArtist(@RequestParam String artistName) {
+        long count = concertService.countConcertsByArtistName(artistName);
+        return ResponseEntity.ok(count);
     }
 }

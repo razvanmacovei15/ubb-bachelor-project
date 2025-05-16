@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import {ConcertDto} from "../types/ConcertDto";
+import { ConcertDto } from "../types/ConcertDto";
+import axios from "axios";
 
 type ConcertSortingFilteringContextType = {
     searchTerm: string;
@@ -15,6 +16,10 @@ type ConcertSortingFilteringContextType = {
     concerts: ConcertDto[];
     totalCount: number;
     resetFilters: () => void;
+    festivalId: string | null;
+    setFestivalId: (id: string | null) => void;
+    resetAndSelectFestival: (id: string | null) => void;
+    fetchConcerts: () => Promise<void>;
 };
 
 const ConcertSortingFilteringContext = createContext<
@@ -32,35 +37,67 @@ export const ConcertSortingFilteringProvider = ({
     const [genres, setGenres] = useState<string[]>([]);
     const [itemsPerPage, setItemsPerPage] = useState(5);
     const [currentPage, setCurrentPage] = useState(1);
-
     const [concerts, setConcerts] = useState<ConcertDto[]>([]);
     const [totalCount, setTotalCount] = useState(0);
+    const [festivalId, setFestivalId] = useState<string | null>(null);
+
+    const API_URL = import.meta.env.VITE_API_URL;
 
     const fetchConcerts = async () => {
-        const params = new URLSearchParams({
+        const params = {
             artist: searchTerm,
-            page: (currentPage - 1).toString(),
-            size: itemsPerPage.toString(),
+            page: currentPage - 1,
+            size: itemsPerPage,
             sortBy: sortBy === "artist" ? "artist.name" : "schedule.date",
             direction: "asc",
-        });
+            ...(date ? { date } : {}),
+        };
 
-        if (date) params.append("date", date);
-        genres.forEach((genre) => params.append("genres", genre));
-
-        const response = await fetch(
-            `http://localhost:8080/api/v1/concerts?${params.toString()}`
-        );
-        const data = await response.json();
+        const response = await axios.get(`${API_URL}/api/v1/concerts`, { params });
+        const data = response.data as {
+            _embedded?: { concertDTOList: ConcertDto[] };
+            page?: { totalElements: number };
+        };
 
         const concertsList = data._embedded?.concertDTOList || [];
         setConcerts(concertsList);
         setTotalCount(data.page?.totalElements || 0);
     };
 
+    const fetchFestivalConcerts = async (festivalId: string) => {
+        const params = {
+            artist: searchTerm,
+            page: currentPage - 1,
+            size: itemsPerPage,
+            sortBy: sortBy === "artist" ? "artist.name" : "schedule.date",
+            direction: "asc",
+            festivalId,
+            ...(date ? { date } : {}),
+        };
+
+        const response = await axios.get(`${API_URL}/api/v1/concerts/by-festival`, { params });
+        const data = response.data as {
+            _embedded?: { concertDTOList: ConcertDto[] };
+            page?: { totalElements: number };
+        };
+
+        const concertsList = data._embedded?.concertDTOList || [];
+        setConcerts(concertsList);
+        setTotalCount(data.page?.totalElements || 0);
+    };
+
+    const resetAndSelectFestival = (id: string | null) => {
+        resetFilters();
+        setFestivalId(id);
+    };
+
     useEffect(() => {
-        fetchConcerts();
-    }, [searchTerm, sortBy, date, genres, itemsPerPage, currentPage]);
+        if (festivalId) {
+            fetchFestivalConcerts(festivalId);
+        } else {
+            fetchConcerts();
+        }
+    }, [searchTerm, sortBy, date, itemsPerPage, currentPage, festivalId]);
 
     useEffect(() => {
         setCurrentPage(1);
@@ -90,6 +127,10 @@ export const ConcertSortingFilteringProvider = ({
                 concerts,
                 totalCount,
                 resetFilters,
+                festivalId,
+                setFestivalId,
+                resetAndSelectFestival,
+                fetchConcerts,
             }}
         >
             {children}

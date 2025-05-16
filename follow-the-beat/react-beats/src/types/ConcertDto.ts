@@ -1,6 +1,6 @@
-import {LocationDto} from "./LocationDTO";
-import {ArtistDto} from "./ArtistDTO";
-import {ScheduleDto} from "./ScheduleDTO";
+import {LocationDto} from "./LocationDto";
+import {ArtistDto} from "./ArtistDto";
+import {ScheduleDto} from "./ScheduleDto";
 
 export interface ConcertDto {
     id: string;

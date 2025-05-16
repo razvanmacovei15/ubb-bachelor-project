@@ -3,18 +3,24 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
+type ResponseData = string | { [key: string]: any };
+
 const SpotifyAuthSuccess = () => {
     const navigate = useNavigate();
     const state = new URLSearchParams(window.location.search).get("state");
+
+    const API_URL = import.meta.env.VITE_API_URL;
 
     useEffect(() => {
         if (!state) return;
 
         const interval = setInterval(async () => {
             try {
-                const res = await axios.get(`http://localhost:8080/spotify-auth/auth-status?state=${state}`);
+                const res : ResponseData = await axios.get<string>(`${API_URL}/spotify-auth/auth-status?state=${state}`);
                 if (res.status === 200 && res.data) {
                     localStorage.setItem("sessionToken", res.data);
+                    const token = localStorage.getItem(res.data);
+                    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
                     clearInterval(interval);
                     navigate("/profile");
                 }

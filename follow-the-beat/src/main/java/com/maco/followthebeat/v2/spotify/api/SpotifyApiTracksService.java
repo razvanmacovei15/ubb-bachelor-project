@@ -1,7 +1,7 @@
 package com.maco.followthebeat.v2.spotify.api;
 
 
-import com.maco.client.v2.SpotifyClientI;
+import com.maco.client.v2.SpotifyClient;
 import com.maco.client.v2.model.SpotifyTrack;
 import com.maco.followthebeat.v2.spotify.enums.SpotifyTimeRange;
 import com.maco.followthebeat.v2.spotify.auth.client.SpotifyClientManager;
@@ -27,14 +27,14 @@ public class SpotifyApiTracksService extends SpotifyApiService<SpotifyTrackDto>{
     public List<SpotifyTrackDto> fetchTopItems(UUID userId, SpotifyTimeRange range, int limit, int offset) {
         validateUserAndAuthentication(userId);
 
-        SpotifyClientI client = clientManager.getOrCreateSpotifyClient(userId);
+        SpotifyClient client = clientManager.getOrCreateSpotifyClient(userId);
         List<SpotifyTrack> artists = getTopItemsByRange(client, range, limit, offset);
         return artists.stream()
                 .map(spotifyTrackMapper::fromSpotifyTrack)
                 .toList();
     }
 
-    private List<SpotifyTrack> getTopItemsByRange(SpotifyClientI client, SpotifyTimeRange range, int limit, int offset) {
+    private List<SpotifyTrack> getTopItemsByRange(SpotifyClient client, SpotifyTimeRange range, int limit, int offset) {
         return switch (range) {
             case SHORT_TERM -> client.getTopTracksLast4Weeks(limit, offset);
             case MEDIUM_TERM -> client.getTopTracksLast6Months(limit, offset);

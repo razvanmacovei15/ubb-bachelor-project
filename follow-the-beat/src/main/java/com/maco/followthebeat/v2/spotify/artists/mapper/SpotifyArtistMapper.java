@@ -5,11 +5,12 @@ import com.maco.client.v2.model.extra.Image;
 import com.maco.followthebeat.v2.spotify.artists.dto.SpotifyArtistDto;
 import com.maco.followthebeat.v2.spotify.artists.entity.BaseUserTopArtist;
 import com.maco.followthebeat.v2.spotify.artists.entity.DbSpotifyArtist;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.List;
-
+@Slf4j
 @Component
 public class SpotifyArtistMapper {
     
@@ -40,6 +41,7 @@ public class SpotifyArtistMapper {
         dto.setImageUrl(entity.getImageUrl());
         dto.setGenres(entity.getGenres());
         dto.setPopularity(entity.getPopularity());
+        dto.setRank(entity.getRank());
         return dto;
     }
 
@@ -50,6 +52,7 @@ public class SpotifyArtistMapper {
         entity.setImageUrl(dto.getImageUrl());
         entity.setGenres(dto.getGenres());
         entity.setPopularity(dto.getPopularity());
+        entity.setRank(dto.getRank());
         return entity;
     }
 
@@ -60,6 +63,7 @@ public class SpotifyArtistMapper {
         dto.setPopularity(artist.getArtist().getPopularity());
         dto.setImageUrl(artist.getArtist().getImageUrl());
         dto.setGenres(artist.getArtist().getGenres());
+        dto.setRank(artist.getRank());
         return dto;
     }
 

@@ -1,4 +1,4 @@
-import { ConcertDto } from "./ConcertDTO";
+import { ConcertDto } from "./ConcertDto";
 
 export interface ScheduleDto {
   id: string;

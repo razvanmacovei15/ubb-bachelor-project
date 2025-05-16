@@ -1,7 +1,7 @@
 package com.maco.followthebeat.v2.spotify.tracks.entity;
 
-import com.maco.followthebeat.v2.spotify.tracks.entity.DbSpotifyTrack;
 import com.maco.followthebeat.v2.user.entity.User;
+import com.maco.followthebeat.v2.user.entity.UserListeningProfile;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -20,6 +20,10 @@ public abstract class BaseUserTopTrack {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "profile_id", nullable = false)
+    private UserListeningProfile profile;
 
     @ManyToOne
     @JoinColumn(name = "track_id", nullable = false)

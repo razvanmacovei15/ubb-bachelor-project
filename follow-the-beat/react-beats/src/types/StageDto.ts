@@ -1,6 +1,6 @@
-import { LocationDto } from "./LocationDTO";
-import ConcertDto from "./ConcertDTO";
-import {FestivalDto} from "./FestivalDTO";
+import { LocationDto } from "./LocationDto";
+import {ConcertDto} from "./ConcertDto";
+import {FestivalDto} from "./FestivalDto";
 
 export interface StageDto extends LocationDto {
     id: string;

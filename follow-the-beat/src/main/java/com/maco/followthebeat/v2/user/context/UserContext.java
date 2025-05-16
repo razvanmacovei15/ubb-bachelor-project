@@ -11,8 +11,12 @@ public class UserContext {
         currentUser.set(user);
     }
 
-    public User get() {
-        return currentUser.get();
+    public User getOrThrow() {
+        User user = currentUser.get();
+        if (user == null) {
+            throw new IllegalStateException("User context is not set");
+        }
+        return user;
     }
 
     public void clear() {

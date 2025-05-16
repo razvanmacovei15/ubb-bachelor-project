@@ -1,6 +1,6 @@
 package com.maco.followthebeat.v2.spotify.auth.client;
 
-import com.maco.client.v2.SpotifyClientI;
+import com.maco.client.v2.SpotifyClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -28,13 +28,7 @@ public class SpotifyClientFactory {
 
     @Bean
     @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-    public SpotifyClientI createSpotifyClient() {
-        return new SpotifyClientI(clientId, clientSecret, redirectUri, scopes);
+    public SpotifyClient createSpotifyClient() {
+        return new SpotifyClient(clientId, clientSecret, redirectUri, scopes);
     }
-
-    //todo
-    //user context
-    //filters -> chain of responsabilty -> request thread local bean -> user ocntext
-    // session scope
-    //validate access token -> get user details() -> save details in DB
 }

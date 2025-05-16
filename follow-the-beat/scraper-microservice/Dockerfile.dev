@@ -12,29 +12,25 @@ RUN apt-get update && apt-get install -y \
     libu2f-udev libvulkan1 libxss1 libgbm1 \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Chrome for Testing (v114)
+# Install Chrome for Testing
 RUN wget https://storage.googleapis.com/chrome-for-testing-public/136.0.7103.49/linux64/chrome-linux64.zip && \
     unzip chrome-linux64.zip && \
     mv chrome-linux64 /opt/chrome && \
     ln -s /opt/chrome/chrome /usr/bin/google-chrome && \
     rm chrome-linux64.zip
 
-# Install ChromeDriver for Testing (v114)
+# Install ChromeDriver
 RUN wget https://storage.googleapis.com/chrome-for-testing-public/136.0.7103.49/linux64/chromedriver-linux64.zip && \
     unzip chromedriver-linux64.zip && \
     mv chromedriver-linux64/chromedriver /usr/local/bin/chromedriver && \
     chmod +x /usr/local/bin/chromedriver && \
     rm -rf chromedriver-linux64*
 
-# Set workdir
 WORKDIR /app
 
-# Install Python deps
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . .
+EXPOSE 8070
 
-EXPOSE 8005
-
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8005"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8070", "--reload"] 

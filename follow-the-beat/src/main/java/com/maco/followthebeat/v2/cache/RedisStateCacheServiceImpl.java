@@ -44,10 +44,15 @@ public class RedisStateCacheServiceImpl implements RedisStateCacheService{
 
     public void storeUserForSession(String sessionToken, UUID userId) {
         redis.opsForValue().set("session:" + sessionToken, userId.toString(), SESSION_TTL);
+        redis.opsForValue().set("userSession:" + userId.toString(), sessionToken, SESSION_TTL);
     }
 
     public UUID getUserBySession(String sessionToken) {
         String userId = redis.opsForValue().get("session:" + sessionToken);
         return userId != null ? UUID.fromString(userId) : null;
+    }
+
+    public String getSessionTokenForUser(UUID userId) {
+        return redis.opsForValue().get("userSession:" + userId.toString());
     }
 }

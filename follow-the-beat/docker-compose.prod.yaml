@@ -1,0 +1,25 @@
+services:
+  frontend:
+    restart: always
+    ports:
+      - "${APP_PORT}:80"
+
+  backend:
+    restart: always
+    ports:
+      - "8060:8060"
+
+  festival-scraper:
+    restart: always
+    ports:
+      - "8070:8070"
+
+  postgres-database:
+    restart: always
+    ports:
+      - "5432:5432"
+
+  redis-cache:
+    restart: always
+    ports:
+      - "6379:6379"

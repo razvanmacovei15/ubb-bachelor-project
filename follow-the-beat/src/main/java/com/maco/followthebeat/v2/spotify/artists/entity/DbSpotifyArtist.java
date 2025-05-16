@@ -18,6 +18,9 @@ public class DbSpotifyArtist {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @Column(nullable = false)
+    private int rank;
+
     @Column(name = "spotify_id", unique = true, nullable = false)
     private String spotifyId;
 
