@@ -1,17 +1,17 @@
 package com.maco.followthebeat.v2.cache;
 
 import org.springframework.data.redis.core.StringRedisTemplate;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.time.Duration;
 import java.util.UUID;
+
 @Service
-public class RedisStateCacheServiceImpl implements RedisStateCacheService{
+public class RedisStateCacheServiceImpl implements RedisStateCacheService {
     private final StringRedisTemplate redis;
-    private static final Duration STATE_TTL = Duration.ofMinutes(10);
-    private static final Duration SESSION_TTL = Duration.ofHours(1);
+    private static final Duration STATE_TTL = Duration.ofHours(1);
+    private static final Duration SESSION_TTL = Duration.ofDays(7);
+
     @Autowired
     public RedisStateCacheServiceImpl(StringRedisTemplate redis) {
         this.redis = redis;
@@ -25,7 +25,7 @@ public class RedisStateCacheServiceImpl implements RedisStateCacheService{
     @Override
     public UUID retrieve(String state) {
         String userId = redis.opsForValue().get("state:" + state);
-        return userId != null ? UUID.fromString(userId) : null;
+        return UUID.fromString(userId);
     }
 
     @Override
@@ -49,7 +49,7 @@ public class RedisStateCacheServiceImpl implements RedisStateCacheService{
 
     public UUID getUserBySession(String sessionToken) {
         String userId = redis.opsForValue().get("session:" + sessionToken);
-        return userId != null ? UUID.fromString(userId) : null;
+        return UUID.fromString(userId);
     }
 
     public String getSessionTokenForUser(UUID userId) {

@@ -23,76 +23,6 @@ const SpotifyProfile: React.FC = () => {
         handleSpotifyLogin,
     } = useSpotifyProfile();
 
-    const API_URL = import.meta.env.VITE_API_URL;
-    const sessionToken = localStorage.getItem("sessionToken");
-
-
-    const fetchConcerts = async () => {
-        try {
-            const response = await axios.get(`${API_URL}/api/v1/concerts`, {
-                params: {
-                    page: 50,
-                    size: 50,
-                    sortBy: "createdAt",
-                    direction: "desc",
-                },
-            });
-
-            console.log("Concerts data:", response.data);
-        } catch (error) {
-            console.error("Error fetching concerts:", error);
-        }
-    };
-
-    const fetchPayload = async () => {
-        try {
-            const response = await axios.get(`${API_URL}/api/v1/user/suggestions`, {
-                params: {
-                    range: "MEDIUM_TERM",
-                    festivalId: "ba8a8dc8-bd9e-4146-a693-8e1485cb8939",
-                },
-                headers: {
-                    Authorization: `Bearer ${sessionToken}`,
-                }
-            });
-
-            console.log("payload data:", response.data);
-        } catch (error) {
-            console.error("Error fetching payload:", error);
-        }
-    };
-
-    const countByArtist = async () => {
-        try {
-            const response = await axios.get(`${API_URL}/api/v1/concerts/count-by-artist`, {
-                params: {
-                    artistName: "AC/DC",
-                },
-
-            });
-
-            console.log("payload data:", response.data);
-        } catch (error) {
-            console.error("Error fetching payload:", error);
-        }
-    };
-
-    const fetchFakeConcerts = async () => {
-        try {
-            const response = await axios.post(`${API_URL}/api/fake-data/festivals`, null, {
-                params: {
-                    count: 100000,
-                },
-            });
-
-            console.log("Fake data generation response:", response.data);
-        } catch (error) {
-            console.error("Error generating fake concerts:", error);
-        }
-    };
-
-
-
     return (
         <div className="spotify-settings">
             <div className="profile-content">
@@ -104,11 +34,6 @@ const SpotifyProfile: React.FC = () => {
                         onLogin={handleSpotifyLogin}
                         onRefresh={() => window.location.reload()}
                     />
-
-                    <button onClick={fetchConcerts}>TEST FETCH CONCERTS WITH PAGINATION</button>
-                    <button onClick={fetchFakeConcerts}>TEST CREATING FAKE FESTIVALS</button>
-                    <button onClick={fetchPayload}>TEST PAYLOAD</button>
-                    <button onClick={countByArtist}>TEST COUNT</button>
 
                     {userData.isConnectedToSpotify && (
                         <>

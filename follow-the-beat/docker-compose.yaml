@@ -9,6 +9,7 @@ services:
       - "8060:8060"  # Expose port 8060 on host, map to backend's port 8060
     environment:
       SPRING_PROFILES_ACTIVE: ${SPRING_PROFILE}  # Tells Spring to use 'application-server.properties'
+      FRONTEND_URL: ${FRONTEND_URL}  # Frontend URL with default value
 
       # PostgreSQL environment variables (custom)
       DB_HOST: ${DB_HOST}
@@ -61,9 +62,11 @@ services:
     image: redis:7
     container_name: redis
     ports:
-      - "${REDIS_PORT}:${REDIS_PORT}"  # Maps container port 6379 to host port 6739
+      - "${REDIS_PORT}:${REDIS_PORT}"
     volumes:
-      - redis_data:/data  # Persists Redis data
+      - redis_data:/data
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
     restart: unless-stopped
 
   postgres-database:
