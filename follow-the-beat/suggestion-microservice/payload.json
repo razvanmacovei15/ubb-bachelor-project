@@ -1,0 +1,13 @@
+{
+  "requestId": "123",
+  "topUserArtists": ["Drake", "Kygo", "Avenged Sevenfold"],
+  "genreFrequencies": {
+    "rap": 5,
+    "edm": 4,
+    "metal": 2
+  },
+  "festivalArtists": [
+    { "name": "Tiësto", "genres": ["edm", "electro house"] },
+    { "name": "Black Sabbath", "genres": ["metal", "rock"] }
+  ]
+}

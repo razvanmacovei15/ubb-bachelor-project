@@ -11,13 +11,15 @@ import org.springframework.stereotype.Component;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Component
 public class UserEmbeddingPayloadMapper {
     public UserEmbeddingPayloadDto toDto(UserListeningProfile profile,
                                          SpotifyTimeRange timeRange,
-                                         List<ArtistForSuggestionDto> artists) {
+                                         List<ArtistForSuggestionDto> artists,
+                                         UUID userId) {
         UserEmbeddingPayloadDto dto =  new UserEmbeddingPayloadDto();
         List<String> topArtists = switch(timeRange){
             case SHORT_TERM -> extractArtistNames(profile.getShortTermArtists());
@@ -30,7 +32,7 @@ public class UserEmbeddingPayloadMapper {
                     UserGenreFrequency::getGenre,
                     UserGenreFrequency::getCount
                 ));
-
+        dto.setUserId(userId);
         dto.setTopUserArtists(topArtists);
         dto.setGenreFrequencies(genreMap);
         dto.setFestivalArtists(artists);

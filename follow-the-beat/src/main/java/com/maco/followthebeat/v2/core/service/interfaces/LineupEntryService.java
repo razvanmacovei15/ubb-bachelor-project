@@ -38,4 +38,5 @@ public interface LineupEntryService extends BaseCrudService<LineupEntry> {
             Integer minCompatibility,
             Pageable pageable
     );
+    List<UUID> getAllConcertIdsByUserId(UUID userId);
 }

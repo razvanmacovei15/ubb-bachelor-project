@@ -31,15 +31,15 @@ public class UserListeningProfileServiceImpl implements UserListeningProfileServ
     private final ArtistService artistService;
 
     public UserEmbeddingPayloadDto getEmbeddingPayloadForFestival(
-             UUID id,
+             UUID userId,
              SpotifyTimeRange range,
              UUID festivalId
     ) {
         log.info("Requesting embedding payload for festival {} in time range {}", festivalId, range);
         List<ArtistForSuggestionDto> artists = artistService.generateFestivalPayload(festivalId);
         log.info("Artists for festival {}: {}", festivalId, artists);
-        return repo.findByUserId(id)
-                .map(profile -> embeddingMapper.toDto(profile, range, artists))
+        return repo.findByUserId(userId)
+                .map(profile -> embeddingMapper.toDto(profile, range, artists, userId))
                 .orElseThrow(() -> new RuntimeException("Profile not found"));
     }
 

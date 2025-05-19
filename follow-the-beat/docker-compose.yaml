@@ -70,7 +70,7 @@ services:
     restart: unless-stopped
 
   postgres-database:
-    image: postgres:15
+    image: postgres:17
     container_name: postgres_database
     environment:
       POSTGRES_DB: ${DB_NAME}
@@ -80,6 +80,15 @@ services:
       - "${DB_PORT}:${DB_PORT}"
     volumes:
       - pgdata:/var/lib/postgresql/data
+
+  ai-suggestor:
+    build:
+      context: ./suggestion-microservice
+      dockerfile: Dockerfile
+    container_name: ai_suggestor
+    ports:
+      - "${AI_PORT}:${AI_PORT}"
+    restart: unless-stopped
 
 volumes:
   redis_data:  # Persists Redis cache

@@ -2,11 +2,11 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
-type ResponseData = string | { [key: string]: any };
+import { useUser } from "../../contexts/UserContext";
 
 const SpotifyAuthSuccess = () => {
   const navigate = useNavigate();
+  const { setConnectionState } = useUser();
   const state = new URLSearchParams(window.location.search).get("state");
   const API_URL = import.meta.env.VITE_API_URL;
 
@@ -41,9 +41,9 @@ const SpotifyAuthSuccess = () => {
 
         if (res.status === 200 && res.data) {
           console.log(
-            "[SpotifyAuthSuccess] Session token received, storing in localStorage"
+            "[SpotifyAuthSuccess] Session token received, updating context and localStorage"
           );
-          localStorage.setItem("sessionToken", res.data);
+          setConnectionState(true, res.data);
           axios.defaults.headers.common["Authorization"] = `Bearer ${res.data}`;
           clearInterval(interval);
           console.log("[SpotifyAuthSuccess] Redirecting to profile page");
@@ -73,7 +73,7 @@ const SpotifyAuthSuccess = () => {
       clearInterval(interval);
       clearTimeout(timeout);
     };
-  }, [state, navigate]);
+  }, [state, navigate, setConnectionState]);
 
   return <div>Authenticating with Spotify... Please wait.</div>;
 };

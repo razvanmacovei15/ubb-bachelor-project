@@ -43,10 +43,13 @@ public class ConcertController {
         Pageable pageable = PageRequest.of(page, size,
                 direction.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending());
 
-        //todo make in only one method
         Page<Concert> concerts = concertService.getConcerts(artist, date, pageable);
+        log.info("first concert artist: {}", concerts.getContent().get(0).getArtist().getName());
+        log.info("first concert spotify url: {}", concerts.getContent().get(0).getArtist().getSpotifyUrl());
         Page<ConcertDTO> dtoPage = concertService.convertToDTO(concerts);
-
+        dtoPage.getContent().forEach(concert -> {
+            log.info("Concert ID: {}, Artist: {}", concert.getId(), concert.getArtistDTO().getName());
+        });
         return pagedResourcesAssembler.toModel(dtoPage);
     }
 
@@ -65,7 +68,10 @@ public class ConcertController {
                 direction.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending());
 
         Page<ConcertDTO> concertPage = concertService.findConcertsByFestivalId(artist, date, pageable, festivalId);
-
+        //log every concert
+        concertPage.getContent().forEach(concert -> {
+            log.info("Concert ID: {}, Artist: {}", concert.getId(), concert.getArtistDTO().getName());
+        });
         return pagedResourcesAssembler.toModel(concertPage);
     }
 

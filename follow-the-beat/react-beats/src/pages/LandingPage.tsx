@@ -4,12 +4,6 @@ import {FaSpotify} from "react-icons/fa";
 
 const LandingPage = () => {
     const features = [
-        // {
-        //   title: "Discover Concerts",
-        //   description: "Find concerts near you using our RapidAPI integration. Search by location and discover your next favorite show.",
-        //   icon: "🎵",
-        //   link: "/concerts"
-        // },
         {
             title: "Explore Festivals",
             description: "Browse through our curated list of festivals. Found a festival we don't have? Suggest it to us!",

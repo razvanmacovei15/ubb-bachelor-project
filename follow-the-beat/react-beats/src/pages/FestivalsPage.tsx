@@ -22,19 +22,28 @@ const FestivalsPage: React.FC = () => {
 
   const [festivals, setFestivals] = useState<FestivalDto[]>([]);
 
-  const { addLineupEntry } = useLineupSortingFilteringContext();
+  const { addLineupEntry, removeLineupEntry } = useLineupSortingFilteringContext();
   const onAddToLineup = async (concertId: string) => {
+    console.log("[FestivalsPage] onAddToLineup called with:", concertId);
+
     try {
+      if (!addLineupEntry) {
+        console.warn("[FestivalsPage] addLineupEntry is undefined!");
+      }
+
       await addLineupEntry({
         concertId,
         notes: "",
         priority: 0,
         compatibility: 0,
       });
+
+      console.log("[FestivalsPage] addLineupEntry call completed");
     } catch (e) {
-      console.error("Failed to add concert to lineup", e);
+      console.error("[FestivalsPage] Failed to add concert to lineup", e);
     }
   };
+
   const {
     searchTerm,
     sortBy,
@@ -187,7 +196,7 @@ const FestivalsPage: React.FC = () => {
                     key={concert.id}
                     concert={concert}
                     onAdd={() => onAddToLineup(concert.id)}
-                    onRemove={() => console.log("Remove from lineup")}
+                    onRemove={() => removeLineupEntry(concert.id)}
                   />
                 ))}
               </div>

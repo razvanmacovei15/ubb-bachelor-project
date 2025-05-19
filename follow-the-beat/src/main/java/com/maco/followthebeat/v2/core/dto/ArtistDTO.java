@@ -14,4 +14,6 @@ public class ArtistDTO {
     private String name;
     private String imgUrl;
     private List<String> genres;
+    private String spotifyId;
+    private String spotifyUrl;
 }

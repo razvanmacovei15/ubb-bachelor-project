@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.TimeUnit;
+
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -26,34 +28,72 @@ public class FestivalBootstrapSync {
     @Value("${scraper.api.untold}")
     private String untoldEndpoint;
 
+    private static final int MAX_RETRIES = 3;
+    private static final long RETRY_DELAY_MS = 5000; // 5 seconds
+
     @PostConstruct
     public void initFestivalsOnStartup() {
         log.info("Bootstrapping festival sync...");
-
-        try {
-            UntoldFestivalResponse untoldData = genericApi.fetchFestival(
-                    untoldEndpoint, UntoldFestivalResponse.class, "untold"
-            );
-            if (untoldData == null) throw new RuntimeException("Untold data is null");
-            untoldAdapter.saveUntoldFestival(untoldData);
-            log.info("Untold festival synced.");
-        } catch (Exception e) {
-            log.error("Failed to sync Untold festival", e);
-            throw new RuntimeException("Startup failed: Untold sync error", e);
-        }
-
-        try {
-            ElectricFestivalResponse electricData = genericApi.fetchFestival(
-                    electricEndpoint, ElectricFestivalResponse.class, "electric"
-            );
-            if (electricData == null) throw new RuntimeException("Electric data is null");
-            electricAdapter.saveElectricFestival(electricData);
-            log.info("Electric festival synced.");
-        } catch (Exception e) {
-            log.error("Failed to sync Electric festival", e);
-            throw new RuntimeException("Startup failed: Electric sync error", e);
-        }
-
+        
+        syncUntoldFestival();
+        syncElectricFestival();
+        
         log.info("Festival bootstrap complete.");
+    }
+
+    private void syncUntoldFestival() {
+        int retryCount = 0;
+        while (retryCount < MAX_RETRIES) {
+            try {
+                UntoldFestivalResponse untoldData = genericApi.fetchFestival(
+                        untoldEndpoint, UntoldFestivalResponse.class, "untold"
+                );
+                if (untoldData == null) throw new RuntimeException("Untold data is null");
+                untoldAdapter.saveUntoldFestival(untoldData);
+                log.info("Untold festival synced successfully.");
+                return;
+            } catch (Exception e) {
+                retryCount++;
+                if (retryCount == MAX_RETRIES) {
+                    log.error("Failed to sync Untold festival after {} attempts. The site might be under maintenance. Continuing without Untold data.", MAX_RETRIES, e);
+                    return;
+                }
+                log.warn("Failed to sync Untold festival (attempt {}/{}). Retrying in {} seconds...", retryCount, MAX_RETRIES, RETRY_DELAY_MS/1000);
+                try {
+                    TimeUnit.MILLISECONDS.sleep(RETRY_DELAY_MS);
+                } catch (InterruptedException ie) {
+                    Thread.currentThread().interrupt();
+                    return;
+                }
+            }
+        }
+    }
+
+    private void syncElectricFestival() {
+        int retryCount = 0;
+        while (retryCount < MAX_RETRIES) {
+            try {
+                ElectricFestivalResponse electricData = genericApi.fetchFestival(
+                        electricEndpoint, ElectricFestivalResponse.class, "electric"
+                );
+                if (electricData == null) throw new RuntimeException("Electric data is null");
+                electricAdapter.saveElectricFestival(electricData);
+                log.info("Electric festival synced successfully.");
+                return;
+            } catch (Exception e) {
+                retryCount++;
+                if (retryCount == MAX_RETRIES) {
+                    log.error("Failed to sync Electric festival after {} attempts. The site might be under maintenance. Continuing without Electric data.", MAX_RETRIES, e);
+                    return;
+                }
+                log.warn("Failed to sync Electric festival (attempt {}/{}). Retrying in {} seconds...", retryCount, MAX_RETRIES, RETRY_DELAY_MS/1000);
+                try {
+                    TimeUnit.MILLISECONDS.sleep(RETRY_DELAY_MS);
+                } catch (InterruptedException ie) {
+                    Thread.currentThread().interrupt();
+                    return;
+                }
+            }
+        }
     }
 }

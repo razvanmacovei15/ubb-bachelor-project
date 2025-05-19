@@ -175,4 +175,16 @@ public class LineupEntryController {
         }
         return ResponseEntity.ok(details);
     }
+
+    @IsConnected
+    @GetMapping("/concerts-ids")
+    public ResponseEntity<?> getAllConcertIds() {
+        User user = userContext.getOrThrow();
+        List<UUID> concertIds = lineupEntryService.getAllConcertIdsByUserId(user.getId());
+        if (concertIds.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("No concert IDs found for user with id: " + user.getId());
+        }
+        return ResponseEntity.ok(concertIds);
+    }
 }

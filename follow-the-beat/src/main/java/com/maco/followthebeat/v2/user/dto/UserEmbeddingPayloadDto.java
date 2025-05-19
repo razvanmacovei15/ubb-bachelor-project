@@ -9,11 +9,14 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserEmbeddingPayloadDto {
+    private UUID userId;
     private List<String> topUserArtists;
     private List<ArtistForSuggestionDto> festivalArtists;
     private Map<String, Integer> genreFrequencies;

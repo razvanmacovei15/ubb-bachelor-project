@@ -1,7 +1,8 @@
 // types/LineupDetailsDto.ts
 
 export interface LineupDetailDto {
-    id: string;                  // UUID as string
+    id: string;
+    concertId: string; // UUID as string
     artistName: string;
     artistImageUrl: string;
     spotifyUrl: string | null;   // Assuming this can be null

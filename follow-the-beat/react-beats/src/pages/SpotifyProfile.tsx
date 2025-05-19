@@ -4,13 +4,12 @@ import SpotifyConnection from "../components/spotify/SpotifyConnection";
 import FilterSidebar from "../components/spotify/FilterSidebar";
 import useSpotifyProfile from "../hooks/useSpotifyProfile";
 import "./ProfilePage.css";
-import axios from "axios";
 import SpotifyTrackCard from "@/components/spotify/SpotifyTrackCard.tsx";
 import SpotifyArtistCard from "@/components/spotify/SpotifyArtistCard.tsx";
+import {useUser} from "@/contexts/UserContext.tsx";
 
 const SpotifyProfile: React.FC = () => {
     const {
-        userData,
         contentLoading,
         statsLoading,
         error,
@@ -23,19 +22,21 @@ const SpotifyProfile: React.FC = () => {
         handleSpotifyLogin,
     } = useSpotifyProfile();
 
+    const { isConnectedToSpotify } = useUser();
+
     return (
         <div className="spotify-settings">
             <div className="profile-content">
                 <div className="main-content">
                     <SpotifyConnection
-                        isConnected={userData.isConnectedToSpotify}
+                        isConnected={isConnectedToSpotify}
                         loading={contentLoading}
                         error={error}
                         onLogin={handleSpotifyLogin}
                         onRefresh={() => window.location.reload()}
                     />
 
-                    {userData.isConnectedToSpotify && (
+                    {isConnectedToSpotify && (
                         <>
                             {contentLoading ? (
                                 <div className="profile-content-loading">

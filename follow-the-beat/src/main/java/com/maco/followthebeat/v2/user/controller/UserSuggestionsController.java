@@ -27,9 +27,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserSuggestionsController {
     private final UserContext userContext;
-    private final RedisStateCacheService redisStateCacheService;
     private final UserListeningProfileService userListeningProfileService;
-    private final SpotifyClientManager clientManager;
 
     @IsConnected
     @GetMapping UserEmbeddingPayloadDto getSuggestionsForFestival(SpotifyTimeRange range, UUID festivalId) {
@@ -42,11 +40,9 @@ public class UserSuggestionsController {
                 range,
                 festivalId
         );
-        // -> generate artist information like genres first DONE
-        // -> send it to the AI api to create a suggestion
-        // -> get a response from the AI api
-        // -> update the artist <-> user information
-        // -> return the response
+
+
+
         return payloadDto;
     }
 

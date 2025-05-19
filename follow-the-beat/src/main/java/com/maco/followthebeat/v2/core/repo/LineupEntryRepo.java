@@ -2,6 +2,7 @@ package com.maco.followthebeat.v2.core.repo;
 
 import com.maco.followthebeat.v2.core.entity.LineupEntry;
 import com.maco.followthebeat.v2.core.model.LineupDetailDto;
+import com.maco.followthebeat.v2.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -18,9 +19,10 @@ public interface LineupEntryRepo extends JpaRepository<LineupEntry, UUID>, JpaSp
     @Query("""
     SELECT new com.maco.followthebeat.v2.core.model.LineupDetailDto(
         le.id,
+        le.concert.id,
         a.name,
         a.imgUrl,
-        null,
+        a.spotifyUrl,
         le.notes,
         le.priority,
         le.compatibility,
@@ -39,4 +41,6 @@ public interface LineupEntryRepo extends JpaRepository<LineupEntry, UUID>, JpaSp
     WHERE le.user.id = :userId
 """)
     List<LineupDetailDto> findLineupDetailsByUserId(@Param("userId") UUID userId);
+    @Query("SELECT le.concert.id FROM LineupEntry le WHERE le.user.id = :userId")
+    List<UUID> findAllConcertIds(@Param("userId") UUID userId);
 }

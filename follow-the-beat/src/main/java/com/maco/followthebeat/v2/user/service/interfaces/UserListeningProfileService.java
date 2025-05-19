@@ -11,7 +11,7 @@ import java.util.UUID;
 
 public interface UserListeningProfileService {
     UserEmbeddingPayloadDto getEmbeddingPayloadForFestival(
-            UUID id,
+            UUID userId,
             SpotifyTimeRange range,
             UUID festivalId
     );

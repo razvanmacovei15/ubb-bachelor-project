@@ -9,6 +9,7 @@ import java.util.UUID;
 @Data
 public class LineupDetailDto {
     private UUID id;
+    private UUID concertId;
     private String artistName;
     private String artistImageUrl;
     private String spotifyUrl;
@@ -20,10 +21,11 @@ public class LineupDetailDto {
     private String stageName;
     private String festivalName;
 
-    public LineupDetailDto(UUID id, String artistName, String artistImageUrl, String spotifyUrl,
+    public LineupDetailDto(UUID id, UUID concertId, String artistName, String artistImageUrl, String spotifyUrl,
                            String notes, Integer priority, Integer compatibility,
                            LocalTime startTime, LocalDate date, String stageName, String festivalName) {
         this.id = id;
+        this.concertId = concertId;
         this.artistName = artistName;
         this.artistImageUrl = artistImageUrl;
         this.spotifyUrl = spotifyUrl;

@@ -23,4 +23,5 @@ public class LineupEntryDTO {
     private Integer priority;
 
     private Integer compatibility;
+
 }

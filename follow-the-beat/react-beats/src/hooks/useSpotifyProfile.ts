@@ -16,15 +16,10 @@ export interface SpotifyArtist {
     playCount: number;
 }
 
-interface UserData {
-    isConnectedToSpotify: boolean;
-}
-
-
 const useSpotifyProfile = () => {
     const API_URL = import.meta.env.VITE_API_URL;
+    const sessionToken = localStorage.getItem("sessionToken");
 
-    const [userData, setUserData] = useState<UserData>({ isConnectedToSpotify: false });
     const [contentLoading, setContentLoading] = useState<boolean>(true);
     const [statsLoading, setStatsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
@@ -33,7 +28,21 @@ const useSpotifyProfile = () => {
     const [topTracks, setTopTracks] = useState<SpotifyTrackDto[]>([]);
     const [currentView, setCurrentView] = useState<ViewType>("artists");
 
-    const sessionToken = localStorage.getItem("sessionToken");
+    const checkSpotifyConnection = async () => {
+        if (!sessionToken) {
+            return false;
+        }
+
+        try {
+            const response = await axios.get<boolean>(`${API_URL}/spotify-auth/is-connected`, {
+                params: { sessionToken }
+            });
+            return response.data;
+        } catch (err) {
+            console.error("Error checking Spotify connection:", err);
+            return false;
+        }
+    };
 
     const fetchTopArtists = async (range: string) => {
         const response = await axios.get<SpotifyArtistDto[]>(`${API_URL}/api/spotify-artists/top-artists`, {
@@ -54,17 +63,18 @@ const useSpotifyProfile = () => {
 
     const fetchSpotifyData = async (range: string) => {
         await Promise.all([fetchTopArtists(range), fetchTopTracks(range)]);
-        setUserData({ isConnectedToSpotify: true });
     };
 
     const fetchInitialSpotifyData = async () => {
         setContentLoading(true);
         try {
-            await fetchSpotifyData(timeRange);
+            const isConnected = await checkSpotifyConnection();
+            if (isConnected) {
+                await fetchSpotifyData(timeRange);
+            }
         } catch (err) {
             console.error(err);
             setError("Failed to fetch Spotify data");
-            setUserData({ isConnectedToSpotify: false });
         } finally {
             setContentLoading(false);
         }
@@ -73,7 +83,10 @@ const useSpotifyProfile = () => {
     const fetchStatsSpotifyData = async (range: string) => {
         setStatsLoading(true);
         try {
-            await fetchSpotifyData(range);
+            const isConnected = await checkSpotifyConnection();
+            if (isConnected) {
+                await fetchSpotifyData(range);
+            }
         } catch (err) {
             console.error(err);
             setError("Failed to fetch Spotify data");
@@ -95,16 +108,18 @@ const useSpotifyProfile = () => {
     };
 
     useEffect(() => {
-        if (sessionToken) {
-            setUserData({ isConnectedToSpotify: true });
-            fetchInitialSpotifyData();
-        } else {
-            setContentLoading(false);
-        }
+        const initializeSpotifyData = async () => {
+            if (sessionToken) {
+                await fetchInitialSpotifyData();
+            } else {
+                setContentLoading(false);
+            }
+        };
+
+        initializeSpotifyData();
     }, [sessionToken]);
 
     return {
-        userData,
         contentLoading,
         statsLoading,
         error,
@@ -115,6 +130,7 @@ const useSpotifyProfile = () => {
         setCurrentView,
         handleTimeRangeChange,
         handleSpotifyLogin,
+        checkSpotifyConnection,
     };
 };
 

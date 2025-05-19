@@ -116,4 +116,24 @@ public class SpotifyAuthController {
             return ResponseEntity.noContent().build();
         }
     }
+
+    @GetMapping("/is-connected")
+    public ResponseEntity<Boolean> isUserConnectedToSpotify(@RequestParam String sessionToken) {
+        try {
+            UUID userId = redisStateCacheService.getUserBySession(sessionToken);
+            if (userId == null) {
+                return ResponseEntity.ok(false);
+            }
+
+            Optional<User> user = userService.findUserById(userId);
+            if (user.isEmpty()) {
+                return ResponseEntity.ok(false);
+            }
+
+            SpotifyClient client = clientManager.getOrCreateSpotifyClient(userId);
+            return ResponseEntity.ok(client.isAuthenticated());
+        } catch (Exception e) {
+            return ResponseEntity.ok(false);
+        }
+    }
 } 
