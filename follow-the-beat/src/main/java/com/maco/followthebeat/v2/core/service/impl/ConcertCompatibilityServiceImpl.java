@@ -31,9 +31,9 @@ public class ConcertCompatibilityServiceImpl implements ConcertCompatibilityServ
     @Override
     public ConcertCompatibilityDto create(ConcertCompatibilityDto dto) {
         ConcertCompatibility entity = ConcertCompatibility.builder()
-                .user(userService.findUserById(dto.userId()).orElseThrow())
-                .concert(concertService.getById(dto.concertId()).orElseThrow())
-                .compatibility(dto.compatibility())
+                .user(userService.findUserById(dto.getUserId()).orElseThrow())
+                .concert(concertService.getById(dto.getConcertId()).orElseThrow())
+                .compatibility(dto.getCompatibility())
                 .build();
         return toDto(repository.save(entity));
     }
@@ -41,6 +41,11 @@ public class ConcertCompatibilityServiceImpl implements ConcertCompatibilityServ
     @Override
     public List<ConcertCompatibilityDto> getAll() {
         return repository.findAll().stream().map(this::toDto).toList();
+    }
+
+    @Override
+    public ConcertCompatibilityDto getByConcertAndUser(UUID concertId, UUID userId) {
+        return toDto(repository.findByConcertIdAndUserId(concertId, userId));
     }
 
     @Override
@@ -61,7 +66,7 @@ public class ConcertCompatibilityServiceImpl implements ConcertCompatibilityServ
     @Override
     public ConcertCompatibilityDto update(UUID id, ConcertCompatibilityDto dto) {
         ConcertCompatibility entity = repository.findById(id).orElseThrow();
-        entity.setCompatibility(dto.compatibility());
+        entity.setCompatibility(dto.getCompatibility());
         return toDto(repository.save(entity));
     }
 
@@ -162,11 +167,11 @@ public class ConcertCompatibilityServiceImpl implements ConcertCompatibilityServ
     }
 
     private ConcertCompatibilityDto toDto(ConcertCompatibility entity) {
-        return new ConcertCompatibilityDto(
-                entity.getId(),
-                entity.getUser().getId(),
-                entity.getConcert().getId(),
-                entity.getCompatibility()
-        );
+        return ConcertCompatibilityDto.builder()
+                .id(entity.getId())
+                .userId(entity.getUser().getId())
+                .concertId(entity.getConcert().getId())
+                .compatibility(entity.getCompatibility())
+                .build();
     }
 }

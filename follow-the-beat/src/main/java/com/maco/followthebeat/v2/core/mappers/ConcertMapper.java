@@ -1,17 +1,16 @@
 package com.maco.followthebeat.v2.core.mappers;
 
-import com.maco.followthebeat.v2.core.dto.ArtistDTO;
-import com.maco.followthebeat.v2.core.dto.ConcertDTO;
-import com.maco.followthebeat.v2.core.dto.ScheduleDTO;
-import com.maco.followthebeat.v2.core.dto.StageDTO;
+import com.maco.followthebeat.v2.core.dto.*;
 import com.maco.followthebeat.v2.core.entity.Concert;
 import com.maco.followthebeat.v2.core.entity.Stage;
 import com.maco.followthebeat.v2.core.model.ConcertResponseDto;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
 @Component
+@Slf4j
 public class ConcertMapper {
     public ConcertDTO fromEntity(Concert concert) {
         return ConcertDTO.builder()
@@ -47,6 +46,19 @@ public class ConcertMapper {
                 .stageName(concert.getLocation().getName())
                 .startTime(concert.getSchedule() != null ? concert.getSchedule().getStartTime() : null)
                 .date(concert.getSchedule() != null ? concert.getSchedule().getDate() : null)
+                .build();
+    }
+
+    public ConcertForSuggestionDto toSuggestionDto(Concert concert) {
+        if (concert.getId() == null) {
+            log.warn("Attempted to map a concert with null ID: {}", concert);
+            return null;
+        }
+
+        return ConcertForSuggestionDto.builder()
+                .concertId(concert.getId())
+                .artistName(concert.getArtist().getName())
+                .genres(concert.getArtist().getGenres())
                 .build();
     }
 }

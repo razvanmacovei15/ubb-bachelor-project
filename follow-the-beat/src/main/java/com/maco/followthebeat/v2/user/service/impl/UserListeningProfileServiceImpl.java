@@ -1,7 +1,7 @@
 package com.maco.followthebeat.v2.user.service.impl;
 
-import com.maco.followthebeat.v2.core.dto.ArtistForSuggestionDto;
-import com.maco.followthebeat.v2.core.service.interfaces.ArtistService;
+import com.maco.followthebeat.v2.core.dto.ConcertForSuggestionDto;
+import com.maco.followthebeat.v2.core.service.interfaces.ConcertService;
 import com.maco.followthebeat.v2.spotify.enums.SpotifyTimeRange;
 import com.maco.followthebeat.v2.user.dto.UserEmbeddingPayloadDto;
 import com.maco.followthebeat.v2.user.dto.UserListeningProfileDto;
@@ -13,11 +13,7 @@ import com.maco.followthebeat.v2.user.repo.UserListeningProfileRepo;
 import com.maco.followthebeat.v2.user.service.interfaces.UserListeningProfileService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.UUID;
@@ -28,7 +24,7 @@ public class UserListeningProfileServiceImpl implements UserListeningProfileServ
     private final UserListeningProfileRepo repo;
     private final UserEmbeddingPayloadMapper embeddingMapper;
     private final UserListeningProfileMapper mapper;
-    private final ArtistService artistService;
+    private final ConcertService concertService;
 
     public UserEmbeddingPayloadDto getEmbeddingPayloadForFestival(
              UUID userId,
@@ -36,7 +32,7 @@ public class UserListeningProfileServiceImpl implements UserListeningProfileServ
              UUID festivalId
     ) {
         log.info("Requesting embedding payload for festival {} in time range {}", festivalId, range);
-        List<ArtistForSuggestionDto> artists = artistService.generateFestivalPayload(festivalId);
+        List<ConcertForSuggestionDto> artists = concertService.generateFestivalPayload(festivalId);
         log.info("Artists for festival {}: {}", festivalId, artists);
         return repo.findByUserId(userId)
                 .map(profile -> embeddingMapper.toDto(profile, range, artists, userId))

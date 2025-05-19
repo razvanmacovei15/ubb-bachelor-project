@@ -40,7 +40,9 @@ public class UserSuggestionsController {
 
     @IsConnected
     @GetMapping
-    void getSuggestionsForFestival(SpotifyTimeRange range, UUID festivalId) {
+    public ResponseEntity<MatchResponse> getSuggestionsForFestival(
+            @RequestParam SpotifyTimeRange range,
+            @RequestParam UUID festivalId) {
         log.info("Requesting suggestions for festival {} in time range {}", festivalId, range);
         User user = userContext.getOrThrow();
 
@@ -56,13 +58,18 @@ public class UserSuggestionsController {
                 List<MatchResult> matches = matchResponse.matches;
                 for (MatchResult match : matches) {
                     log.info("Match result: {} with score {}", match.concertId, match.score);
-                    ConcertCompatibilityDto compatibilityDto = ConcertCompatibilityDto.builder()
-                            .userId(user.getId())
-                            .compatibility(match.score)
-                            .build();
-                    concertCompatibilityService.create(compatibilityDto);
+                    ConcertCompatibilityDto existingCompatibilityDto = concertCompatibilityService.getByConcertAndUser(
+                            UUID.fromString(match.concertId),
+                            user.getId()
+                    );
+
+                    existingCompatibilityDto.setCompatibility(match.score);
+                    concertCompatibilityService.update(existingCompatibilityDto.getId(), existingCompatibilityDto);
                 }
+                log.info("All match results: {}", matchResponse.getMatches());
+
             }
+            return ResponseEntity.ok(matchResponse);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

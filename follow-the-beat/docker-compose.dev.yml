@@ -27,3 +27,7 @@ services:
   redis-cache:
     ports:
       - "${REDIS_PORT}:${REDIS_PORT}"
+
+  ai-suggestor:
+    ports:
+      - "${AI_PORT}:${AI_PORT}"

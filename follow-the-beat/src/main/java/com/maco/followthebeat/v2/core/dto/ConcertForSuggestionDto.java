@@ -6,11 +6,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.UUID;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ArtistForSuggestionDto {
-    private String name;
+public class ConcertForSuggestionDto {
+    private UUID concertId;
+    private String artistName;
     private List<String> genres;
 }

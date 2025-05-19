@@ -1,8 +1,9 @@
 package com.maco.followthebeat.v2.core.mappers;
 
 import com.maco.followthebeat.v2.core.dto.ArtistDTO;
-import com.maco.followthebeat.v2.core.dto.ArtistForSuggestionDto;
+import com.maco.followthebeat.v2.core.dto.ConcertForSuggestionDto;
 import com.maco.followthebeat.v2.core.entity.Artist;
+import com.maco.followthebeat.v2.core.entity.Concert;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -24,10 +25,5 @@ public class ArtistMapper {
                 .build();
     }
 
-    public ArtistForSuggestionDto toSuggestionDto(Artist artist) {
-        return ArtistForSuggestionDto.builder()
-                .name(artist.getName())
-                .genres(artist.getGenres())
-                .build();
-    }
+
 }

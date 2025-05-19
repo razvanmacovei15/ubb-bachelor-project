@@ -12,6 +12,7 @@ import java.util.UUID;
 public interface ConcertCompatibilityService {
     ConcertCompatibilityDto create(ConcertCompatibilityDto dto);
     List<ConcertCompatibilityDto> getAll();
+    ConcertCompatibilityDto getByConcertAndUser(UUID concertId, UUID userId);
     ConcertCompatibilityDto getById(UUID id);
     List<ConcertCompatibilityDto> getByUser(UUID userId);
     List<ConcertCompatibilityDto> getByConcert(UUID concertId);

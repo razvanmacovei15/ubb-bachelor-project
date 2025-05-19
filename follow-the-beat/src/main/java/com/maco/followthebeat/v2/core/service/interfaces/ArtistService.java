@@ -1,6 +1,6 @@
 package com.maco.followthebeat.v2.core.service.interfaces;
 
-import com.maco.followthebeat.v2.core.dto.ArtistForSuggestionDto;
+import com.maco.followthebeat.v2.core.dto.ConcertForSuggestionDto;
 import com.maco.followthebeat.v2.core.entity.Artist;
 import com.maco.followthebeat.v2.core.generics.BaseCrudService;
 
@@ -13,6 +13,4 @@ public interface ArtistService extends BaseCrudService<Artist> {
     List<Artist> findAllArtistsByFestivalId(UUID festivalId);
     Artist fetchDetailsFromSpotify(Artist artist, UUID userId);
     List<Artist> getAll();
-    List<ArtistForSuggestionDto> generateFestivalPayload(UUID festivalId);
-    List<ArtistForSuggestionDto> generateAllPayload();
 }

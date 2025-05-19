@@ -1,6 +1,6 @@
 package com.maco.followthebeat.v2.user.mapper;
 
-import com.maco.followthebeat.v2.core.dto.ArtistForSuggestionDto;
+import com.maco.followthebeat.v2.core.dto.ConcertForSuggestionDto;
 import com.maco.followthebeat.v2.spotify.artists.entity.BaseUserTopArtist;
 import com.maco.followthebeat.v2.spotify.enums.SpotifyTimeRange;
 import com.maco.followthebeat.v2.user.dto.UserEmbeddingPayloadDto;
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class UserEmbeddingPayloadMapper {
     public UserEmbeddingPayloadDto toDto(UserListeningProfile profile,
                                          SpotifyTimeRange timeRange,
-                                         List<ArtistForSuggestionDto> artists,
+                                         List<ConcertForSuggestionDto> artists,
                                          UUID userId) {
         UserEmbeddingPayloadDto dto =  new UserEmbeddingPayloadDto();
         List<String> topArtists = switch(timeRange){

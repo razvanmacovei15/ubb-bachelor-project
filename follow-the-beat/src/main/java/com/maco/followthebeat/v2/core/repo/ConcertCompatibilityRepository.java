@@ -13,6 +13,7 @@ import java.util.UUID;
 public interface ConcertCompatibilityRepository extends JpaRepository<ConcertCompatibility, UUID>, JpaSpecificationExecutor<ConcertCompatibility> {
     List<ConcertCompatibility> findByUserId(UUID userId);
     List<ConcertCompatibility> findByConcertId(UUID concertId);
+    ConcertCompatibility findByConcertIdAndUserId(UUID concertId, UUID userId);
     boolean existsByUserIdAndConcertId(UUID userId, UUID concertId);
     List<ConcertCompatibility> findAllByUserId(UUID userId);
     //v2 apis

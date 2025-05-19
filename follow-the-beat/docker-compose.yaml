@@ -10,8 +10,7 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: ${SPRING_PROFILE}  # Tells Spring to use 'application-server.properties'
       FRONTEND_URL: ${FRONTEND_URL}  # Frontend URL with default value
-      AI_PORT: ${AI_PORT}  # Port for AI suggestor microservice
-
+      AI_URL: ${AI_URL}  # URL for AI suggestor microservice
       # PostgreSQL environment variables (custom)
       DB_HOST: ${DB_HOST}
       DB_PORT: ${DB_PORT}

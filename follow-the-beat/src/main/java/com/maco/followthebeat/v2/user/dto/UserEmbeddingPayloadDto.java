@@ -1,7 +1,6 @@
 package com.maco.followthebeat.v2.user.dto;
 
-import com.maco.followthebeat.v2.core.dto.ArtistForSuggestionDto;
-import com.maco.followthebeat.v2.core.entity.Artist;
+import com.maco.followthebeat.v2.core.dto.ConcertForSuggestionDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,7 +17,7 @@ import java.util.UUID;
 public class UserEmbeddingPayloadDto {
     private UUID requestId;
     private List<String> topUserArtists;
-    private List<ArtistForSuggestionDto> festivalArtists;
+    private List<ConcertForSuggestionDto> festivalArtists;
     private Map<String, Integer> genreFrequencies;
 
 }

@@ -1,6 +1,7 @@
 package com.maco.followthebeat.v2.core.service.interfaces;
 
 import com.maco.followthebeat.v2.core.dto.ConcertDTO;
+import com.maco.followthebeat.v2.core.dto.ConcertForSuggestionDto;
 import com.maco.followthebeat.v2.core.entity.Concert;
 import com.maco.followthebeat.v2.core.generics.BaseCrudService;
 import com.maco.followthebeat.v2.core.model.ConcertResponseDto;
@@ -20,5 +21,6 @@ public interface ConcertService extends BaseCrudService<Concert> {
     void deleteConcertById(UUID concertId);
     Page<ConcertResponseDto> findConcertsByFestivalId(Optional<String> artist,  Optional<LocalDate> date, Pageable pageable, UUID festivalId);
     long countConcertsByArtistName(String artistName);
+    List<ConcertForSuggestionDto> generateFestivalPayload(UUID festivalId);
 
 }

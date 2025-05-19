@@ -22,7 +22,8 @@ const FestivalsPage: React.FC = () => {
 
   const [festivals, setFestivals] = useState<FestivalDto[]>([]);
 
-  const { addLineupEntry, removeLineupEntry } = useLineupSortingFilteringContext();
+  const { addLineupEntry, removeLineupEntry } =
+    useLineupSortingFilteringContext();
   const onAddToLineup = async (concertId: string) => {
     console.log("[FestivalsPage] onAddToLineup called with:", concertId);
 
@@ -69,9 +70,7 @@ const FestivalsPage: React.FC = () => {
   useEffect(() => {
     const fetchFestivals = async () => {
       try {
-        const res = await axios.get<FestivalDto[]>(`${API_URL}/api/festivals`
-
-        );
+        const res = await axios.get<FestivalDto[]>(`${API_URL}/api/festivals`);
         console.log("Fetched festivals:", res.data);
         setFestivals(res.data);
       } catch (e) {
@@ -209,7 +208,9 @@ const FestivalsPage: React.FC = () => {
             </>
           )}
         </div>
-        <FestivalConcertFilters />
+        <div className="flex flex-col gap-2 ">
+          <FestivalConcertFilters />
+        </div>
       </div>
     </div>
   );
