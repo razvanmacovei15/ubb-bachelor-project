@@ -20,10 +20,7 @@ public interface LineupEntryService extends BaseCrudService<LineupEntry> {
     LineupEntry updateLineupEntry(UUID id, LineupEntryDTO dto, User user);
     Page<LineupEntryDTO> searchLineupEntries(
             UUID userId,
-            Integer hasPriority,
-            Integer hasPriorityGreaterThan,
             Integer hasCompatibilityGreaterThan,
-            Integer minPriority,
             Integer minCompatibility,
             Pageable pageable
     );
@@ -31,10 +28,7 @@ public interface LineupEntryService extends BaseCrudService<LineupEntry> {
     Page<LineupDetailDto> searchLineupDetails(
             UUID userId,
             Optional<String> artistName,
-            Integer hasPriority,
-            Integer hasPriorityGreaterThan,
             Integer hasCompatibilityGreaterThan,
-            Integer minPriority,
             Integer minCompatibility,
             Pageable pageable
     );

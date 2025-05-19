@@ -3,6 +3,8 @@ package com.maco.followthebeat.v2.spotify.auth.service.impl;
 import com.maco.client.v2.SpotifyClient;
 import com.maco.followthebeat.v2.cache.RedisStateCacheServiceImpl;
 import com.maco.followthebeat.v2.common.exceptions.UserNotFoundException;
+import com.maco.followthebeat.v2.core.entity.ConcertCompatibility;
+import com.maco.followthebeat.v2.core.service.interfaces.ConcertCompatibilityService;
 import com.maco.followthebeat.v2.spotify.auth.client.SpotifyClientManager;
 import com.maco.followthebeat.v2.spotify.auth.userdata.entity.SpotifyUserData;
 import com.maco.followthebeat.v2.user.context.UserContext;
@@ -28,7 +30,7 @@ public class AuthServiceImpl implements AuthService {
     private final UserService userService;
     private final SpotifyUserDataService spotifyUserDataService;
     private final UserListeningProfileService userListeningProfileService;
-
+    private final ConcertCompatibilityService concertCompatibilityService;
 
     @Override
     @Transactional
@@ -37,8 +39,10 @@ public class AuthServiceImpl implements AuthService {
         user.setSpotifyUserData(sp);
         user.setHasSpotifyConnected(true);
         storeListeningProfile(user);
+        concertCompatibilityService.initCompatibilities(user.getId());
         userService.updateUser(user);
         log.info("User {} linked Spotify account and is connected {} and active {}", user.getId(), user.isHasSpotifyConnected(), user.isActive());
+        concertCompatibilityService.initCompatibilities(user.getId());
         return user;
     }
 

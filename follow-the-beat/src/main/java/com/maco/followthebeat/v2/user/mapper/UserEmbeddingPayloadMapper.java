@@ -32,7 +32,7 @@ public class UserEmbeddingPayloadMapper {
                     UserGenreFrequency::getGenre,
                     UserGenreFrequency::getCount
                 ));
-        dto.setUserId(userId);
+        dto.setRequestId(userId);
         dto.setTopUserArtists(topArtists);
         dto.setGenreFrequencies(genreMap);
         dto.setFestivalArtists(artists);

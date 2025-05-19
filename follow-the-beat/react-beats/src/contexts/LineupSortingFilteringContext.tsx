@@ -7,8 +7,8 @@ import {useUser} from "./UserContext";
 type LineupSortingFilteringContextType = {
     searchTerm: string;
     setSearchTerm: (term: string) => void;
-    sortBy: "none" | "priority" | "compatibility";
-    setSortBy: (sort: "none" | "priority" | "compatibility") => void;
+    sortBy: "none" | "compatibility" | "artist";
+    setSortBy: (sort: "none" | "compatibility" | "artist") => void;
     itemsPerPage: number;
     setItemsPerPage: (count: number) => void;
     currentPage: number;
@@ -39,9 +39,8 @@ export const LineupSortingFilteringProvider = ({
     const {isConnectedToSpotify, sessionToken} = useUser();
 
     const [searchTerm, setSearchTerm] = useState("");
-    const [sortBy, setSortBy] = useState<"none" | "priority" | "compatibility">(
-        "none"
-    );
+    const [sortBy, setSortBy] = useState<"none" | "compatibility" | "artist">("none");
+
     const [itemsPerPage, setItemsPerPage] = useState(15);
     const [currentPage, setCurrentPage] = useState(1);
     const [lineupEntries, setLineupEntries] = useState<LineupDetailDto[]>([]);
@@ -86,7 +85,7 @@ export const LineupSortingFilteringProvider = ({
             artist: searchTerm,
             page: currentPage - 1,
             size: itemsPerPage,
-            sortBy: sortBy === "priority" ? "priority" : "compatibility",
+            sortBy: sortBy,
             direction: "asc",
         };
 
@@ -114,7 +113,7 @@ export const LineupSortingFilteringProvider = ({
         }
         try {
             const res = await axios.post(`${API_URL}/api/lineup`, entry, {
-                headers: { Authorization: `Bearer ${sessionToken}` },
+                headers: {Authorization: `Bearer ${sessionToken}`},
             });
             await fetchLineupDetails();
             await fetchUserConcertsIds();

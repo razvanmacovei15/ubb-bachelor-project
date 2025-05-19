@@ -60,22 +60,23 @@ public class LineupEntryController {
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "addedAt") String sortBy,
             @RequestParam(defaultValue = "desc") String direction,
-            @RequestParam(required = false) Integer hasPriority,
-            @RequestParam(required = false) Integer hasPriorityGreaterThan,
             @RequestParam(required = false) Integer hasCompatibilityGreaterThan,
-            @RequestParam(required = false) Integer minPriority,
             @RequestParam(required = false) Integer minCompatibility,
             PagedResourcesAssembler<LineupEntryDTO> pagedResourcesAssembler
     ) {
         User user = userContext.getOrThrow();
-        Pageable pageable = PageRequest.of(page, size,
-                direction.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending());
+        Sort sort;
+        if (sortBy.equals("artist")) {
+            sort = Sort.by(Sort.Direction.fromString(direction), "concert.artist.name");
+        } else {
+            sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+        }
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
         Page<LineupEntryDTO> result = lineupEntryService.searchLineupEntries(
                 user.getId(),
-                hasPriority,
-                hasPriorityGreaterThan,
                 hasCompatibilityGreaterThan,
-                minPriority,
                 minCompatibility,
                 pageable
         );
@@ -91,23 +92,24 @@ public class LineupEntryController {
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "addedAt") String sortBy,
             @RequestParam(defaultValue = "asc") String direction,
-            @RequestParam(required = false) Integer hasPriority,
-            @RequestParam(required = false) Integer hasPriorityGreaterThan,
             @RequestParam(required = false) Integer hasCompatibilityGreaterThan,
-            @RequestParam(required = false) Integer minPriority,
             @RequestParam(required = false) Integer minCompatibility,
             PagedResourcesAssembler<LineupDetailDto> pagedResourcesAssembler
     ) {
         User user = userContext.getOrThrow();
-        Pageable pageable = PageRequest.of(page, size,
-                direction.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending());
+        Sort sort;
+        if (sortBy.equals("artist")) {
+            sort = Sort.by(Sort.Direction.fromString(direction), "concert.artist.name");
+        } else {
+            sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+        }
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
         Page<LineupDetailDto> result = lineupEntryService.searchLineupDetails(
                 user.getId(),
                 artist,
-                hasPriority,
-                hasPriorityGreaterThan,
                 hasCompatibilityGreaterThan,
-                minPriority,
                 minCompatibility,
                 pageable
         );

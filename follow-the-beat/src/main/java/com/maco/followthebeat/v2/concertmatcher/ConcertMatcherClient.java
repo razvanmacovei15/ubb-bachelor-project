@@ -34,7 +34,7 @@ public class ConcertMatcherClient {
 
         try (Response response = client.newCall(httpRequest).execute()) {
             if (!response.isSuccessful()) {
-                throw new IOException("Unexpected response code: " + response.code());
+                throw new IOException("Unexpected response code: " + response.code() + response.body());
             }
             return objectMapper.readValue(response.body().string(), MatchResponse.class);
         }

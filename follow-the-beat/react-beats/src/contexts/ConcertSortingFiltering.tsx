@@ -1,6 +1,7 @@
 import {createContext, useContext, useState} from "react";
-import {ConcertDto} from "../types/ConcertDto";
+import {ConcertResponseDto} from "../types/ConcertResponseDto.ts";
 import axios from "axios";
+import {useUser} from "./UserContext";
 
 type ConcertSortingFilteringContextType = {
     searchTerm: string;
@@ -13,7 +14,7 @@ type ConcertSortingFilteringContextType = {
     setItemsPerPage: (count: number) => void;
     currentPage: number;
     setCurrentPage: (page: number) => void;
-    concerts: ConcertDto[];
+    concerts: ConcertResponseDto[];
     totalCount: number;
     resetFilters: () => void;
     festivalId: string | null;
@@ -32,12 +33,13 @@ export const ConcertSortingFilteringProvider = ({
                                                 }: {
     children: React.ReactNode;
 }) => {
+    const {isConnectedToSpotify, sessionToken} = useUser();
     const [searchTerm, setSearchTerm] = useState("");
     const [sortBy, setSortBy] = useState<"none" | "artist" | "time">("none");
     const [date, setDate] = useState<string | null>(null);
     const [itemsPerPage, setItemsPerPage] = useState(15);
     const [currentPage, setCurrentPage] = useState(1);
-    const [concerts, setConcerts] = useState<ConcertDto[]>([]);
+    const [concerts, setConcerts] = useState<ConcertResponseDto[]>([]);
     const [totalCount, setTotalCount] = useState(0);
     const [festivalId, setFestivalId] = useState<string | null>(null);
 
@@ -48,25 +50,25 @@ export const ConcertSortingFilteringProvider = ({
             artist: searchTerm,
             page: currentPage - 1,
             size: itemsPerPage,
-            sortBy: sortBy === "artist" ? "artist.name" : "schedule.date",
+            sortBy: sortBy === "artist" ? "compatibility" : "createdAt",
             direction: "asc",
             ...(date ? {date} : {}),
         };
 
-        const response = await axios.get(`${API_URL}/api/v1/concerts`, {params});
+        const endpoint = isConnectedToSpotify ? "/api/v2/concerts" : "/api/v1/concerts";
+        const headers = isConnectedToSpotify ? {Authorization: `Bearer ${sessionToken}`} : {};
+
+        const response = await axios.get(`${API_URL}${endpoint}`, {
+            params,
+            headers
+        });
         const data = response.data as {
-            _embedded?: { concertDTOList: ConcertDto[] };
+            _embedded?: { concertResponseDtoList: ConcertResponseDto[] };
             page?: { totalElements: number };
         };
+        console.log("Concerts data:", response);
+        const concertsList = data._embedded?.concertResponseDtoList || [];
 
-        const concertsList = data._embedded?.concertDTOList || [];
-        concertsList.forEach((concert) => {
-            console.log("Concert ID:", concert.id);
-            console.log("Concert:", concert);
-            console.log("Artist:", concert.artistDTO.name);
-            console.log("Location:", concert.locationDTO.name);
-            console.log("Schedule:", concert.scheduleDTO.date);
-        });
         setConcerts(concertsList);
         setTotalCount(data.page?.totalElements || 0);
     };
@@ -76,21 +78,26 @@ export const ConcertSortingFilteringProvider = ({
             artist: searchTerm,
             page: currentPage - 1,
             size: itemsPerPage,
-            sortBy: sortBy === "artist" ? "artist.name" : "schedule.date",
+            sortBy: sortBy === "artist" ? "compatibility" : "createdAt",
             direction: "asc",
             festivalId,
             ...(date ? {date} : {}),
         };
 
-        const response = await axios.get(`${API_URL}/api/v1/concerts/by-festival`, {
+        const endpoint = isConnectedToSpotify ? "/api/v2/concerts/festival" : "/api/v1/concerts/by-festival";
+        const headers = isConnectedToSpotify ? {Authorization: `Bearer ${sessionToken}`} : {};
+
+        const response = await axios.get(`${API_URL}${endpoint}`, {
             params,
+            headers
         });
         const data = response.data as {
-            _embedded?: { concertDTOList: ConcertDto[] };
+            _embedded?: { concertResponseDtoList: ConcertResponseDto[] };
             page?: { totalElements: number };
         };
+        console.log("Concerts data:", response);
 
-        const concertsList = data._embedded?.concertDTOList || [];
+        const concertsList = data._embedded?.concertResponseDtoList || [];
         setConcerts(concertsList);
         setTotalCount(data.page?.totalElements || 0);
     };
@@ -99,18 +106,6 @@ export const ConcertSortingFilteringProvider = ({
         resetFilters();
         setFestivalId(id);
     };
-
-    // useEffect(() => {
-    //   if (festivalId) {
-    //     fetchFestivalConcerts(festivalId);
-    //   } else {
-    //     fetchConcerts();
-    //   }
-    // }, [searchTerm, sortBy, date, itemsPerPage, currentPage, festivalId]);
-    //
-    // useEffect(() => {
-    //   setCurrentPage(1);
-    // }, [searchTerm, sortBy, date, itemsPerPage]);
 
     const resetFilters = () => {
         setSearchTerm("");

@@ -26,20 +26,8 @@ public class LineupEntrySpecification {
         return (root, query, cb) -> cb.equal(root.get("concert").get("id"), concertId);
     }
 
-    public static Specification<LineupEntry> hasPriority(Integer priority) {
-        return (root, query, cb) -> cb.equal(root.get("priority"), priority);
-    }
-
-    public static Specification<LineupEntry> hasPriorityGreaterThan(Integer minPriority) {
-        return (root, query, cb) -> cb.greaterThan(root.get("priority"), minPriority);
-    }
-
     public static Specification<LineupEntry> hasCompatibilityGreaterThan(Integer minCompatibility) {
         return (root, query, cb) -> cb.greaterThan(root.get("compatibility"), minCompatibility);
-    }
-
-    public static Specification<LineupEntry> hasMinPriority(Integer minPriority) {
-        return (root, query, cb) -> cb.greaterThanOrEqualTo(root.get("priority"), minPriority);
     }
 
     public static Specification<LineupEntry> hasMinCompatibility(Integer minCompatibility) {

@@ -4,6 +4,7 @@ import com.maco.followthebeat.v2.core.dto.ConcertDTO;
 import com.maco.followthebeat.v2.core.entity.Concert;
 import com.maco.followthebeat.v2.core.generics.BaseCrudServiceImpl;
 import com.maco.followthebeat.v2.core.mappers.ConcertMapper;
+import com.maco.followthebeat.v2.core.model.ConcertResponseDto;
 import com.maco.followthebeat.v2.core.repo.ConcertRepo;
 import com.maco.followthebeat.v2.core.service.interfaces.ConcertService;
 import com.maco.followthebeat.v2.core.specification.ConcertSpecification;
@@ -46,8 +47,8 @@ public class ConcertServiceImpl extends BaseCrudServiceImpl<Concert> implements 
     }
 
     @Override
-    public Page<ConcertDTO> convertToDTO(Page<Concert> concerts) {
-        return concerts.map(concertMapper::fromEntity);
+    public Page<ConcertResponseDto> convertToDTO(Page<Concert> concerts) {
+        return concerts.map(concertMapper::fromEntityToResponseDto);
     }
 
     @Override
@@ -66,7 +67,7 @@ public class ConcertServiceImpl extends BaseCrudServiceImpl<Concert> implements 
     }
 
     @Override
-    public Page<ConcertDTO> findConcertsByFestivalId(
+    public Page<ConcertResponseDto> findConcertsByFestivalId(
             Optional<String> artist,
             Optional<LocalDate> date,
             Pageable pageable,
@@ -82,7 +83,7 @@ public class ConcertServiceImpl extends BaseCrudServiceImpl<Concert> implements 
             spec = spec.and(ConcertSpecification.hasDate(date.get()));
         }
 
-        return concertRepo.findAll(spec, pageable).map(concertMapper::fromEntity);
+        return concertRepo.findAll(spec, pageable).map(concertMapper::fromEntityToResponseDto);
     }
 
     @Override

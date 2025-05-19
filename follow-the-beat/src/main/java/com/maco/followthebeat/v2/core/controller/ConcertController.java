@@ -2,6 +2,7 @@ package com.maco.followthebeat.v2.core.controller;
 
 import com.maco.followthebeat.v2.core.dto.ConcertDTO;
 import com.maco.followthebeat.v2.core.entity.Concert;
+import com.maco.followthebeat.v2.core.model.ConcertResponseDto;
 import com.maco.followthebeat.v2.core.service.interfaces.ConcertService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,30 +32,30 @@ public class ConcertController {
     private final ConcertService concertService;
 
     @GetMapping
-    public PagedModel<EntityModel<ConcertDTO>> getConcerts(
+    public PagedModel<EntityModel<ConcertResponseDto>> getConcerts(
             @RequestParam Optional<String> artist,
             @RequestParam Optional<LocalDate> date,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "createdAt") String sortBy,
             @RequestParam(defaultValue = "desc") String direction,
-            PagedResourcesAssembler<ConcertDTO> pagedResourcesAssembler
+            PagedResourcesAssembler<ConcertResponseDto> pagedResourcesAssembler
     ) {
         Pageable pageable = PageRequest.of(page, size,
                 direction.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending());
 
         Page<Concert> concerts = concertService.getConcerts(artist, date, pageable);
-        log.info("first concert artist: {}", concerts.getContent().get(0).getArtist().getName());
-        log.info("first concert spotify url: {}", concerts.getContent().get(0).getArtist().getSpotifyUrl());
-        Page<ConcertDTO> dtoPage = concertService.convertToDTO(concerts);
+        log.info("first concert artist: {}", concerts.getContent().getFirst().getArtist().getName());
+        log.info("first concert spotify url: {}", concerts.getContent().getFirst().getArtist().getSpotifyUrl());
+        Page<ConcertResponseDto> dtoPage = concertService.convertToDTO(concerts);
         dtoPage.getContent().forEach(concert -> {
-            log.info("Concert ID: {}, Artist: {}", concert.getId(), concert.getArtistDTO().getName());
+            log.info("Concert ID: {}, Artist: {}", concert.getConcertId(), concert.getArtistName());
         });
         return pagedResourcesAssembler.toModel(dtoPage);
     }
 
     @GetMapping("/by-festival")
-    public PagedModel<EntityModel<ConcertDTO>> getConcertsByFestival(
+    public PagedModel<EntityModel<ConcertResponseDto>> getConcertsByFestival(
             @RequestParam UUID festivalId,
             @RequestParam Optional<String> artist,
             @RequestParam Optional<LocalDate> date,
@@ -62,15 +63,15 @@ public class ConcertController {
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "createdAt") String sortBy,
             @RequestParam(defaultValue = "desc") String direction,
-            PagedResourcesAssembler<ConcertDTO> pagedResourcesAssembler
+            PagedResourcesAssembler<ConcertResponseDto> pagedResourcesAssembler
     ) {
         Pageable pageable = PageRequest.of(page, size,
                 direction.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending());
 
-        Page<ConcertDTO> concertPage = concertService.findConcertsByFestivalId(artist, date, pageable, festivalId);
+        Page<ConcertResponseDto> concertPage = concertService.findConcertsByFestivalId(artist, date, pageable, festivalId);
         //log every concert
         concertPage.getContent().forEach(concert -> {
-            log.info("Concert ID: {}, Artist: {}", concert.getId(), concert.getArtistDTO().getName());
+            log.info("Concert ID: {}, Artist: {}", concert.getConcertId(), concert.getArtistName());
         });
         return pagedResourcesAssembler.toModel(concertPage);
     }

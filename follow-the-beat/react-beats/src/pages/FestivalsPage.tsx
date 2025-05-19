@@ -68,11 +68,10 @@ const FestivalsPage: React.FC = () => {
 
   useEffect(() => {
     const fetchFestivals = async () => {
-      const sessionToken = localStorage.getItem("sessionToken");
       try {
-        const res = await axios.get<FestivalDto[]>(`${API_URL}/api/festivals`, {
-          headers: { Authorization: `Bearer ${sessionToken}` },
-        });
+        const res = await axios.get<FestivalDto[]>(`${API_URL}/api/festivals`
+
+        );
         console.log("Fetched festivals:", res.data);
         setFestivals(res.data);
       } catch (e) {
@@ -193,10 +192,10 @@ const FestivalsPage: React.FC = () => {
               <div className="concert-grid">
                 {concerts.map((concert) => (
                   <ConcertCard
-                    key={concert.id}
+                    key={concert.concertId}
                     concert={concert}
-                    onAdd={() => onAddToLineup(concert.id)}
-                    onRemove={() => removeLineupEntry(concert.id)}
+                    onAdd={() => onAddToLineup(concert.concertId)}
+                    onRemove={() => removeLineupEntry(concert.concertId)}
                   />
                 ))}
               </div>

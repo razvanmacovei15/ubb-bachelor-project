@@ -1,6 +1,7 @@
 package com.maco.followthebeat.v2.core.specification;
 
 import com.maco.followthebeat.v2.core.entity.Concert;
+import com.maco.followthebeat.v2.core.entity.LineupEntry;
 import com.maco.followthebeat.v2.core.entity.Stage;
 import jakarta.persistence.criteria.*;
 import org.springframework.data.jpa.domain.Specification;
@@ -26,5 +27,4 @@ public class ConcertSpecification {
             return cb.equal(stage.get("festival").get("id"), festivalId);
         };
     }
-
 }

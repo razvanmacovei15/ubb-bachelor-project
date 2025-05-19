@@ -3,7 +3,13 @@ package com.maco.followthebeat.v2.user.controller;
 import com.maco.client.v2.SpotifyClient;
 import com.maco.client.v2.model.SpotifyArtist;
 import com.maco.followthebeat.v2.cache.RedisStateCacheService;
+import com.maco.followthebeat.v2.concertmatcher.ConcertMatcherClient;
+import com.maco.followthebeat.v2.concertmatcher.MatchResponse;
+import com.maco.followthebeat.v2.concertmatcher.MatchResult;
+import com.maco.followthebeat.v2.core.dto.ConcertCompatibilityDto;
+import com.maco.followthebeat.v2.core.entity.ConcertCompatibility;
 import com.maco.followthebeat.v2.core.service.interfaces.ArtistService;
+import com.maco.followthebeat.v2.core.service.interfaces.ConcertCompatibilityService;
 import com.maco.followthebeat.v2.spotify.auth.client.SpotifyClientManager;
 import com.maco.followthebeat.v2.spotify.enums.SpotifyTimeRange;
 import com.maco.followthebeat.v2.user.context.IsConnected;
@@ -19,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 @Slf4j
@@ -27,10 +34,13 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserSuggestionsController {
     private final UserContext userContext;
+    private final ConcertMatcherClient concertMatcherClient;
     private final UserListeningProfileService userListeningProfileService;
+    private final ConcertCompatibilityService concertCompatibilityService;
 
     @IsConnected
-    @GetMapping UserEmbeddingPayloadDto getSuggestionsForFestival(SpotifyTimeRange range, UUID festivalId) {
+    @GetMapping
+    void getSuggestionsForFestival(SpotifyTimeRange range, UUID festivalId) {
         log.info("Requesting suggestions for festival {} in time range {}", festivalId, range);
         User user = userContext.getOrThrow();
 
@@ -40,10 +50,21 @@ public class UserSuggestionsController {
                 range,
                 festivalId
         );
-
-
-
-        return payloadDto;
+        try {
+            MatchResponse matchResponse = concertMatcherClient.matchConcerts(payloadDto);
+            if (matchResponse.requestId.equals(user.getId())) {
+                List<MatchResult> matches = matchResponse.matches;
+                for (MatchResult match : matches) {
+                    log.info("Match result: {} with score {}", match.concertId, match.score);
+                    ConcertCompatibilityDto compatibilityDto = ConcertCompatibilityDto.builder()
+                            .userId(user.getId())
+                            .compatibility(match.score)
+                            .build();
+                    concertCompatibilityService.create(compatibilityDto);
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
-
 }

@@ -16,7 +16,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserEmbeddingPayloadDto {
-    private UUID userId;
+    private UUID requestId;
     private List<String> topUserArtists;
     private List<ArtistForSuggestionDto> festivalArtists;
     private Map<String, Integer> genreFrequencies;

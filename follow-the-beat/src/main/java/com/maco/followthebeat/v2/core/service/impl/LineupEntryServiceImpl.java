@@ -58,27 +58,16 @@ public class LineupEntryServiceImpl extends BaseCrudServiceImpl<LineupEntry> imp
 
     public Page<LineupEntryDTO> searchLineupEntries(
             UUID userId,
-            Integer hasPriority,
-            Integer hasPriorityGreaterThan,
             Integer hasCompatibilityGreaterThan,
-            Integer minPriority,
             Integer minCompatibility,
             Pageable pageable
     ) {
         Specification<LineupEntry> spec = Specification.where(LineupEntrySpecification.hasUserId(userId));
 
-        if (hasPriority != null) {
-            spec = spec.and(LineupEntrySpecification.hasPriority(hasPriority));
-        }
-        if (hasPriorityGreaterThan != null) {
-            spec = spec.and(LineupEntrySpecification.hasPriorityGreaterThan(hasPriorityGreaterThan));
-        }
         if (hasCompatibilityGreaterThan != null) {
             spec = spec.and(LineupEntrySpecification.hasCompatibilityGreaterThan(hasCompatibilityGreaterThan));
         }
-        if (minPriority != null) {
-            spec = spec.and(LineupEntrySpecification.hasMinPriority(minPriority));
-        }
+
         if (minCompatibility != null) {
             spec = spec.and(LineupEntrySpecification.hasMinCompatibility(minCompatibility));
         }
@@ -95,10 +84,7 @@ public class LineupEntryServiceImpl extends BaseCrudServiceImpl<LineupEntry> imp
     public Page<LineupDetailDto> searchLineupDetails(
             UUID userId,
             Optional<String> artistName,
-            Integer hasPriority,
-            Integer hasPriorityGreaterThan,
             Integer hasCompatibilityGreaterThan,
-            Integer minPriority,
             Integer minCompatibility,
             Pageable pageable
     ) {
@@ -106,17 +92,8 @@ public class LineupEntryServiceImpl extends BaseCrudServiceImpl<LineupEntry> imp
         if (artistName.isPresent()) {
             spec = spec.and(LineupEntrySpecification.hasArtistName(artistName.get()));
         }
-        if (hasPriority != null) {
-            spec = spec.and(LineupEntrySpecification.hasPriority(hasPriority));
-        }
-        if (hasPriorityGreaterThan != null) {
-            spec = spec.and(LineupEntrySpecification.hasPriorityGreaterThan(hasPriorityGreaterThan));
-        }
         if (hasCompatibilityGreaterThan != null) {
             spec = spec.and(LineupEntrySpecification.hasCompatibilityGreaterThan(hasCompatibilityGreaterThan));
-        }
-        if (minPriority != null) {
-            spec = spec.and(LineupEntrySpecification.hasMinPriority(minPriority));
         }
         if (minCompatibility != null) {
             spec = spec.and(LineupEntrySpecification.hasMinCompatibility(minCompatibility));

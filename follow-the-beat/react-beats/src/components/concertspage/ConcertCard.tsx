@@ -1,37 +1,37 @@
 import "./ConcertCard.css";
-import {ConcertDto} from "../../types/ConcertDto.ts";
+import {ConcertResponseDto} from "@/types/ConcertResponseDto.ts";
 import {useState} from "react";
 import {useUser} from "@/contexts/UserContext.tsx";
 import {useLineupSortingFilteringContext} from "@/contexts/LineupSortingFilteringContext.tsx";
 
 interface ConcertCardProps {
-    concert: ConcertDto;
-    onAdd: (concert: ConcertDto) => void;
+    concert: ConcertResponseDto;
+    onAdd: (concert: ConcertResponseDto) => void;
     onRemove: (id: string) => void;
 }
 
 const ConcertCard = ({concert, onAdd, onRemove}: ConcertCardProps) => {
-    const {artistDTO, locationDTO, scheduleDTO} = concert;
+
     const [imgError, setImgError] = useState(false);
     const {isConnectedToSpotify} = useUser();
-    const {isConcertInLineup, removeLineupEntry} = useLineupSortingFilteringContext();
+    const {isConcertInLineup} = useLineupSortingFilteringContext();
 
     const bgImage =
-        !imgError && artistDTO.imgUrl
-            ? `url(${artistDTO.imgUrl})`
+        !imgError && concert.artistImageUrl
+            ? `url(${concert.artistImageUrl})`
             : `url(/images/image.jpg)`;
 
-    const performanceDay = scheduleDTO.date
-        ? new Date(scheduleDTO.date).toLocaleDateString(undefined, {
+    const performanceDay = concert.date
+        ? new Date(concert.date).toLocaleDateString(undefined, {
             weekday: "long",
             month: "short",
             day: "numeric",
         })
         : "TBA";
 
-    const isInLineup = isConcertInLineup(concert.id);
+    const isInLineup = isConcertInLineup(concert.concertId);
     console.log("[ConcertCard] Render", {
-        concertId: concert.id,
+        concertId: concert.concertId,
         isInLineup,
         isConnectedToSpotify,
     });
@@ -43,15 +43,15 @@ const ConcertCard = ({concert, onAdd, onRemove}: ConcertCardProps) => {
             onError={() => setImgError(true)}
         >
             <div className="concert-overlay">
-                <h3>{artistDTO.name}</h3>
+                <h3>{concert.artistName}</h3>
                 <p className="datetime">{performanceDay}</p>
-                <p className="location">Stage: {locationDTO.name}</p>
+                <p className="location">Stage: {concert.stageName}</p>
                 {isConnectedToSpotify && (
                     <div className="button-group">
                         {isInLineup ? (
                             <button
                                 className="remove-button"
-                                onClick={() => onRemove(concert.id)}
+                                onClick={() => onRemove(concert.concertId)}
                             >
                                 Remove from lineup
                             </button>
@@ -60,7 +60,7 @@ const ConcertCard = ({concert, onAdd, onRemove}: ConcertCardProps) => {
                             <button
                                 className="add-button"
                                 onClick={() => {
-                                    console.log("[ConcertCard] Add clicked for:", concert.id);
+                                    console.log("[ConcertCard] Add clicked for:", concert.concertId);
                                     onAdd(concert);
                                 }}
                             >

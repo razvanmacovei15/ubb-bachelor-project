@@ -1,7 +1,7 @@
-import {ConcertDto} from "../types/ConcertDto.ts";
+import {ConcertResp} from "../types/ConcertResponseDto.ts";
 import LineupConcert from "../types/LineupConcert";
 
-export const addToLineup = (lineup: LineupConcert[], concert: ConcertDto): LineupConcert[] => {
+export const addToLineup = (lineup: LineupConcert[], concert: ConcertResp): LineupConcert[] => {
     if (lineup.some(c => c.id === concert.id)) return lineup;
 
     const newLineupConcert: LineupConcert = {
