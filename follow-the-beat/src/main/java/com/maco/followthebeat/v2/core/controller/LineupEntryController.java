@@ -65,14 +65,14 @@ public class LineupEntryController {
             PagedResourcesAssembler<LineupEntryDTO> pagedResourcesAssembler
     ) {
         User user = userContext.getOrThrow();
-        Sort sort;
-        if (sortBy.equals("artist")) {
-            sort = Sort.by(Sort.Direction.fromString(direction), "concert.artist.name");
-        } else {
-            sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+        Sort sort = Sort.unsorted();
+        if (!sortBy.equalsIgnoreCase("none")) {
+            sort = direction.equalsIgnoreCase("desc")
+                    ? Sort.by(sortBy).descending()
+                    : Sort.by(sortBy).ascending();
         }
-
         Pageable pageable = PageRequest.of(page, size, sort);
+
 
         Page<LineupEntryDTO> result = lineupEntryService.searchLineupEntries(
                 user.getId(),
@@ -97,13 +97,12 @@ public class LineupEntryController {
             PagedResourcesAssembler<LineupDetailDto> pagedResourcesAssembler
     ) {
         User user = userContext.getOrThrow();
-        Sort sort;
-        if (sortBy.equals("artist")) {
-            sort = Sort.by(Sort.Direction.fromString(direction), "concert.artist.name");
-        } else {
-            sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+        Sort sort = Sort.unsorted();
+        if (!sortBy.equalsIgnoreCase("none")) {
+            sort = direction.equalsIgnoreCase("desc")
+                    ? Sort.by(sortBy).descending()
+                    : Sort.by(sortBy).ascending();
         }
-
         Pageable pageable = PageRequest.of(page, size, sort);
 
         Page<LineupDetailDto> result = lineupEntryService.searchLineupDetails(
