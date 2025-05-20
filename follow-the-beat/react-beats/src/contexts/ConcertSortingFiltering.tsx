@@ -22,6 +22,7 @@ type ConcertSortingFilteringContextType = {
     resetAndSelectFestival: (id: string | null) => void;
     fetchConcerts: () => Promise<void>;
     fetchFestivalConcerts: (festivalId: string) => Promise<void>;
+    hasFestival: boolean;
 };
 
 const ConcertSortingFilteringContext = createContext<
@@ -42,10 +43,31 @@ export const ConcertSortingFilteringProvider = ({
     const [concerts, setConcerts] = useState<ConcertResponseDto[]>([]);
     const [totalCount, setTotalCount] = useState(0);
     const [festivalId, setFestivalId] = useState<string | null>(null);
-
+    const [hasFestival, setHasFestival] = useState(false);
     const API_URL = import.meta.env.VITE_API_URL;
 
+    const checkHasFestival = async () => {
+        const params = {
+            festivalId,
+        };
+
+        const response = await axios.get(`${API_URL}/api/user/hasFestival`, {
+            params,
+            headers: {
+                Authorization: `Bearer ${sessionToken}`
+            }
+        });
+        const data = response.data as {
+            hasFestival: boolean;
+        };
+        console.log("Has festival data:", response);
+
+        setHasFestival(data.hasFestival);
+
+    }
+
     const fetchConcerts = async () => {
+        checkHasFestival();
         const params = {
             artist: searchTerm,
             page: currentPage - 1,
@@ -74,6 +96,8 @@ export const ConcertSortingFilteringProvider = ({
     };
 
     const fetchFestivalConcerts = async (festivalId: string) => {
+        checkHasFestival();
+
         const params = {
             artist: searchTerm,
             page: currentPage - 1,
@@ -135,6 +159,7 @@ export const ConcertSortingFilteringProvider = ({
                 resetAndSelectFestival,
                 fetchConcerts,
                 fetchFestivalConcerts,
+                hasFestival,
             }}
         >
             {children}

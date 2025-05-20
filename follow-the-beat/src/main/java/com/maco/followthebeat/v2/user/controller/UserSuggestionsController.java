@@ -7,9 +7,11 @@ import com.maco.followthebeat.v2.concertmatcher.ConcertMatcherClient;
 import com.maco.followthebeat.v2.concertmatcher.MatchResponse;
 import com.maco.followthebeat.v2.concertmatcher.MatchResult;
 import com.maco.followthebeat.v2.core.dto.ConcertCompatibilityDto;
+import com.maco.followthebeat.v2.core.dto.FestivalUserDto;
 import com.maco.followthebeat.v2.core.entity.ConcertCompatibility;
 import com.maco.followthebeat.v2.core.service.interfaces.ArtistService;
 import com.maco.followthebeat.v2.core.service.interfaces.ConcertCompatibilityService;
+import com.maco.followthebeat.v2.core.service.interfaces.FestivalUserService;
 import com.maco.followthebeat.v2.spotify.auth.client.SpotifyClientManager;
 import com.maco.followthebeat.v2.spotify.enums.SpotifyTimeRange;
 import com.maco.followthebeat.v2.user.context.IsConnected;
@@ -37,6 +39,7 @@ public class UserSuggestionsController {
     private final ConcertMatcherClient concertMatcherClient;
     private final UserListeningProfileService userListeningProfileService;
     private final ConcertCompatibilityService concertCompatibilityService;
+    private final FestivalUserService festivalUserService;
 
     @IsConnected
     @GetMapping
@@ -67,8 +70,10 @@ public class UserSuggestionsController {
                     concertCompatibilityService.update(existingCompatibilityDto.getId(), existingCompatibilityDto);
                 }
                 log.info("All match results: {}", matchResponse.getMatches());
-
             }
+            FestivalUserDto festivalUserDto = festivalUserService.getById(festivalId);
+            festivalUserDto.setGeneratedCompatibility(true);
+            festivalUserService.update(festivalUserDto.getId(), festivalUserDto);
             return ResponseEntity.ok(matchResponse);
         } catch (IOException e) {
             throw new RuntimeException(e);

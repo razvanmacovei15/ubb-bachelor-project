@@ -3,7 +3,7 @@ package com.maco.followthebeat.v2.user.service.impl;
 import com.maco.client.v2.SpotifyClient;
 import com.maco.followthebeat.v2.spotify.exceptions.SpotifyAuthenticationException;
 import com.maco.followthebeat.v2.common.exceptions.UserNotFoundException;
-import com.maco.followthebeat.v2.user.dto.CreateUserRequest;
+import com.maco.followthebeat.v2.user.dto.UpdateUserRequest;
 import com.maco.followthebeat.v2.user.entity.User;
 import com.maco.followthebeat.v2.user.repo.UserRepo;
 import com.maco.followthebeat.v2.user.service.interfaces.UserService;
@@ -25,7 +25,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public User createUser(CreateUserRequest userRequest) {
+    public User createUser(UpdateUserRequest userRequest) {
         if (userRepo.existsByEmail(userRequest.getEmail())) {
             throw new IllegalArgumentException("Email already in use: " + userRequest.getEmail());
         }
@@ -36,7 +36,6 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         user.setUsername(userRequest.getUsername());
         user.setEmail(userRequest.getEmail());
-        user.setPasswordHash(passwordEncoder.encode(userRequest.getPassword()));
         user.setAnonymous(false);
 
         return userRepo.save(user);
@@ -60,6 +59,25 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUser(User user) {
+        userRepo.save(user);
+    }
+
+    @Override
+    public void updateUser(UpdateUserRequest userRequest, User user) {
+        if (userRequest.getEmail() != null && !userRequest.getEmail().equals(user.getEmail())) {
+            if (userRepo.existsByEmail(userRequest.getEmail())) {
+                throw new IllegalArgumentException("Email already in use: " + userRequest.getEmail());
+            }
+            user.setEmail(userRequest.getEmail());
+        }
+
+        if (userRequest.getUsername() != null && !userRequest.getUsername().equals(user.getUsername())) {
+            if (userRepo.existsByUsername(userRequest.getUsername())) {
+                throw new IllegalArgumentException("Username already in use: " + userRequest.getUsername());
+            }
+            user.setUsername(userRequest.getUsername());
+        }
+
         userRepo.save(user);
     }
 

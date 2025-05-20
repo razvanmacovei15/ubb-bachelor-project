@@ -83,7 +83,7 @@ def match_concerts(req: MatchRequest):
 
     matches.sort(key=lambda m: m.score, reverse=True)
 
-    print(f"\n✅ Top Matches (Top 5):")
+    print(f"\n✅ Top Matches (Top 15):")
     for match in matches[:15]:
         print(f"  ➤ {match.artistName} | ID: {match.concertId} | Score: {match.score}")
 

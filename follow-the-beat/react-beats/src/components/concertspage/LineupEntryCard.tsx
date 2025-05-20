@@ -84,7 +84,7 @@ const LineupEntryCard = ({lineupDetail}: LineupConcertCardProps) => {
                                 : "bg-gray-400 cursor-not-allowed opacity-60 pointer-events-none"
                         }`}
                     >
-                        <FaSpotify size={18} />
+                        <FaSpotify size={18}/>
                         <span>Listen on Spotify</span>
                     </a>
 
@@ -103,7 +103,7 @@ const LineupEntryCard = ({lineupDetail}: LineupConcertCardProps) => {
                             stroke="currentColor"
                             strokeWidth={2}
                         >
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/>
                         </svg>
                         <span>Remove from Lineup</span>
                     </Button>

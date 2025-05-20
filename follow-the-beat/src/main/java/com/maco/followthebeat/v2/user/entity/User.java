@@ -27,9 +27,6 @@ public class User {
     @Column(name = "email", unique = true)
     private String email;
 
-    @Column(name = "password_hash", unique = true)
-    private String passwordHash;
-
     @Column(name = "is_anonymous")
     private boolean isAnonymous;
 

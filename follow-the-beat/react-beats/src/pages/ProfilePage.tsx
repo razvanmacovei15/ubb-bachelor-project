@@ -41,19 +41,6 @@ const ProfilePage: React.FC = () => {
                             </div>
                             <button className="save-button">Save Changes</button>
                         </div>
-
-                        <div className="settings-section">
-                            <h3>Password</h3>
-                            <div className="form-group">
-                                <label>Current Password</label>
-                                <input type="password" placeholder="Enter current password"/>
-                            </div>
-                            <div className="form-group">
-                                <label>New Password</label>
-                                <input type="password" placeholder="Enter new password"/>
-                            </div>
-                            <button className="save-button">Change Password</button>
-                        </div>
                     </div>
                 )}
             </div>

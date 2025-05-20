@@ -1,11 +1,14 @@
 package com.maco.followthebeat.v2.core.service.impl;
 
 import com.maco.followthebeat.v2.core.dto.ConcertCompatibilityDto;
+import com.maco.followthebeat.v2.core.dto.FestivalUserDto;
 import com.maco.followthebeat.v2.core.entity.*;
 import com.maco.followthebeat.v2.core.model.ConcertResponseDto;
 import com.maco.followthebeat.v2.core.repo.ConcertCompatibilityRepository;
 import com.maco.followthebeat.v2.core.service.interfaces.ConcertCompatibilityService;
 import com.maco.followthebeat.v2.core.service.interfaces.ConcertService;
+import com.maco.followthebeat.v2.core.service.interfaces.FestivalService;
+import com.maco.followthebeat.v2.core.service.interfaces.FestivalUserService;
 import com.maco.followthebeat.v2.core.specification.ConcertCompatibilitySpecification;
 import com.maco.followthebeat.v2.user.service.interfaces.UserService;
 import jakarta.transaction.Transactional;
@@ -27,6 +30,8 @@ public class ConcertCompatibilityServiceImpl implements ConcertCompatibilityServ
     private final ConcertCompatibilityRepository repository;
     private final UserService userService;
     private final ConcertService concertService;
+    private final FestivalUserService festivalUserService;
+    private final FestivalService festivalService;
 
     @Override
     public ConcertCompatibilityDto create(ConcertCompatibilityDto dto) {
@@ -147,21 +152,32 @@ public class ConcertCompatibilityServiceImpl implements ConcertCompatibilityServ
     @Transactional
     @Override
     public void initCompatibilities(UUID userId) {
-        List<Concert> concerts = concertService.getAll();
-        List<UUID> existingConcertIds = repository
-                .findAllByUserId(userId)
-                .stream()
-                .map(cc -> cc.getConcert().getId())
-                .toList();
+        List<Festival> festivals = festivalService.getAll();
+        for(Festival f : festivals){
+            FestivalUserDto festivalUser = FestivalUserDto.builder()
+                    .festivalId(f.getId())
+                    .userId(userId)
+                    .generatedCompatibility(false)
+                    .build();
+            if (!festivalUserService.existsByFestivalIdAndUserId(f.getId(), userId)) {
+                festivalUserService.create(festivalUser);
+            }
+            List<Concert> concertsInFestival = concertService.getConcertsByFestivalId(f.getId());
+            List<UUID> existingConcertIds = repository
+                    .findAllByUserId(userId)
+                    .stream()
+                    .map(cc -> cc.getConcert().getId())
+                    .toList();
 
-        for (Concert c : concerts) {
-            if (!existingConcertIds.contains(c.getId())) {
-                ConcertCompatibilityDto dto = ConcertCompatibilityDto.builder()
-                        .compatibility(0.0f)
-                        .userId(userId)
-                        .concertId(c.getId())
-                        .build();
-                create(dto);
+            for (Concert c : concertsInFestival) {
+                if (!existingConcertIds.contains(c.getId())) {
+                    ConcertCompatibilityDto dto = ConcertCompatibilityDto.builder()
+                            .compatibility(0.0f)
+                            .userId(userId)
+                            .concertId(c.getId())
+                            .build();
+                    create(dto);
+                }
             }
         }
     }
