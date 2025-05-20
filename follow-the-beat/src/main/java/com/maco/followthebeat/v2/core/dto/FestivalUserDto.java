@@ -1,5 +1,6 @@
 package com.maco.followthebeat.v2.core.dto;
 
+import com.maco.followthebeat.v2.spotify.enums.SpotifyTimeRange;
 import lombok.*;
 
 import java.util.UUID;
@@ -13,4 +14,5 @@ public class FestivalUserDto {
     private UUID festivalId;
     private UUID userId;
     private Boolean generatedCompatibility;
+    private SpotifyTimeRange timeRange;
 }

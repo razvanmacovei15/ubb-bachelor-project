@@ -13,12 +13,15 @@ import axios from "axios";
 
 const FestivalConcertFilter = () => {
   const {
+    itemsPerPage,
     festivalId,
     searchTerm,
     setSearchTerm,
     setSortBy,
     setItemsPerPage,
-    setDate,
+    hasFestival,
+    compatibilityTimeRange,
+    fetchFestivalConcerts,
   } = useConcertSortingFilteringContext();
   const { isConnectedToSpotify } = useUser();
   const API_URL = import.meta.env.VITE_API_URL;
@@ -40,6 +43,7 @@ const FestivalConcertFilter = () => {
         },
       });
       console.log(response.data);
+      fetchFestivalConcerts(festivalId);
     } catch (error) {
       console.error(error);
     } finally {
@@ -74,22 +78,14 @@ const FestivalConcertFilter = () => {
           >
             <option value="none">No Sort</option>
             <option value="artist">Artist Name</option>
-            <option value="time">Date & Time</option>
+            <option value="compatibility">Compatibility</option>
           </select>
-        </div>
-
-        <div className="filter-section">
-          <h3>Filter by Date</h3>
-          <input
-            type="date"
-            className="search-input"
-            onChange={(e) => setDate(e.target.value || null)}
-          />
         </div>
 
         <div className="filter-section">
           <h3>Items Per Page</h3>
           <select
+            value={itemsPerPage}
             onChange={(e) => setItemsPerPage(Number(e.target.value))}
             className="filter-select"
           >
@@ -100,6 +96,7 @@ const FestivalConcertFilter = () => {
         </div>
       </div>
       <div className="divider my-4 border-t border-gray-200"></div>
+
       {festivalId && isConnectedToSpotify && (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -107,37 +104,52 @@ const FestivalConcertFilter = () => {
               className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold shadow-lg hover:shadow-xl transition-all w-full h-12 relative"
               disabled={generatingCompatibility}
             >
-              {generatingCompatibility ? (
-                <>
-                  <span className="animate-spin inline-block mr-2 h-4 w-4 border-2 border-white border-t-transparent rounded-full" />
-                  Generating compatibility...
-                </>
-              ) : (
-                "Generate Compatibility"
-              )}
+              <div className="flex items-center justify-center">
+                {generatingCompatibility ? (
+                  <>
+                    <div className="animate-spin inline-block mr-2 h-4 w-4 border-2 border-white border-t-transparent rounded-full" />
+                    <span>Generating compatibility...</span>
+                  </>
+                ) : (
+                  <span>Generate Compatibility</span>
+                )}
+              </div>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56 bg-gray-800/80 backdrop-blur-sm p-1">
             <DropdownMenuItem
-              onClick={() => generateCompatibility(festivalId, "SHORT_TERM")}
+              onClick={() =>
+                festivalId && generateCompatibility(festivalId, "SHORT_TERM")
+              }
               className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold cursor-pointer mb-1 last:mb-0 w-full"
             >
               Over past 4 weeks
             </DropdownMenuItem>
             <DropdownMenuItem
-              onClick={() => generateCompatibility(festivalId, "MEDIUM_TERM")}
+              onClick={() =>
+                festivalId && generateCompatibility(festivalId, "MEDIUM_TERM")
+              }
               className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold cursor-pointer mb-1 last:mb-0 w-full"
             >
               Over past 6 months
             </DropdownMenuItem>
             <DropdownMenuItem
-              onClick={() => generateCompatibility(festivalId, "LONG_TERM")}
+              onClick={() =>
+                festivalId && generateCompatibility(festivalId, "LONG_TERM")
+              }
               className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold cursor-pointer mb-1 last:mb-0 w-full"
             >
               Over all time
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+      )}
+      {hasFestival && compatibilityTimeRange && (
+        <div className="text-sm text-gray-600 mt-4 text-center">
+          Current : {compatibilityTimeRange === "SHORT_TERM" && "Past 4 weeks"}
+          {compatibilityTimeRange === "MEDIUM_TERM" && "Past 6 months"}
+          {compatibilityTimeRange === "LONG_TERM" && "All time"}
+        </div>
       )}
     </div>
   );

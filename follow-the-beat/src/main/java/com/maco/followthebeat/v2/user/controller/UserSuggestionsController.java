@@ -90,6 +90,7 @@ public class UserSuggestionsController {
 
             FestivalUserDto festivalUserDto = festivalUserService.getByFestivalIdAndUserId(festivalId, user.getId());
             festivalUserDto.setGeneratedCompatibility(true);
+            festivalUserDto.setTimeRange(range);
             festivalUserService.update(festivalUserDto.getId(), festivalUserDto);
             log.info("Set generatedCompatibility=true for festivalUser {}", festivalUserDto.getId());
 

@@ -13,4 +13,5 @@ export interface FestivalDto {
     isActive: boolean;
     dtoArtists: ArtistDto[];
     dtoStages: StageDto[];
+    festivalImageUrl: string;
 }

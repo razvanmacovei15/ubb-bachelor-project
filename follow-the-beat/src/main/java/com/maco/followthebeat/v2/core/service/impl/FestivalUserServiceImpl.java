@@ -44,6 +44,7 @@ public class FestivalUserServiceImpl implements FestivalUserService {
         FestivalUser existing = repo.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("FestivalUser not found with id: " + id));
         existing.setGeneratedCompatibility(dto.getGeneratedCompatibility());
+        existing.setTimeRange(dto.getTimeRange());
         return mapper.toDto(repo.save(existing));
     }
 

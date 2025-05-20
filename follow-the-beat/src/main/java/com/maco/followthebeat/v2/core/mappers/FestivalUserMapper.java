@@ -22,6 +22,7 @@ public class FestivalUserMapper {
                 .festivalId(entity.getFestival().getId())
                 .userId(entity.getUser().getId())
                 .generatedCompatibility(entity.getGeneratedCompatibility())
+                .timeRange(entity.getTimeRange())
                 .build();
     }
 
@@ -33,6 +34,7 @@ public class FestivalUserMapper {
                 .festival(festival.orElseThrow(() -> new IllegalArgumentException("Festival not found with id: " + dto.getFestivalId())))
                 .user(user.orElseThrow(() -> new IllegalArgumentException("User not found with id: " + dto.getUserId())))
                 .generatedCompatibility(dto.getGeneratedCompatibility())
+                .timeRange(dto.getTimeRange())
                 .build();
     }
 

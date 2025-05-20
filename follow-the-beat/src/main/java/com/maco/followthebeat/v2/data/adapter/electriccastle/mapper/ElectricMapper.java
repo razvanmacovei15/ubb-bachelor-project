@@ -37,6 +37,7 @@ public class ElectricMapper {
                 .logoUrl(ElectricConstants.LOGO)
                 .websiteUrl(ElectricConstants.WEBSITE)
                 .isActive(checkCurrentDateInRange(startDate, endDate))
+                .festivalImageUrl(ElectricConstants.FESTIVAL_IMG_URL)
                 .build();
     }
 

@@ -22,4 +22,5 @@ public class FestivalDTO {
     private Boolean isActive;
     private List<ArtistDTO> dtoArtists;
     private Set<StageDTO> dtoStages;
+    private String festivalImageUrl;
 }

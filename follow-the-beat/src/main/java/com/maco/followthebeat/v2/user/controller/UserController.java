@@ -33,9 +33,8 @@ public class UserController {
 
     @IsConnected
     @GetMapping("/hasFestival")
-    public Boolean hasFestivalUserGenerated(@RequestParam String festivalId) {
+    public FestivalUserDto hasFestivalUserGenerated(@RequestParam String festivalId) {
         User user = userContext.getOrThrow();
-        FestivalUserDto festivalUser = festivalUserService.getByFestivalIdAndUserId(UUID.fromString(festivalId), user.getId());
-        return festivalUser.getGeneratedCompatibility();
+        return festivalUserService.getByFestivalIdAndUserId(UUID.fromString(festivalId), user.getId());
     }
 }

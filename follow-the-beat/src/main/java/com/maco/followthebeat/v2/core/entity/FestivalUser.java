@@ -1,5 +1,6 @@
 package com.maco.followthebeat.v2.core.entity;
 
+import com.maco.followthebeat.v2.spotify.enums.SpotifyTimeRange;
 import com.maco.followthebeat.v2.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -32,6 +33,10 @@ public class FestivalUser {
 
     @Column(name = "generated_compatibility", nullable = true)
     private Boolean generatedCompatibility;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = true)
+    private SpotifyTimeRange timeRange;
 
     @CreationTimestamp
     @Column(name = "added_at", nullable = false, updatable = false)
