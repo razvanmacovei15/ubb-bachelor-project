@@ -1,5 +1,6 @@
 package com.maco.followthebeat.v2.user.controller;
 
+import com.maco.followthebeat.v2.core.dto.FestivalUserDto;
 import com.maco.followthebeat.v2.core.service.interfaces.FestivalUserService;
 import com.maco.followthebeat.v2.user.context.IsConnected;
 import com.maco.followthebeat.v2.user.context.UserContext;
@@ -34,6 +35,7 @@ public class UserController {
     @GetMapping("/hasFestival")
     public Boolean hasFestivalUserGenerated(@RequestParam String festivalId) {
         User user = userContext.getOrThrow();
-        return festivalUserService.existsByFestivalIdAndUserId(UUID.fromString(festivalId), user.getId());
+        FestivalUserDto festivalUser = festivalUserService.getByFestivalIdAndUserId(UUID.fromString(festivalId), user.getId());
+        return festivalUser.getGeneratedCompatibility();
     }
 }

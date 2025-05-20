@@ -46,6 +46,7 @@ const FestivalsPage: React.FC = () => {
   };
 
   const {
+    hasFestival,
     searchTerm,
     sortBy,
     date,
@@ -192,6 +193,7 @@ const FestivalsPage: React.FC = () => {
                 {concerts.map((concert) => (
                   <ConcertCard
                     key={concert.concertId}
+                    hasFestival={hasFestival}
                     concert={concert}
                     onAdd={() => onAddToLineup(concert.concertId)}
                     onRemove={() => removeLineupEntry(concert.concertId)}

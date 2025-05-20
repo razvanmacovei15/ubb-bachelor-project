@@ -13,4 +13,9 @@ public class AsyncConfig {
     public Executor spotifyTaskExecutor() {
         return Executors.newFixedThreadPool(100); // adjust thread pool size as needed
     }
+
+    @Bean(name = "concertTaskExecutor")
+    public Executor concertTaskExecutor() {
+        return Executors.newFixedThreadPool(100); // adjust thread pool size as needed
+    }
 }

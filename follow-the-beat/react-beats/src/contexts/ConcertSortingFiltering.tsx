@@ -1,4 +1,4 @@
-import {createContext, useContext, useState} from "react";
+import {createContext, useContext, useState, useEffect} from "react";
 import {ConcertResponseDto} from "../types/ConcertResponseDto.ts";
 import axios from "axios";
 import {useUser} from "./UserContext";
@@ -46,28 +46,47 @@ export const ConcertSortingFilteringProvider = ({
     const [hasFestival, setHasFestival] = useState(false);
     const API_URL = import.meta.env.VITE_API_URL;
 
-    const checkHasFestival = async () => {
-        const params = {
-            festivalId,
-        };
+    const checkHasFestival = async (): Promise<boolean> => {
+        if (!festivalId || !sessionToken) {
+            setHasFestival(false);
+            return false;
+        }
 
-        const response = await axios.get(`${API_URL}/api/user/hasFestival`, {
-            params,
-            headers: {
-                Authorization: `Bearer ${sessionToken}`
-            }
-        });
-        const data = response.data as {
-            hasFestival: boolean;
-        };
-        console.log("Has festival data:", response);
+        try {
+            const params = { festivalId };
+            const response = await axios.get(`${API_URL}/api/user/hasFestival`, {
+                params,
+                headers: {
+                    Authorization: `Bearer ${sessionToken}`
+                }
+            });
 
-        setHasFestival(data.hasFestival);
+            const hasFestivalValue = response.data as boolean;
+            console.log("Has festival data:", response);
+            setHasFestival(hasFestivalValue);
+            return hasFestivalValue;
+        } catch (error) {
+            console.error("Error checking hasFestival:", error);
+            setHasFestival(false);
+            return false;
+        }
+    };
 
-    }
+    useEffect(() => {
+        if (festivalId && sessionToken) {
+            checkHasFestival();
+        } else {
+            setHasFestival(false);
+        }
+    }, [festivalId, sessionToken]);
 
     const fetchConcerts = async () => {
-        checkHasFestival();
+        if (festivalId) {
+            await checkHasFestival();
+        } else {
+            setHasFestival(false);
+        }
+
         const params = {
             artist: searchTerm,
             page: currentPage - 1,
@@ -96,7 +115,7 @@ export const ConcertSortingFilteringProvider = ({
     };
 
     const fetchFestivalConcerts = async (festivalId: string) => {
-        checkHasFestival();
+        await checkHasFestival();
 
         const params = {
             artist: searchTerm,
@@ -129,6 +148,9 @@ export const ConcertSortingFilteringProvider = ({
     const resetAndSelectFestival = (id: string | null) => {
         resetFilters();
         setFestivalId(id);
+        if (!id) {
+            setHasFestival(false);
+        }
     };
 
     const resetFilters = () => {

@@ -21,6 +21,7 @@ import com.maco.followthebeat.v2.user.entity.User;
 import com.maco.followthebeat.v2.user.service.interfaces.UserListeningProfileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +31,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
+
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/user/suggestions")
@@ -40,43 +44,60 @@ public class UserSuggestionsController {
     private final UserListeningProfileService userListeningProfileService;
     private final ConcertCompatibilityService concertCompatibilityService;
     private final FestivalUserService festivalUserService;
+    @Qualifier("concertTaskExecutor")
+    private final Executor concertTaskExecutor;
 
     @IsConnected
     @GetMapping
     public ResponseEntity<MatchResponse> getSuggestionsForFestival(
             @RequestParam SpotifyTimeRange range,
             @RequestParam UUID festivalId) {
-        log.info("Requesting suggestions for festival {} in time range {}", festivalId, range);
-        User user = userContext.getOrThrow();
 
-        log.info("User {} is requesting suggestions for festival {} in time range {}", user.getId(), festivalId, range);
+        User user = userContext.getOrThrow();
+        log.info("User {} is requesting suggestions for festival {} with range {}", user.getId(), festivalId, range);
+
         UserEmbeddingPayloadDto payloadDto = userListeningProfileService.getEmbeddingPayloadForFestival(
                 user.getId(),
                 range,
                 festivalId
         );
+
         try {
             MatchResponse matchResponse = concertMatcherClient.matchConcerts(payloadDto);
-            if (matchResponse.requestId.equals(user.getId())) {
-                List<MatchResult> matches = matchResponse.matches;
-                for (MatchResult match : matches) {
-                    log.info("Match result: {} with score {}", match.concertId, match.score);
-                    ConcertCompatibilityDto existingCompatibilityDto = concertCompatibilityService.getByConcertAndUser(
-                            UUID.fromString(match.concertId),
-                            user.getId()
-                    );
 
-                    existingCompatibilityDto.setCompatibility(match.score);
-                    concertCompatibilityService.update(existingCompatibilityDto.getId(), existingCompatibilityDto);
-                }
-                log.info("All match results: {}", matchResponse.getMatches());
+            if (matchResponse.requestId.equals(user.getId())) {
+                List<CompletableFuture<Void>> futures = matchResponse.getMatches().stream()
+                        .map(match -> CompletableFuture.runAsync(() -> {
+                            try {
+                                log.info("[AsyncTask] Updating compatibility for concert {}", match.getConcertId());
+                                ConcertCompatibilityDto compatibility = concertCompatibilityService.getByConcertAndUser(
+                                        UUID.fromString(match.getConcertId()),
+                                        user.getId()
+                                );
+                                compatibility.setCompatibility(match.getScore());
+                                concertCompatibilityService.update(compatibility.getId(), compatibility);
+                                log.info("[AsyncTask] Done updating concert {}", match.getConcertId());
+                            } catch (Exception ex) {
+                                log.error("[AsyncTask] Failed to update concert {}: {}", match.getConcertId(), ex.getMessage(), ex);
+                            }
+                        }, concertTaskExecutor))
+                        .toList();
+
+                log.info("Waiting for {} compatibility updates to finish...", futures.size());
+                CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
+                log.info("All compatibility updates completed.");
             }
-            FestivalUserDto festivalUserDto = festivalUserService.getById(festivalId);
+
+            FestivalUserDto festivalUserDto = festivalUserService.getByFestivalIdAndUserId(festivalId, user.getId());
             festivalUserDto.setGeneratedCompatibility(true);
             festivalUserService.update(festivalUserDto.getId(), festivalUserDto);
+            log.info("Set generatedCompatibility=true for festivalUser {}", festivalUserDto.getId());
+
             return ResponseEntity.ok(matchResponse);
+
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            log.error("Concert matcher client failed: {}", e.getMessage(), e);
+            throw new RuntimeException("Concert matching failed", e);
         }
     }
 }

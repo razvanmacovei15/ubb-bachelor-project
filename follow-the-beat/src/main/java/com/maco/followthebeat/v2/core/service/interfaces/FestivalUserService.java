@@ -12,4 +12,5 @@ public interface FestivalUserService {
     FestivalUserDto update(UUID id, FestivalUserDto dto);
     void delete(UUID id);
     boolean existsByFestivalIdAndUserId(UUID festivalId, UUID userId);
+    FestivalUserDto getByFestivalIdAndUserId(UUID festivalId, UUID userId);
 }

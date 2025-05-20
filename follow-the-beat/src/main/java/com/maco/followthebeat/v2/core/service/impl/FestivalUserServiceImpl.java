@@ -6,13 +6,14 @@ import com.maco.followthebeat.v2.core.repo.FestivalUserRepo;
 import com.maco.followthebeat.v2.core.service.interfaces.FestivalUserService;
 import com.maco.followthebeat.v2.core.mappers.FestivalUserMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class FestivalUserServiceImpl implements FestivalUserService {
@@ -54,5 +55,14 @@ public class FestivalUserServiceImpl implements FestivalUserService {
     @Override
     public boolean existsByFestivalIdAndUserId(UUID festivalId, UUID userId) {
         return repo.existsByFestivalIdAndUserId(festivalId, userId);
+    }
+
+    @Override
+    public FestivalUserDto getByFestivalIdAndUserId(UUID festivalId, UUID userId) {
+
+        log.info("Fetching FestivalUser with festivalId: {} and userId: {}", festivalId, userId);
+        return repo.findByFestivalIdAndUserId(festivalId, userId)
+                .map(mapper::toDto)
+                .orElseThrow(() -> new NoSuchElementException("FestivalUser not found with festivalId: " + festivalId + " and userId: " + userId));
     }
 }
