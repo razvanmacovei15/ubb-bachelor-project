@@ -33,56 +33,56 @@ const ConcertCard = ({concert, onAdd, onRemove, hasFestival}: ConcertCardProps) 
 
     const isInLineup = isConcertInLineup(concert.concertId);
 
+    // Dynamic font size for long artist names
+    const isLongTitle = concert.artistName.length > 20;
+
     return (
+        <div
+            className={`concert-card ${isInLineup ? "in-lineup" : ""}`}
+            style={{backgroundImage: bgImage}}
+            onError={() => setImgError(true)}
+        >
+            <div className="concert-overlay flex flex-col justify-between h-full">
+                <div className={`concert-info flex-grow p-4 ${isLongTitle ? 'small-title' : ''}`}>
+                    <h3>{concert.artistName}</h3>
+                    <p className="datetime">{performanceDay}</p>
+                    <p className="location">Stage: {concert.stageName}</p>
+                </div>
+                <div className="button-group">
+                    {isConnectedToSpotify && concert.compatibility !== null && hasFestival && (
+                        <div
+                            className="compatibility-badge bg-green-100 text-green-800 text-[0.8rem] font-semibold px-2 py-1 w-full text-center">
+                            Compatibility: {Math.floor(concert.compatibility * 100)}%
 
-        <>
-            <div
-                className={`concert-card ${isInLineup ? "in-lineup" : ""}`}
-                style={{backgroundImage: bgImage}}
-                onError={() => setImgError(true)}
-            >
-                <div className="flex flex-col">
-                    <div className="concert-overlay">
-                        <h3>{concert.artistName}</h3>
-                        <p className="datetime">{performanceDay}</p>
-                        <p className="location">Stage: {concert.stageName}</p>
-                        {isConnectedToSpotify && (
-                            <div className="button-group">
-                                {isInLineup ? (
-                                    <button
-                                        className="remove-button"
-                                        onClick={() => onRemove(concert.concertId)}
-                                    >
-                                        Remove from lineup
-                                    </button>
-                                ) : (
-                                    <div>
-                                        {(concert.compatibility !== null && hasFestival) && (
-                                            <div>
-                                                <p className="bg-green-100 text-green-800 text-xs font-semibold px-2 py-1 rounded">
-                                                    Compatibility: {Math.floor(concert.compatibility * 100)}%
-                                                </p>
-                                            </div>
-                                        )}
-
-
-                                    </div>
-                                )}
-                            </div>
-                        )}
-                    </div>
-                    <button
-                        className="add-button"
-                        onClick={() => {
-                            console.log("[ConcertCard] Add clicked for:", concert.concertId);
-                            onAdd(concert);
-                        }}
-                    >
-                        Add to lineup
-                    </button>
+                            {/*<p className="compatibility-badge bg-green-100 text-green-800 text-[0.8rem] font-semibold px-2 py-1 w-full text-center">*/}
+                            {/*</p>*/}
+                        </div>
+                    )}
+                    {isConnectedToSpotify && (
+                        <div className="w-full">
+                            {isInLineup ? (
+                                <button
+                                    className="remove-button w-full"
+                                    onClick={() => onRemove(concert.concertId)}
+                                >
+                                    Remove from lineup
+                                </button>
+                            ) : (
+                                <button
+                                    className="add-button w-full"
+                                    onClick={() => {
+                                        console.log("[ConcertCard] Add clicked for:", concert.concertId);
+                                        onAdd(concert);
+                                    }}
+                                >
+                                    Add to lineup
+                                </button>
+                            )}
+                        </div>
+                    )}
                 </div>
             </div>
-        </>
+        </div>
     );
 };
 

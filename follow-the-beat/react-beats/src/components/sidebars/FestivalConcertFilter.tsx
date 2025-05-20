@@ -15,7 +15,6 @@ const FestivalConcertFilter = () => {
   const {
     festivalId,
     searchTerm,
-    itemsPerPage,
     setSearchTerm,
     setSortBy,
     setItemsPerPage,

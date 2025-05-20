@@ -1,110 +1,125 @@
 .concert-card {
-  aspect-ratio: 1 / 1;
-  background-size: cover;
-  background-position: center;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  overflow: hidden;
-  position: relative;
-  transition: transform 0.2s ease;
-  display: flex;
-  align-items: flex-end;
+    aspect-ratio: 1 / 1;
+    background-size: cover;
+    background-position: center;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    position: relative;
+    transition: transform 0.2s ease;
+    display: flex;
+    align-items: flex-end;
 
 }
 
 .concert-card:hover {
-  transform: translateY(-4px);
+    transform: translateY(-4px);
 }
 
 .concert-card.selected {
-  border: 2px solid var(--color-accent);
+    border: 2px solid var(--color-accent);
 }
 
 .concert-overlay {
-  width: 100%;
-  padding: 12px;
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), transparent 60%);
-  color: white;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  height: 100%;
+    width: 100%;
+    /*padding: 12px;*/
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), transparent 60%);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
 }
 
 .concert-overlay p {
-  margin: 2px 0;
-  font-size: 0.75rem;
-  line-height: 1.2;
+    margin: 2px 0;
+    font-size: 0.75rem;
+    line-height: 1.2;
 }
 
 .concert-overlay h3 {
-  margin: 0;
-  font-size: 1.25rem; /* base size for mobile */
-  font-weight: bold;
+    margin: 0;
+    font-size: 1.25rem; /* base size for mobile */
+    font-weight: bold;
+}
+
+.small-title h3 {
+    font-size: 1rem;
+    line-height: 1.1;
+}
+
+.concert-info h3 {
+    font-size: clamp(1.1rem, 2vw, 2rem);
+    word-break: break-word;
 }
 
 /* Medium screens (≥768px) */
 @media (min-width: 768px) {
-  .concert-overlay p {
-    font-size: 0.875rem;
-  }
+    .concert-overlay p {
+        font-size: 0.875rem;
+    }
 
-  .concert-overlay h3 {
-    font-size: 1.5rem;
-  }
+    .concert-overlay h3 {
+        font-size: 1.5rem;
+    }
 }
 
 /* Large screens (≥1280px) */
 @media (min-width: 1280px) {
-  .concert-overlay p {
-    font-size: 1rem;
-  }
+    .concert-overlay p {
+        font-size: 1rem;
+    }
 
-  .concert-overlay h3 {
-    font-size: 2rem;
-  }
+    .concert-overlay h3 {
+        font-size: 2rem;
+    }
 }
 
 .genres,
 .datetime,
 .location {
-  margin: 4px 0;
-  font-size: 0.75rem;
+    margin: 4px 0;
+    font-size: 0.75rem;
 
 }
 
 .button-group {
-  margin-top: auto;
-  display: flex;
-  justify-content: flex-end;
+    margin-top: auto;
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    flex-direction: column;
 
+}
+
+.compatibility-badge {
+    margin: 0;
 }
 
 .add-button,
 .remove-button {
-  margin-top: 8px;
-  padding: 6px 10px;
-  font-size: 0.75rem;
-  font-weight: bold;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  color: white;
-  transition: background-color 0.2s ease;
+    padding: 6px 10px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    color: white;
+    transition: background-color 0.2s ease;
+    width: 100%;
 }
 
 .add-button {
-  background-color: var(--color-accent);
+    background-color: var(--color-accent);
 }
 
 .add-button:hover {
-  background-color: #1b5e20;
+    background-color: #1b5e20;
 }
 
 .remove-button {
-  background-color: var(--color-error);
+    background-color: var(--color-error);
 }
 
 .remove-button:hover {
-  background-color: #c62828;
+    background-color: #c62828;
 }
