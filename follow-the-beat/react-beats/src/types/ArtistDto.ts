@@ -3,4 +3,5 @@ export interface ArtistDto {
     name: string;
     imgUrl: string;
     genres: string[];
+    spotifyUrl: string;
 }

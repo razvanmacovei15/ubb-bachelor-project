@@ -1,6 +1,6 @@
 package com.maco.followthebeat.v2.spotify.api;
 
-import com.maco.client.v2.SpotifyClientI;
+import com.maco.client.v2.SpotifyClient;
 import com.maco.client.v2.model.SpotifyArtist;
 import com.maco.followthebeat.v2.spotify.enums.SpotifyTimeRange;
 import com.maco.followthebeat.v2.spotify.artists.dto.SpotifyArtistDto;
@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.IntStream;
 
 @Slf4j
 @Service
@@ -26,15 +27,20 @@ public class SpotifyApiArtistsService extends SpotifyApiService<SpotifyArtistDto
     public List<SpotifyArtistDto> fetchTopItems(UUID userId, SpotifyTimeRange range, int limit, int offset) {
         validateUserAndAuthentication(userId);
 
-        SpotifyClientI client = clientManager.getOrCreateSpotifyClient(userId);
-        List<SpotifyArtist> tracks = getTopItemsByRange(client, range, limit, offset);
+        SpotifyClient client = clientManager.getOrCreateSpotifyClient(userId);
+        List<SpotifyArtist> artists = getTopItemsByRange(client, range, limit, offset);
 
-        return tracks.stream()
-                .map(spotifyArtistMapper::clientToDto)
+        return IntStream.range(0, artists.size())
+                .mapToObj(i -> {
+                    SpotifyArtistDto dto = spotifyArtistMapper.clientToDto(artists.get(i));
+                    dto.setRank(i + offset + 1); // rank should be 1-based and respect pagination offset
+                    return dto;
+                })
                 .toList();
     }
 
-    protected List<SpotifyArtist> getTopItemsByRange(SpotifyClientI client, SpotifyTimeRange range, int limit, int offset) {
+
+    protected List<SpotifyArtist> getTopItemsByRange(SpotifyClient client, SpotifyTimeRange range, int limit, int offset) {
         return switch (range) {
             case SHORT_TERM -> client.getTopArtistsLast4Weeks(limit, offset);
             case MEDIUM_TERM -> client.getTopArtistsLast6Months(limit, offset);

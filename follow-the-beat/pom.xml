@@ -75,9 +75,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.macocoding</groupId>
+            <groupId>com.macocoding.spotify-api</groupId>
             <artifactId>spotify-api</artifactId>
-            <version>3.0.3</version>
+            <version>4.0.14</version>
         </dependency>
         <dependency>
             <groupId>com.github.ben-manes.caffeine</groupId>
@@ -108,8 +108,18 @@
             <artifactId>spring-boot-starter-data-redis</artifactId>
             <version>3.4.3</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-test</artifactId>
+            <version>3.4.4</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>4.12.0</version>
+        </dependency>
     </dependencies>
-
     <build>
         <plugins>
             <plugin>
@@ -142,19 +152,4 @@
             </plugin>
         </plugins>
     </build>
-    <repositories>
-        <repository>
-            <id>github</id>
-            <name>GitHub Maco Packages</name>
-            <url>https://maven.pkg.github.com/razvanmacovei15/maco-spotify-api</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
-
-
 </project>

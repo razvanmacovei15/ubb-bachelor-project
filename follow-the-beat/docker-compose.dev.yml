@@ -1,0 +1,33 @@
+services:
+  frontend:
+    build:
+      context: ./react-beats
+      dockerfile: Dockerfile.dev
+
+    ports:
+      - "8050:8050"
+    volumes:
+      - ./react-beats:/app
+      - /app/node_modules
+    environment:
+      - VITE_API_URL=http://localhost:8060
+
+  backend:
+    ports:
+      - "8060:8060"
+
+  festival-scraper:
+    ports:
+      - "8070:8070"
+
+  postgres-database:
+    ports:
+      - "${DB_PORT}:${DB_PORT}"
+
+  redis-cache:
+    ports:
+      - "${REDIS_PORT}:${REDIS_PORT}"
+
+  ai-suggestor:
+    ports:
+      - "${AI_PORT}:${AI_PORT}"

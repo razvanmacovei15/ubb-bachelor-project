@@ -33,6 +33,7 @@ public class Festival {
     private String logoUrl;
     private String websiteUrl;
     private Boolean isActive;
+    private String festivalImageUrl;
 
     @ManyToMany
     @JoinTable(

@@ -6,5 +6,4 @@ public interface RedisStateCacheService {
     void store(String state, UUID userId);
     UUID retrieve(String state);
     void invalidate(String state);
-
 }

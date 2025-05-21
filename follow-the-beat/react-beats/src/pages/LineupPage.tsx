@@ -1,72 +1,92 @@
-import React, { useState } from "react";
-import { useLineup } from "../contexts/LineupContext";
-import TopBar from "../components/top-bar/TopBar";
+import React from "react";
 import "./LineupPage.css";
-import LineupConcertCard from "../components/concertspage/LineupConcertCard";
+import Pagination from "../components/pagination/Pagination";
+import {useLineupSortingFilteringContext} from "../contexts/LineupSortingFilteringContext";
+import {Input} from "../components/ui/input";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "../components/ui/select";
+import LineupEntryCard from "@/components/concertspage/LineupEntryCard.tsx";
 
 const LineupPage: React.FC = () => {
-  const getGradientClass = (compatibility: number): string => {
-    if (compatibility <= 33)
-      return "bg-gradient-to-r from-[#cd7f32]/50 to-white";
-    if (compatibility <= 66)
-      return "bg-gradient-to-r from-gray-400/50 to-white";
-    return "bg-gradient-to-r from-yellow-300/50 to-white";
-  };
+    const {
+        searchTerm,
+        setSearchTerm,
+        sortBy,
+        setSortBy,
+        itemsPerPage,
+        setItemsPerPage,
+        currentPage,
+        setCurrentPage,
+        lineupEntries,
+        totalCount,
+        // resetFilters,
+    } = useLineupSortingFilteringContext();
 
-  const {
-    lineup,
-    getSortedLineup,
-    filterLineup,
-    removeFromLineup,
-    editConcert,
-  } = useLineup();
+    return (
+        <div className="lineup-page-container">
+            <div className="main-container">
+                <div className="lineup-container">
+                    <h1 className="lineup-title">My Lineup</h1>
+                    <div className="filters-container"
+                         style={{
+                             width: '100%',
+                             padding: '1rem',
+                             display: 'flex',
+                             gap: '1rem',
+                             justifyContent: 'center'
+                         }}>
+                        <Input
+                            type="text"
+                            placeholder="Search entries..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            style={{maxWidth: '300px'}}
+                        />
+                        <Select value={sortBy}
+                                onValueChange={(value: "none" | "priority" | "compatibility") => setSortBy(value)}>
+                            <SelectTrigger style={{width: '200px'}}>
+                                <SelectValue placeholder="Sort by"/>
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="none">No Sorting</SelectItem>
+                                <SelectItem value="priority">Priority</SelectItem>
+                                <SelectItem value="compatibility">Compatibility</SelectItem>
+                            </SelectContent>
+                        </Select>
+                        <Select value={itemsPerPage.toString()}
+                                onValueChange={(value) => setItemsPerPage(Number(value))}>
+                            <SelectTrigger style={{width: '150px'}}>
+                                <SelectValue placeholder="Items per page"/>
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="5">5 per page</SelectItem>
+                                <SelectItem value="10">10 per page</SelectItem>
+                                <SelectItem value="20">20 per page</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
 
-  const [sortBy, setSortBy] = useState<"artist" | "time" | "none">("none");
-  const [searchTerm, setSearchTerm] = useState<string>("");
-
-  const [detailsDraft, setDetailsDraft] = useState<{ [id: number]: string }>(
-    {}
-  );
-
-  const handleSort = () => {
-    if (sortBy === "none") return lineup;
-    return getSortedLineup(sortBy);
-  };
-
-  const handleFilter = (concerts: typeof lineup) => {
-    return searchTerm ? filterLineup(searchTerm) : concerts;
-  };
-
-  const displayConcerts = handleFilter(handleSort());
-
-  const handleUpdate = (id: number) => {
-    if (detailsDraft[id] !== undefined) {
-      editConcert(id, detailsDraft[id]);
-    }
-  };
-
-  return (
-    <div className="page-background">
-      <h1>Your Lineup</h1>
-      <div className="content-container">
-        {displayConcerts.length === 0 ? (
-          <p>No concerts found.</p>
-        ) : (
-          <div className="lineuppage-list">
-            {displayConcerts.map((concert) => (
-              <LineupConcertCard
-                key={concert.id}
-                concert={concert}
-                getGradientClass={getGradientClass}
-                handleUpdate={handleUpdate}
-                removeFromLineup={removeFromLineup}
-              />
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
-  );
+                    <div className="flex flex-col gap-4 px-4 w-full">
+                        {lineupEntries.length === 0 ? (
+                            <h2 style={{color: 'white', textAlign: 'center', width: '100%'}}>
+                                No entries in your lineup. Start adding some concerts!
+                            </h2>
+                        ) : (
+                            lineupEntries.map((entry) => (
+                                <LineupEntryCard key={entry.id} lineupDetail={entry}/>
+                            ))
+                        )}
+                    </div>
+                    <Pagination
+                        className="pagination-bar"
+                        currentPage={currentPage}
+                        totalCount={totalCount}
+                        pageSize={itemsPerPage}
+                        onPageChange={(page) => setCurrentPage(page)}
+                    />
+                </div>
+            </div>
+        </div>
+    );
 };
 
-export default LineupPage;
+export default LineupPage; 

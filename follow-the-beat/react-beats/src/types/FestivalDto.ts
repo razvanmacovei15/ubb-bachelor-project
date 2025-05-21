@@ -1,5 +1,5 @@
-import {ArtistDto} from "./ArtistDTO";
-import { StageDto } from "./StageDTO";
+import {ArtistDto} from "./ArtistDto";
+import { StageDto } from "./StageDto";
 
 export interface FestivalDto {
     id: string;
@@ -13,4 +13,5 @@ export interface FestivalDto {
     isActive: boolean;
     dtoArtists: ArtistDto[];
     dtoStages: StageDto[];
+    festivalImageUrl: string;
 }

@@ -39,6 +39,8 @@ public class LongTermTrackSaveStrategy extends AbstractTrackSaveStrategy<LongTer
         longTermTrack.setUser(user);
         longTermTrack.setTrack(track);
         longTermTrack.setRank(rank);
+        longTermTrack.setProfile(user.getUserListeningProfile());
+        longTermTrackRepository.save(longTermTrack);
         return longTermTrack;
     }
 

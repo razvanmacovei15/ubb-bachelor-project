@@ -1,7 +1,8 @@
-import {ConcertDto} from "./ConcertDto.ts";
+import {ConcertResp} from "./ConcertResponseDto.ts";
 
-interface LineupConcert extends ConcertDto {
+interface LineupConcert extends ConcertResp {
     details: string;
+    compatibility: number;
 }
 
 export default LineupConcert;

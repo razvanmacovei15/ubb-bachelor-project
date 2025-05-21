@@ -45,6 +45,8 @@ public class ShortTermArtistSaveStrategy extends AbstractArtistSaveStrategy<Shor
         entity.setUser(user);
         entity.setArtist(artist);
         entity.setRank(rank);
+        entity.setProfile(user.getUserListeningProfile());
+        shortTermArtistRepository.save(entity);
         return entity;
     }
 

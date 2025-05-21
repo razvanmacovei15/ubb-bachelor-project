@@ -35,6 +35,7 @@ public class UntoldMapper {
         festivalDTO.setLogoUrl(UntoldConstants.LOGO); //todo later, need to scrape it
         festivalDTO.setWebsiteUrl(UntoldConstants.WEBSITE);
         festivalDTO.setIsActive(checkCurrentDateInRange(dateRange[0], dateRange[1]));
+        festivalDTO.setFestivalImageUrl(UntoldConstants.FESTIVAL_IMG_URL);
         return festivalDTO;
     }
 }

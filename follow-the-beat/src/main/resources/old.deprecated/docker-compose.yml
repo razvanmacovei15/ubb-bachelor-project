@@ -1,0 +1,66 @@
+services:
+  backend:
+    build:
+      context: ../../../..
+      dockerfile: ../../../../Dockerfile
+    container_name: backend
+    ports:
+      - "${BACKEND_PORT:-8060}:8060"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/dev_db
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+      SPRING_SCRAPER_URL: http://scraper:8070
+      SPRING_SCRAPER_ELECTRIC_ENDPOINT: http://scraper:8070/electric
+    depends_on:
+      - redis
+      - scraper
+      - db
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ../../../../react-beats
+      dockerfile: ../../../../react-beats/Dockerfile
+    container_name: frontend
+    ports:
+      - "${FRONTEND_PORT:-8055}:80"
+    restart: unless-stopped
+
+  scraper:
+    build:
+      context: ../../../../scraper-microservice
+      dockerfile: ../../../../scraper-microservice/Dockerfile
+    container_name: scraper
+    ports:
+      - "${SCRAPER_PORT:-8070}:8070"
+    restart: unless-stopped
+
+  redis:
+    image: redis:7
+    container_name: redis
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+
+  db:
+    image: postgres:17
+    container_name: db
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-dev_db}
+      POSTGRES_USER: ${POSTGRES_USER:-dev_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-dev_pass}
+    ports:
+      - "55432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  redis_data:
+  db_data:

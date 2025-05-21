@@ -20,6 +20,7 @@ public class FestivalMapper {
                 .websiteUrl(festivalDTO.getWebsiteUrl())
                 .isActive(festivalDTO.getIsActive())
                 .stages(new HashSet<>())
+                .festivalImageUrl(festivalDTO.getFestivalImageUrl())
                 .build();
     }
 
@@ -35,6 +36,7 @@ public class FestivalMapper {
                 .websiteUrl(festival.getWebsiteUrl())
                 .isActive(festival.getIsActive())
                 .dtoStages(new HashSet<>())
+                .festivalImageUrl(festival.getFestivalImageUrl())
                 .build();
     }
 }

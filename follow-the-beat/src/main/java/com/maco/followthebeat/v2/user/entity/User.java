@@ -15,6 +15,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
 public class User {
     @Id
     @GeneratedValue
@@ -25,9 +26,6 @@ public class User {
 
     @Column(name = "email", unique = true)
     private String email;
-
-    @Column(name = "password_hash", unique = true)
-    private String passwordHash;
 
     @Column(name = "is_anonymous")
     private boolean isAnonymous;
@@ -48,4 +46,7 @@ public class User {
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private SpotifyUserData spotifyUserData;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private UserListeningProfile userListeningProfile;
 }

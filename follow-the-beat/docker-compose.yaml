@@ -1,0 +1,95 @@
+services:
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: spring_boot_app
+    ports:
+      - "8060:8060"  # Expose port 8060 on host, map to backend's port 8060
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILE}  # Tells Spring to use 'application-server.properties'
+      FRONTEND_URL: ${FRONTEND_URL}  # Frontend URL with default value
+      AI_URL: ${AI_URL}  # URL for AI suggestor microservice
+      # PostgreSQL environment variables (custom)
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_PASS}
+
+      # Redis connection
+      REDIS_HOST: ${REDIS_HOST}  # Points to the redis container by its service name
+      REDIS_PORT: ${REDIS_PORT}
+
+      # Spotify API credentials
+      SPOTIFY_CLIENT_ID: 40f0faeac8b043ee99f7bd42e134f97c
+      SPOTIFY_CLIENT_SECRET: 9713d372e12e4c699accf979bd406435
+      SPOTIFY_REDIRECT_URI: ${SPOTIFY_REDIRECT_URI}
+
+      # MinIO object storage config
+      MINIO_ENDPOINT: http://minio:9000  # Points to MinIO container if added
+      MINIO_ACCESS_KEY: LZqd6fKR6JDBltE8Q2p5
+      MINIO_SECRET_KEY: 5p0IIUasY4k3jmCzv7Ht4Z9i3lVOuN2a9pF6QOR0
+      MINIO_BUCKET: dev-bucket
+
+      SCRAPER_URL: ${SCRAPER_URL}  # URL of the scraper microservice
+
+    depends_on:
+      - redis-cache              # Ensure Redis starts before backend
+      - festival-scraper         # Ensure scraper starts before backend
+      - postgres-database        # Ensure PostgreSQL DB starts before backend
+
+    restart: unless-stopped  # Restart the container unless it was manually stopped
+
+  frontend:
+    build:
+      context: ./react-beats
+      dockerfile: Dockerfile
+      args:
+        VITE_ENV: ${VITE_ENV}
+    container_name: react_frontend
+
+  festival-scraper:
+    build:
+      context: ./scraper-microservice
+      dockerfile: Dockerfile
+    ports:
+      - "8070:8070"  # Expose scraper microservice on port 8070
+    restart: unless-stopped
+
+  redis-cache:
+    image: redis:7
+    container_name: redis
+    ports:
+      - "${REDIS_PORT}:${REDIS_PORT}"
+    volumes:
+      - redis_data:/data
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+    restart: unless-stopped
+
+  postgres-database:
+    image: postgres:17
+    container_name: postgres_database
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+    ports:
+      - "${DB_PORT}:${DB_PORT}"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  ai-suggestor:
+    build:
+      context: ./suggestion-microservice
+      dockerfile: Dockerfile
+    container_name: ai_suggestor
+    ports:
+      - "${AI_PORT}:${AI_PORT}"
+    restart: unless-stopped
+
+volumes:
+  redis_data:  # Persists Redis cache
+  pgdata:     # Persists PostgreSQL data

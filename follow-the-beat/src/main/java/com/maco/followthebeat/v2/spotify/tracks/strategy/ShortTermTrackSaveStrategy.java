@@ -37,6 +37,8 @@ public class ShortTermTrackSaveStrategy extends AbstractTrackSaveStrategy<ShortT
         shortTermTrack.setUser(user);
         shortTermTrack.setTrack(track);
         shortTermTrack.setRank(rank);
+        shortTermTrack.setProfile(user.getUserListeningProfile());
+        shortTermTrackRepository.save(shortTermTrack);
         return shortTermTrack;
     }
 
