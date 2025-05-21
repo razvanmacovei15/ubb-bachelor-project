@@ -13,6 +13,8 @@ import axios from "axios";
 
 const FestivalConcertFilter = () => {
   const {
+    sortBy,
+    sortDirection,
     itemsPerPage,
     festivalId,
     searchTerm,
@@ -22,6 +24,7 @@ const FestivalConcertFilter = () => {
     hasFestival,
     compatibilityTimeRange,
     fetchFestivalConcerts,
+    setSortDirection,
   } = useConcertSortingFilteringContext();
   const { isConnectedToSpotify } = useUser();
   const API_URL = import.meta.env.VITE_API_URL;
@@ -71,6 +74,7 @@ const FestivalConcertFilter = () => {
         <div className="filter-section">
           <h3>Sort By</h3>
           <select
+            value={sortBy}
             onChange={(e) =>
               setSortBy(e.target.value as "none" | "artist" | "compatibility")
             }
@@ -79,6 +83,18 @@ const FestivalConcertFilter = () => {
             <option value="none">No Sort</option>
             <option value="artist">Artist Name</option>
             <option value="compatibility">Compatibility</option>
+          </select>
+        </div>
+
+        <div className="filter-section">
+          <h3>Sort Order</h3>
+          <select
+            value={sortDirection}
+            onChange={(e) => setSortDirection(e.target.value as "asc" | "desc")}
+            className="filter-select"
+          >
+            <option value="asc">Ascending</option>
+            <option value="desc">Descending</option>
           </select>
         </div>
 

@@ -10,7 +10,6 @@ interface FilterSidebarProps {
 const FilterSidebar: React.FC<FilterSidebarProps> = ({
   timeRange,
   onTimeRangeChange,
-  onSortChange,
 }) => {
   return (
     <div className="filter-sidebar">
@@ -37,14 +36,6 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
           >
             All Time
           </button>
-        </div>
-      </div>
-
-      <div className="filter-section">
-        <h4>Sort By</h4>
-        <div className="filter-options">
-          <button onClick={() => onSortChange("popularity")}>Popularity</button>
-          <button onClick={() => onSortChange("name")}>Name</button>
         </div>
       </div>
     </div>

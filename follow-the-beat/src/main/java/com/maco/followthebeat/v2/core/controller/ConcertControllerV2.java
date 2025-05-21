@@ -50,8 +50,6 @@ public class ConcertControllerV2 {
             PagedResourcesAssembler<ConcertResponseDto> pagedResourcesAssembler
     ) {
         User user = userContext.getOrThrow();
-        log.info("[getAllConcerts] userId={}, artist={}, minCompatibility={}, hasCompatibilityGreaterThan={}, page={}, size={}, sortBy={}, direction={}",
-                user.getId(), artist.orElse(""), minCompatibility, hasCompatibilityGreaterThan, page, size, sortBy, direction);
 
         Pageable pageable = PageRequest.of(page, size,
                 direction.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending());

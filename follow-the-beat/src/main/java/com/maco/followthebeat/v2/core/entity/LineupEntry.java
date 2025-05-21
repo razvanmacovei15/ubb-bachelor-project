@@ -14,7 +14,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "lineup_entries", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"user_id", "concert_id"})
+        @UniqueConstraint(columnNames = {"concert_compatibility_id"})
 })
 @Data
 @Builder
@@ -26,21 +26,14 @@ public class LineupEntry {
     private UUID id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
-    @ManyToOne
-    @JoinColumn(name = "concert_id", nullable = false)
-    private Concert concert;
+    @JoinColumn(name = "concert_compatibility_id", nullable = false)
+    private ConcertCompatibility concertCompatibility;
 
     @Column(name = "notes")
     private String notes; // optional: user can add notes
 
     @Column(name = "priority")
     private Integer priority; // optional: rank or priority in lineup
-
-    @Column(name = "compatibility")
-    private Integer compatibility;
 
     @CreationTimestamp
     @Column(name = "added_at", nullable = false, updatable = false)

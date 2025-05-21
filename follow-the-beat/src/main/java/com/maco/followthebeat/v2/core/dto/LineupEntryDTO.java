@@ -14,14 +14,11 @@ import java.util.UUID;
 @AllArgsConstructor
 public class LineupEntryDTO {
     private UUID id;
-
     @NotNull
     private UUID concertId;
 
     private String notes;
 
     private Integer priority;
-
-    private Integer compatibility;
 
 }

@@ -41,10 +41,11 @@
     margin: 0;
     font-size: 1.25rem; /* base size for mobile */
     font-weight: bold;
+    word-break: break-word;
 }
 
-.small-title h3 {
-    font-size: 1rem;
+.concert-info.small-title h3 {
+    font-size: 0.9rem;
     line-height: 1.1;
 }
 
@@ -62,6 +63,10 @@
     .concert-overlay h3 {
         font-size: 1.5rem;
     }
+
+    .concert-info.small-title h3 {
+        font-size: 1.1rem;
+    }
 }
 
 /* Large screens (≥1280px) */
@@ -72,6 +77,10 @@
 
     .concert-overlay h3 {
         font-size: 2rem;
+    }
+
+    .concert-info.small-title h3 {
+        font-size: 1.3rem;
     }
 }
 

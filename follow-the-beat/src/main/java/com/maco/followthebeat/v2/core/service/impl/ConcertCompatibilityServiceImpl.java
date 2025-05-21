@@ -44,6 +44,11 @@ public class ConcertCompatibilityServiceImpl implements ConcertCompatibilityServ
     }
 
     @Override
+    public ConcertCompatibility getByConcertIdAndUserId(UUID concertId, UUID userId) {
+        return repository.findByConcertIdAndUserId(concertId, userId);
+    }
+
+    @Override
     public List<ConcertCompatibilityDto> getAll() {
         return repository.findAll().stream().map(this::toDto).toList();
     }

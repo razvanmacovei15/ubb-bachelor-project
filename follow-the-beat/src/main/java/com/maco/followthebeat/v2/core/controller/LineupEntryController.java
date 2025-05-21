@@ -53,35 +53,30 @@ public class LineupEntryController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }
     }
+
     @IsConnected
-    @GetMapping("/search")
-    public PagedModel<EntityModel<LineupEntryDTO>> searchLineupEntries(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "addedAt") String sortBy,
-            @RequestParam(defaultValue = "desc") String direction,
-            @RequestParam(required = false) Integer hasCompatibilityGreaterThan,
-            @RequestParam(required = false) Integer minCompatibility,
-            PagedResourcesAssembler<LineupEntryDTO> pagedResourcesAssembler
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> removeLineupEntryByConcertIdAndUserId(
+            @PathVariable UUID id
     ) {
         User user = userContext.getOrThrow();
-        Sort sort = Sort.unsorted();
-        if (!sortBy.equalsIgnoreCase("none")) {
-            sort = direction.equalsIgnoreCase("desc")
-                    ? Sort.by(sortBy).descending()
-                    : Sort.by(sortBy).ascending();
+        LineupEntry existing = lineupEntryService.getLineupByConcertIdAndUserId(id, user.getId());
+        lineupEntryService.delete(existing.getId());
+        return ResponseEntity.noContent().build();
+    }
+
+    @IsConnected
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateLineupEntry(@Valid @RequestBody LineupEntryDTO dto) {
+        try {
+            User user = userContext.getOrThrow();
+            LineupEntry updated = lineupEntryService.updateLineupEntry(dto, user);
+            return ResponseEntity.ok(lineupEntryMapper.toDTO(updated));
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-        Pageable pageable = PageRequest.of(page, size, sort);
-
-
-        Page<LineupEntryDTO> result = lineupEntryService.searchLineupEntries(
-                user.getId(),
-                hasCompatibilityGreaterThan,
-                minCompatibility,
-                pageable
-        );
-        log.info("result: {}", result);
-        return pagedResourcesAssembler.toModel(result);
     }
 
     @IsConnected
@@ -91,28 +86,19 @@ public class LineupEntryController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "addedAt") String sortBy,
-            @RequestParam(defaultValue = "asc") String direction,
-            @RequestParam(required = false) Integer hasCompatibilityGreaterThan,
-            @RequestParam(required = false) Integer minCompatibility,
+            @RequestParam(defaultValue = "desc") String direction,
             PagedResourcesAssembler<LineupDetailDto> pagedResourcesAssembler
     ) {
         User user = userContext.getOrThrow();
-        Sort sort = Sort.unsorted();
-        if (!sortBy.equalsIgnoreCase("none")) {
-            sort = direction.equalsIgnoreCase("desc")
-                    ? Sort.by(sortBy).descending()
-                    : Sort.by(sortBy).ascending();
-        }
-        Pageable pageable = PageRequest.of(page, size, sort);
+        Pageable pageable = PageRequest.of(page, size,
+                direction.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending());
 
         Page<LineupDetailDto> result = lineupEntryService.searchLineupDetails(
                 user.getId(),
                 artist,
-                hasCompatibilityGreaterThan,
-                minCompatibility,
                 pageable
         );
-        log.info("result: {}", result);
+
         return pagedResourcesAssembler.toModel(result);
     }
 
@@ -140,30 +126,7 @@ public class LineupEntryController {
                 .collect(Collectors.toList());
         return ResponseEntity.ok(dtoList);
     }
-    @IsConnected
-    @PutMapping("/{id}")
-    public ResponseEntity<?> updateLineupEntry(@PathVariable UUID id, @Valid @RequestBody LineupEntryDTO dto) {
-        try {
-            User user = userContext.getOrThrow();
-            LineupEntry updated = lineupEntryService.updateLineupEntry(id, dto, user);
-            return ResponseEntity.ok(lineupEntryMapper.toDTO(updated));
-        } catch (NoSuchElementException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
-    }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> removeLineupEntry(@PathVariable UUID id) {
-        Optional<LineupEntry> existing = lineupEntryService.getById(id);
-        if (existing.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Lineup entry not found with id: " + id);
-        }
-        lineupEntryService.delete(id);
-        return ResponseEntity.noContent().build();
-    }
 
     @IsConnected
     @GetMapping("/details")

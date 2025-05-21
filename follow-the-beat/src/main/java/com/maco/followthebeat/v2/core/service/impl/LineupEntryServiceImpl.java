@@ -1,6 +1,7 @@
 package com.maco.followthebeat.v2.core.service.impl;
 
 import com.maco.client.v2.SpotifyClient;
+import com.maco.followthebeat.v2.core.dto.ConcertCompatibilityDto;
 import com.maco.followthebeat.v2.core.dto.LineupEntryDTO;
 import com.maco.followthebeat.v2.core.entity.*;
 import com.maco.followthebeat.v2.core.generics.BaseCrudServiceImpl;
@@ -8,6 +9,7 @@ import com.maco.followthebeat.v2.core.mappers.LineupEntryMapper;
 import com.maco.followthebeat.v2.core.model.LineupDetailDto;
 import com.maco.followthebeat.v2.core.repo.LineupEntryRepo;
 import com.maco.followthebeat.v2.core.service.interfaces.ArtistService;
+import com.maco.followthebeat.v2.core.service.interfaces.ConcertCompatibilityService;
 import com.maco.followthebeat.v2.core.service.interfaces.ConcertService;
 import com.maco.followthebeat.v2.core.service.interfaces.LineupEntryService;
 import com.maco.followthebeat.v2.core.specification.ConcertSpecification;
@@ -35,13 +37,14 @@ public class LineupEntryServiceImpl extends BaseCrudServiceImpl<LineupEntry> imp
     private final LineupEntryRepo lineupEntryRepo;
     private final SpotifyClientManager spotifyClientManager;
     private final ArtistService artistService;
+    private final ConcertCompatibilityService concertCompatibilityService;
 
     public LineupEntryServiceImpl(LineupEntryRepo repo,
                                   ConcertService concertService,
                                   LineupEntryMapper lineupEntryMapper,
                                   LineupEntryRepo lineupEntryRepo,
                                   SpotifyClientManager spotifyClientManager,
-                                  ArtistService artistService) {
+                                  ArtistService artistService,ConcertCompatibilityService concertCompatibilityService) {
         super(repo);
         this.repo = repo;
         this.concertService = concertService;
@@ -49,11 +52,18 @@ public class LineupEntryServiceImpl extends BaseCrudServiceImpl<LineupEntry> imp
         this.lineupEntryRepo = lineupEntryRepo;
         this.spotifyClientManager = spotifyClientManager;
         this.artistService = artistService;
+        this.concertCompatibilityService = concertCompatibilityService;
     }
 
     @Override
     public List<LineupEntry> getLineupForUserId(UUID userId) {
         return repo.findByUserId(userId);
+    }
+
+    @Override
+    public LineupEntry getLineupByConcertIdAndUserId(UUID concertId, UUID userId) {
+        return repo.findByConcertIdAndUserId(concertId, userId)
+                .orElseThrow(() -> new NoSuchElementException("Lineup entry not found"));
     }
 
     public Page<LineupEntryDTO> searchLineupEntries(
@@ -63,14 +73,6 @@ public class LineupEntryServiceImpl extends BaseCrudServiceImpl<LineupEntry> imp
             Pageable pageable
     ) {
         Specification<LineupEntry> spec = Specification.where(LineupEntrySpecification.hasUserId(userId));
-
-        if (hasCompatibilityGreaterThan != null) {
-            spec = spec.and(LineupEntrySpecification.hasCompatibilityGreaterThan(hasCompatibilityGreaterThan));
-        }
-
-        if (minCompatibility != null) {
-            spec = spec.and(LineupEntrySpecification.hasMinCompatibility(minCompatibility));
-        }
 
         return repo.findAll(spec, pageable).map(lineupEntryMapper::toDTO);
     }
@@ -84,24 +86,16 @@ public class LineupEntryServiceImpl extends BaseCrudServiceImpl<LineupEntry> imp
     public Page<LineupDetailDto> searchLineupDetails(
             UUID userId,
             Optional<String> artistName,
-            Integer hasCompatibilityGreaterThan,
-            Integer minCompatibility,
             Pageable pageable
     ) {
         Specification<LineupEntry> spec = Specification.where(LineupEntrySpecification.hasUserId(userId));
         if (artistName.isPresent()) {
             spec = spec.and(LineupEntrySpecification.hasArtistName(artistName.get()));
         }
-        if (hasCompatibilityGreaterThan != null) {
-            spec = spec.and(LineupEntrySpecification.hasCompatibilityGreaterThan(hasCompatibilityGreaterThan));
-        }
-        if (minCompatibility != null) {
-            spec = spec.and(LineupEntrySpecification.hasMinCompatibility(minCompatibility));
-        }
 
         return lineupEntryRepo.findAll(spec, pageable)
                 .map(entry -> {
-                    Concert concert = entry.getConcert();
+                    Concert concert = entry.getConcertCompatibility().getConcert();
                     Artist artist = concert.getArtist();
                     Schedule schedule = concert.getSchedule();
                     Location location = concert.getLocation();
@@ -115,7 +109,7 @@ public class LineupEntryServiceImpl extends BaseCrudServiceImpl<LineupEntry> imp
                             concert.getArtist().getSpotifyUrl(),
                             entry.getNotes(),
                             entry.getPriority(),
-                            entry.getCompatibility(),
+                            entry.getConcertCompatibility().getCompatibility(),
                             schedule != null ? schedule.getStartTime() : null,
                             schedule != null ? schedule.getDate() : null,
                             location != null ? location.getName() : null,
@@ -132,7 +126,7 @@ public class LineupEntryServiceImpl extends BaseCrudServiceImpl<LineupEntry> imp
 
     @Override
     public boolean isConcertInUserLineup(UUID userId, UUID concertId) {
-        return repo.existsByUserIdAndConcertId(userId, concertId);
+        return repo.existsByConcertCompatibility_User_IdAndConcertCompatibility_Concert_Id(userId, concertId);
     }
 
     @Override
@@ -145,13 +139,14 @@ public class LineupEntryServiceImpl extends BaseCrudServiceImpl<LineupEntry> imp
                 .orElseThrow(() -> new IllegalArgumentException("Invalid concert ID"));
         log.info("Concert found: {}", concert.getId());
 
-        if (repo.existsByUserIdAndConcertId(user.getId(), concert.getId())) {
+        if (repo.existsByConcertCompatibility_User_IdAndConcertCompatibility_Concert_Id(user.getId(), concert.getId())) {
             throw new IllegalStateException("Concert already exists in user's lineup");
         }
-
+        ConcertCompatibility concertCompatibility = concertCompatibilityService.getByConcertIdAndUserId(concert.getId(), user.getId());
         if(concert.getArtist().getSpotifyUrl() != null) {
             log.info("Spotify URL already set: {}", concert.getArtist().getSpotifyUrl());
-            return repo.save(lineupEntryMapper.toEntity(dto, user, concert));
+
+            return repo.save(lineupEntryMapper.toEntity(dto, concertCompatibility));
         }
 
         String artistName = concert.getArtist().getName();
@@ -163,24 +158,18 @@ public class LineupEntryServiceImpl extends BaseCrudServiceImpl<LineupEntry> imp
         updatedArtist.setSpotifyUrl(spotifyUrl);
         artistService.update(updatedArtist.getId(), updatedArtist);
         log.info("Spotify URL set: {}", spotifyUrl);
-        LineupEntry entry = lineupEntryMapper.toEntity(dto, user, concert);
-        log.info("Lineup entry created: {}", entry.getConcert().getArtist().getSpotifyUrl());
+        LineupEntry entry = lineupEntryMapper.toEntity(dto, concertCompatibility);
+        log.info("Lineup entry created: {}", entry.getConcertCompatibility().getConcert().getArtist().getSpotifyUrl());
         return repo.save(entry);
     }
 
     @Override
-    public LineupEntry updateLineupEntry(UUID id, LineupEntryDTO dto, User user) {
-        LineupEntry existing = repo.findById(id)
+    public LineupEntry updateLineupEntry(LineupEntryDTO dto, User user) {
+        LineupEntry existing = repo.findByConcertIdAndUserId(dto.getConcertId(), user.getId())
                 .orElseThrow(() -> new NoSuchElementException("Lineup entry not found"));
 
-        Concert concert = concertService.getById(dto.getConcertId())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid concert ID"));
-
-        existing.setUser(user);
-        existing.setConcert(concert);
         existing.setNotes(dto.getNotes());
         existing.setPriority(dto.getPriority());
-        existing.setCompatibility(dto.getCompatibility());
 
         return repo.save(existing);
     }

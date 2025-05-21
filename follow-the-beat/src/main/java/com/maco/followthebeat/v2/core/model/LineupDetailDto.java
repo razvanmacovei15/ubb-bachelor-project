@@ -15,14 +15,14 @@ public class LineupDetailDto {
     private String spotifyUrl;
     private String notes;
     private Integer priority;
-    private Integer compatibility;
+    private Float compatibility;
     private LocalTime startTime;
     private LocalDate date;
     private String stageName;
     private String festivalName;
 
     public LineupDetailDto(UUID id, UUID concertId, String artistName, String artistImageUrl, String spotifyUrl,
-                           String notes, Integer priority, Integer compatibility,
+                           String notes,Integer priority, Float compatibility,
                            LocalTime startTime, LocalDate date, String stageName, String festivalName) {
         this.id = id;
         this.concertId = concertId;

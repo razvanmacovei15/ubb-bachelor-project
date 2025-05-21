@@ -15,9 +15,10 @@ import java.util.UUID;
 
 public interface LineupEntryService extends BaseCrudService<LineupEntry> {
     List<LineupEntry> getLineupForUserId(UUID userId);
+    LineupEntry getLineupByConcertIdAndUserId(UUID concertId, UUID userId);
     boolean isConcertInUserLineup(UUID userId, UUID concertId);
     LineupEntry createLineupEntry(LineupEntryDTO dto, User user);
-    LineupEntry updateLineupEntry(UUID id, LineupEntryDTO dto, User user);
+    LineupEntry updateLineupEntry(LineupEntryDTO dto, User user);
     Page<LineupEntryDTO> searchLineupEntries(
             UUID userId,
             Integer hasCompatibilityGreaterThan,
@@ -28,8 +29,6 @@ public interface LineupEntryService extends BaseCrudService<LineupEntry> {
     Page<LineupDetailDto> searchLineupDetails(
             UUID userId,
             Optional<String> artistName,
-            Integer hasCompatibilityGreaterThan,
-            Integer minCompatibility,
             Pageable pageable
     );
     List<UUID> getAllConcertIdsByUserId(UUID userId);

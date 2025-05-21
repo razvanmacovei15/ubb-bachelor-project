@@ -38,7 +38,8 @@ const ConcertCard = ({
   const isInLineup = isConcertInLineup(concert.concertId);
 
   // Dynamic font size for long artist names
-  const isLongTitle = concert.artistName.length > 10;
+  const isLongTitle = concert.artistName.length > 5;
+  console.log("[ConcertCard] Long title:", isLongTitle);
 
   return (
     <div
@@ -53,7 +54,7 @@ const ConcertCard = ({
           }`}
         >
           <h3>{concert.artistName}</h3>
-          <p className="datetime">{performanceDay}</p>
+          <p className="datetime">Date & Time: {performanceDay}</p>
           <p className="location">Stage: {concert.stageName}</p>
         </div>
         <div className="button-group">

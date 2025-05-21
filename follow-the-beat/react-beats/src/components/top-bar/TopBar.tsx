@@ -1,9 +1,10 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import TopBarButton from "./TopBarButton";
 import "./TopBar.css";
 
 const TopBar = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   return (
     <div className="top-bar">
@@ -16,24 +17,28 @@ const TopBar = () => {
           onClick={() => {
             navigate("/");
           }}
+          isActive={location.pathname === "/"}
         />
         <TopBarButton
           title="Festivals"
           onClick={() => {
             navigate("/festivals");
           }}
+          isActive={location.pathname === "/festivals"}
         />
         <TopBarButton
           title="My Lineup"
           onClick={() => {
             navigate("/lineup");
           }}
+          isActive={location.pathname === "/lineup"}
         />
         <TopBarButton
           title="Profile"
           onClick={() => {
             navigate("/profile");
           }}
+          isActive={location.pathname === "/profile"}
         />
       </div>
     </div>

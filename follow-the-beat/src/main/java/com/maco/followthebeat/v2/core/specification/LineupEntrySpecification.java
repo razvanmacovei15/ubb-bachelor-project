@@ -12,33 +12,15 @@ public class LineupEntrySpecification {
 
     public static Specification<LineupEntry> hasArtistName(String name) {
         return (root, query, cb) -> {
-            Join<Object, Object> concertJoin = root.join("concert");
-            Join<Object, Object> artistJoin = concertJoin.join("artist");
-            return cb.like(cb.lower(artistJoin.get("name")), "%" + name.toLowerCase() + "%");
+            Join<Object, Object> concertCompatibility = root.join("concertCompatibility");
+            Join<Object, Object> concert = concertCompatibility.join("concert");
+            Join<Object, Object> artist = concert.join("artist");
+            return cb.like(cb.lower(artist.get("name")), "%" + name.toLowerCase() + "%");
         };
     }
 
     public static Specification<LineupEntry> hasUserId(UUID userId) {
-        return (root, query, cb) -> cb.equal(root.get("user").get("id"), userId);
+        return (root, query, cb) -> cb.equal(root.get("concertCompatibility").get("user").get("id"), userId);
     }
 
-    public static Specification<LineupEntry> hasConcertId(UUID concertId) {
-        return (root, query, cb) -> cb.equal(root.get("concert").get("id"), concertId);
-    }
-
-    public static Specification<LineupEntry> hasCompatibilityGreaterThan(Integer minCompatibility) {
-        return (root, query, cb) -> cb.greaterThan(root.get("compatibility"), minCompatibility);
-    }
-
-    public static Specification<LineupEntry> hasMinCompatibility(Integer minCompatibility) {
-        return (root, query, cb) -> cb.greaterThanOrEqualTo(root.get("compatibility"), minCompatibility);
-    }
-
-    public static Specification<LineupEntry> addedAfter(Instant addedAfter) {
-        return (root, query, cb) -> cb.greaterThan(root.get("createdAt"), addedAfter);
-    }
-
-    public static Specification<LineupEntry> updatedAfter(Instant updatedAfter) {
-        return (root, query, cb) -> cb.greaterThan(root.get("updatedAt"), updatedAfter);
-    }
 }

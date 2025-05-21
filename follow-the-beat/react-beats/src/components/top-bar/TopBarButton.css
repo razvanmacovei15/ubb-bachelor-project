@@ -15,11 +15,23 @@
   white-space: nowrap;
 
   cursor: pointer;
+
+  background: none;
+  transition: all 0.3s ease;
 }
 
 .button-class:hover {
   background-color: var(--color-accent);
-  color: white;
+  opacity: 0.8;
+}
+
+.button-class.active {
+  background-color: var(--color-accent);
+  border-bottom: 1px solid black;
+}
+
+.button-class.active h1 {
+  color: black;
 }
 
 .button-class h1 {
@@ -27,7 +39,8 @@
   justify-content: center;
   align-items: center;
 
-  font-size: 1rem;
+  margin: 0;
+  font-size: 1.0rem;
   font-weight: bold;
   color: white;
   text-align: center;

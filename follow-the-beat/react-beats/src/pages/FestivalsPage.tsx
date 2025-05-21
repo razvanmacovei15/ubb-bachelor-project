@@ -36,7 +36,6 @@ const FestivalsPage: React.FC = () => {
                 concertId,
                 notes: "",
                 priority: 0,
-                compatibility: 0,
             });
 
             console.log("[FestivalsPage] addLineupEntry call completed");
@@ -49,6 +48,7 @@ const FestivalsPage: React.FC = () => {
         hasFestival,
         searchTerm,
         sortBy,
+        sortDirection,
         concerts,
         totalCount,
         currentPage,
@@ -90,7 +90,7 @@ const FestivalsPage: React.FC = () => {
         } else {
             fetchConcerts();
         }
-    }, [searchTerm, sortBy, itemsPerPage, currentPage, festivalId]);
+    }, [searchTerm, sortBy, itemsPerPage, currentPage, festivalId, sortDirection]);
 
     useEffect(() => {
         setCurrentPage(1);
