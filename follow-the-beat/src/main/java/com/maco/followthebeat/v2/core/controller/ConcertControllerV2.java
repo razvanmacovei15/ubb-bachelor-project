@@ -50,7 +50,6 @@ public class ConcertControllerV2 {
             PagedResourcesAssembler<ConcertResponseDto> pagedResourcesAssembler
     ) {
         User user = userContext.getOrThrow();
-        log.info("[getAllConcerts] userId={}, artist={}, minCompatibility={}, hasCompatibilityGreaterThan={}, page={}, size={}, sortBy={}, direction={}",
                 user.getId(), artist.orElse(""), minCompatibility, hasCompatibilityGreaterThan, page, size, sortBy, direction);
 
         Pageable pageable = PageRequest.of(page, size,
@@ -64,7 +63,6 @@ public class ConcertControllerV2 {
                 pageable
         );
 
-        log.info("[getAllConcerts] resultSize={}", concerts.getTotalElements());
         return pagedResourcesAssembler.toModel(concerts);
     }
 
