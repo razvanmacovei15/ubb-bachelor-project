@@ -24,10 +24,10 @@ public class FestivalController {
     @GetMapping
     public ResponseEntity<List<FestivalDTO>> getAllFestivals() {
         List<Festival> festivals = festivalService.getAll();
-        List<FestivalDTO> dtos = festivals.stream()
+        List<FestivalDTO> festivalDtos = festivals.stream()
                 .map(festivalMapper::toDTO)
                 .collect(Collectors.toList());
 
-        return ResponseEntity.ok(dtos);
+        return ResponseEntity.ok(festivalDtos);
     }
 }

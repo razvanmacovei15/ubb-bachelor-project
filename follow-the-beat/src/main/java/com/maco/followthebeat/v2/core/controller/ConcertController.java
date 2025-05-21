@@ -69,7 +69,7 @@ public class ConcertController {
                 direction.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending());
 
         Page<ConcertResponseDto> concertPage = concertService.findConcertsByFestivalId(artist, date, pageable, festivalId);
-        //log every concert
+
         concertPage.getContent().forEach(concert -> {
             log.info("Concert ID: {}, Artist: {}", concert.getConcertId(), concert.getArtistName());
         });

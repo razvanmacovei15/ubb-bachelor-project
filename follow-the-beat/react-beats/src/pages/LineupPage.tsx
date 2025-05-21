@@ -42,7 +42,7 @@ const LineupPage: React.FC = () => {
                             style={{maxWidth: '300px'}}
                         />
                         <Select value={sortBy}
-                                onValueChange={(value: "none" | "priority" | "compatibility") => setSortBy(value)}>
+                                onValueChange={(value: "none" | "compatibility") => setSortBy(value)}>
                             <SelectTrigger style={{width: '200px'}}>
                                 <SelectValue placeholder="Sort by"/>
                             </SelectTrigger>

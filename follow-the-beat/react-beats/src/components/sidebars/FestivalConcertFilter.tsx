@@ -72,7 +72,7 @@ const FestivalConcertFilter = () => {
           <h3>Sort By</h3>
           <select
             onChange={(e) =>
-              setSortBy(e.target.value as "none" | "artist" | "time")
+              setSortBy(e.target.value as "none" | "artist" | "compatibility")
             }
             className="filter-select"
           >

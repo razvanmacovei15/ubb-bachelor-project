@@ -49,7 +49,6 @@ const FestivalsPage: React.FC = () => {
         hasFestival,
         searchTerm,
         sortBy,
-        date,
         concerts,
         totalCount,
         currentPage,
@@ -91,11 +90,11 @@ const FestivalsPage: React.FC = () => {
         } else {
             fetchConcerts();
         }
-    }, [searchTerm, sortBy, date, itemsPerPage, currentPage, festivalId]);
+    }, [searchTerm, sortBy, itemsPerPage, currentPage, festivalId]);
 
     useEffect(() => {
         setCurrentPage(1);
-    }, [searchTerm, sortBy, date, itemsPerPage]);
+    }, [searchTerm, sortBy, itemsPerPage]);
 
     React.useEffect(() => {
         if (!api) {

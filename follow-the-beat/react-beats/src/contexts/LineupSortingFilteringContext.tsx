@@ -115,6 +115,7 @@ export const LineupSortingFilteringProvider = ({
             const res = await axios.post(`${API_URL}/api/lineup`, entry, {
                 headers: {Authorization: `Bearer ${sessionToken}`},
             });
+            console.log("Added lineup entry:", res.data);
             await fetchLineupDetails();
             await fetchUserConcertsIds();
         } catch (err: any) {
