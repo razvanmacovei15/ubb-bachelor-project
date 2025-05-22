@@ -52,7 +52,8 @@ export const ConcertSortingFilteringProvider = ({
   const [compatibilityTimeRange, setCompatibilityTimeRange] = useState<
     string | null
   >(null);
-  const API_URL = import.meta.env.VITE_API_URL;
+  const API_URL = ""; // Remove the environment variable since we're using nginx proxy
+  console.log("API_URL:", API_URL);
 
   const checkHasFestival = async (): Promise<boolean> => {
     if (!festivalId || !sessionToken) {
@@ -62,7 +63,7 @@ export const ConcertSortingFilteringProvider = ({
 
     try {
       const params = { festivalId };
-      const response = await axios.get(`${API_URL}/api/user/hasFestival`, {
+      const response = await axios.get("/api/user/hasFestival", {
         params,
         headers: {
           Authorization: `Bearer ${sessionToken}`,
@@ -127,7 +128,7 @@ export const ConcertSortingFilteringProvider = ({
       ? { Authorization: `Bearer ${sessionToken}` }
       : {};
 
-    const response = await axios.get(`${API_URL}${endpoint}`, {
+    const response = await axios.get(endpoint, {
       params,
       headers,
     });
@@ -174,7 +175,7 @@ export const ConcertSortingFilteringProvider = ({
         ? { Authorization: `Bearer ${sessionToken}` }
         : {};
 
-      const response = await axios.get(`${API_URL}${endpoint}`, {
+      const response = await axios.get(endpoint, {
         params,
         headers,
       });
@@ -186,7 +187,10 @@ export const ConcertSortingFilteringProvider = ({
 
       console.log("Concerts data:", data);
 
-      const concertsList = data._embedded?.concertResponseDtoList || [];
+      // Ensure we're working with an array
+      const concertsList = Array.isArray(data._embedded?.concertResponseDtoList)
+        ? data._embedded.concertResponseDtoList
+        : [];
       setConcerts(concertsList);
       setTotalCount(data.page?.totalElements || 0);
     } catch (err) {

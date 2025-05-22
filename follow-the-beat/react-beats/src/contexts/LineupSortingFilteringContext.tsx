@@ -52,7 +52,8 @@ export const LineupSortingFilteringProvider = ({
   const [userId, setUserId] = useState<string | null>(null);
   const [lineupEntryIds, setLineupEntryIds] = useState<Set<string>>(new Set());
 
-  const API_URL = import.meta.env.VITE_API_URL;
+  const API_URL = "";
+  // const API_URL = import.meta.env.VITE_API_URL;
 
   const isConcertInLineup = (concertId: string): boolean => {
     return lineupEntryIds.has(concertId);

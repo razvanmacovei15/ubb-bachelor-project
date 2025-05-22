@@ -17,7 +17,8 @@ export interface SpotifyArtist {
 }
 
 const useSpotifyProfile = () => {
-    const API_URL = import.meta.env.VITE_API_URL;
+    // const API_URL = import.meta.env.VITE_API_URL;
+    const API_URL = "";
     const sessionToken = localStorage.getItem("sessionToken");
 
     const [contentLoading, setContentLoading] = useState<boolean>(true);
@@ -54,11 +55,12 @@ const useSpotifyProfile = () => {
     };
 
     const fetchTopTracks = async (range: string) => {
-        const response = await axios.get<SpotifyTrackDto[]>(`${API_URL}/spotify-tracks/top-tracks`, {
+        const response = await axios.get<SpotifyTrackDto[]>(`${API_URL}/api/spotify-tracks/top-tracks`, {
             headers: { Authorization: `Bearer ${sessionToken}` },
             params: { limit: 50, range },
         });
         setTopTracks(response.data);
+        console.log("Top tracks response:", response.data);
     };
 
     const fetchSpotifyData = async (range: string) => {

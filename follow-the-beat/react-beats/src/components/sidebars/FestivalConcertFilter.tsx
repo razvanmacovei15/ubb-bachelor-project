@@ -27,7 +27,8 @@ const FestivalConcertFilter = () => {
     setSortDirection,
   } = useConcertSortingFilteringContext();
   const { isConnectedToSpotify } = useUser();
-  const API_URL = import.meta.env.VITE_API_URL;
+  const API_URL ="";
+  // const API_URL = import.meta.env.VITE_API_URL;
   const sessionToken = localStorage.getItem("sessionToken");
   const [generatingCompatibility, setGeneratingCompatibility] = useState(false);
   const generateCompatibility = async (

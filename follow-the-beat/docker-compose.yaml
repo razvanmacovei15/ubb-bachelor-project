@@ -48,7 +48,10 @@ services:
       dockerfile: Dockerfile
       args:
         VITE_ENV: ${VITE_ENV}
+        VITE_API_URL: ${VITE_API_URL}
     container_name: react_frontend
+    ports:
+      - "8050:80"  # Map host port 8050 to container port 80 (nginx)
 
   festival-scraper:
     build:

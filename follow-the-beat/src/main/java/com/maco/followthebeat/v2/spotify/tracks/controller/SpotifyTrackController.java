@@ -17,7 +17,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/spotify-tracks")
+@RequestMapping("/api/spotify-tracks")
 @RequiredArgsConstructor
 public class SpotifyTrackController {
     private final SpotifyTrackStatsService spotifyTrackStatsService;

@@ -14,7 +14,7 @@ import LineupEntryCard from "@/components/concertspage/LineupEntryCard.tsx";
 import { useUser } from "@/contexts/UserContext.tsx";
 
 const LineupPage: React.FC = () => {
-  const { isConnectedToSpotify, sessionToken } = useUser();
+  const { isConnectedToSpotify } = useUser();
 
   const {
     searchTerm,

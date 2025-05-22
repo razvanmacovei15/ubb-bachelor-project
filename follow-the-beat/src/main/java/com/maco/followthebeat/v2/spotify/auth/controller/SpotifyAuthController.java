@@ -61,7 +61,7 @@ public class SpotifyAuthController {
             @RequestParam String code,
             @RequestParam String state,
             @RequestParam(required = false) String error) {
-
+        log.info("frontendUrl={}", frontendUrl);
         log.info("[/newCallback] Received callback with state={}, code={}, error={}", state, code, error);
 
         UUID userId = redisStateCacheService.retrieve(state);

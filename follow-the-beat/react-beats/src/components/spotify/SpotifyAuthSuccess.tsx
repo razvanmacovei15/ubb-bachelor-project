@@ -8,7 +8,8 @@ const SpotifyAuthSuccess = () => {
   const navigate = useNavigate();
   const { setConnectionState } = useUser();
   const state = new URLSearchParams(window.location.search).get("state");
-  const API_URL = import.meta.env.VITE_API_URL;
+  const API_URL = "";
+  // const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     console.log(
